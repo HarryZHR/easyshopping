@@ -1,0 +1,79 @@
+#div_goods_list,.div_more{
+    width: 80%;
+    margin-left: 10.5%;
+    margin-top: 4%;
+}
+.div_goods{
+    float: left;
+    margin-left: 1%;
+    border: 1px solid #ededed;
+}
+.div_goods:hover{
+    border: 1px solid #f36;
+}
+.img_goods{
+    width: 224px;
+    height: 340px;
+}
+.div_price_pay{
+    width: 224px;
+    height: 30px;
+    margin-top: 5px;
+    padding: 0 5px;
+}
+.div_price{
+    float: left;
+    color: #f36;
+    font-size: 16px;
+}
+.div_pay{
+    float: right;
+    color: #888;
+}
+.div_title{
+        width: 224px;
+    clear: both;
+    font-size: 14px;
+    overflow: hidden;
+    padding-left: 5px;
+}
+.a_title{
+    text-decoration: none;
+    color: #666;
+}
+.a_title:hover{
+    text-decoration: none;
+    color: #f36;
+    cursor: pointer;
+}
+.div_seller_info{
+    width: 224px;
+    font-size: 14px;
+    margin-top: 5px;
+    padding: 5px 5px;
+}
+.a_seller_location{
+    float: right;
+    color: #888;
+}
+.a_seller_name{
+    color: #888;
+}
+.a_seller_name:hover{
+    color: #f36;
+    cursor: pointer;
+}
+
+.div_load_more{
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 20px;
+}
+.span_load_more{
+    font-size: 14px;
+    color: #888;
+    margin-left: 48%;
+}
+.span_load_more:hover{
+    cursor: pointer;
+}

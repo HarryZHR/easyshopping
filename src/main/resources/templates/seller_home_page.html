@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div th:fragment="seller_data">
+        <link rel="stylesheet" type="text/css" th:href="@{css/seller_home_page.css}" />
+        <div>
+            <table id="tbl_data">
+                <tr id="tr_title">
+                    <td colspan="2">
+                        <p>实时数据</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="../static/img/Order.png" th:src="@{img/Order.png}">
+                        <span>昨日订单</span>
+                    </td>
+                    <td>
+                        <img src="../static/img/Goods.png" th:src="@{img/Goods.png}">
+                        <span>昨日出售</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="../static/img/Pay.png" th:src="@{img/Pay.png}">
+                        <span>昨日支付</span>
+                    </td>
+                    <td></td>
+                </tr>
+            </table>
+            <div id="div_seller_info">
+                <p class="p_big">违规提醒</p>
+                <p class="p_small">违规记录</p>
+                <p class="p_small">店铺积分</p>
+                <p class="p_big">商品</p>
+                <p class="p_small">出售中的商品</p>
+                <p class="p_big">订单</p>
+                <p class="p_small">订单总数</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

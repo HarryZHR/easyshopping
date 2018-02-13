@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="setting">
+        <link type="text/css" rel="stylesheet" href="../static/css/seller_setting.css" th:href="@{/css/seller_setting.css}" />
+        <script type="text/javascript" src="../static/dist/distpicker.data.js" th:src="@{/dist/distpicker.data.js}"></script>
+        <script type="text/javascript" src="../static/dist/distpicker.js" th:src="@{/dist/distpicker.js}"></script>
+        <script type="text/javascript" src="../static/js/seller_setting.js" th:src="@{/js/seller_setting.js}"></script>
+        <div id="div_setting">
+            <h4>基础信息</h4>
+            <div class="div_content">
+                <label class="label_text">
+                    店铺名称：<input type="text" id="seller_name" th:value="${session.sellerNow.storeName}" />
+                </label>
+                <span id="span_name_error" class="span_error"></span>
+            </div>
+            <div class="div_content">
+                <label class="label_text">
+                    店铺图标：<img id="img_seller_icon" src="" th:src="${session.sellerNow.icon}" />
+                </label>
+                <div style="height: 20px">
+                    <input type="file" class="input_seller_icon" accept="image/gif,image/jpeg,image/jpg,image/png"/>
+                    <span class="btn btn-info" id="span_seller_icon">上传图标</span>
+                    <input type="hidden" id="input_seller_icon" th:value="${session.sellerNow.icon}"/>
+                </div>
+            </div>
+            <div class="div_content" id="div_down">
+                <label class="label_text">店铺简介：</label><br/>
+                <textarea cols="50" rows="2" id="textarea_introduce" th:text="${session.sellerNow.introduce}"></textarea>
+            </div>
+            <div id="distpicker" class="div_content">
+                <label class="label_text">店铺地址：</label><br/>
+                <div class="div_border">
+                    <input type="hidden" id="province_val" th:value="${session.sellerNow.sellerProvince}"/>
+                    <select class="select_small" id="province">
+                        <option th:selected="${session.sellerNow.sellerProvince}"></option>
+                    </select>
+                </div>
+                <div class="div_border">
+                    <input type="hidden" id="city_val" th:value="${session.sellerNow.sellerCity}"/>
+                    <select class="select_small" id="city"></select>
+                </div>
+                <div class="div_border">
+                    <select class="select_small" id="district"></select>
+                    <input type="hidden" id="district_val" th:value="${session.sellerNow.sellerDistrict}"/>
+                </div>
+            </div>
+            <div class="div_content">
+                <textarea cols="50" rows="1" id="street" th:text="${session.sellerNow.sellerStreet}"></textarea>
+            </div>
+            <div class="div_content">
+                <label class="label_text">
+                    主要货源：
+                    <label class="label_text"><input type="radio" name="goods_from" class="goods_from" value="线下批发" th:checked="${session.sellerNow.supply eq '线下批发'}"/>线下批发</label>
+                    <label class="label_text"><input type="radio" name="goods_from" class="goods_from" value="实体店拿货" th:checked="${session.sellerNow.supply eq '实体店拿货'}"/>实体店拿货</label>
+                    <label class="label_text"><input type="radio" name="goods_from" class="goods_from" value="自己生产" th:checked="${session.sellerNow.supply eq '自己生产'}"/>自己生产</label>
+                    <label class="label_text"><input type="radio" name="goods_from" class="goods_from" value="分销、代销" th:checked="${session.sellerNow.supply eq '分销、代销'}"/>分销、代销</label>
+                </label>
+            </div>
+            <input class="btn btn-primary" id="input_seller_save" type="button" value="保存" />
+            <span id="span_save_tip"></span>
+        </div>
+    </div>
+</body>
+</html>

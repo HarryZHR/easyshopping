@@ -1,0 +1,13 @@
+#div_nav{
+    margin-bottom: 50px;
+}
+#div_left{
+    width: 40%;
+    float: left;
+    padding-left: 15%;
+    height: 500px;
+}
+#div_main{
+    width: 60%;
+    margin-left: 40%;
+}

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.cslg.easyshopping.dao.GoodsDao">
+	<resultMap id="goodsMap" type="edu.cslg.easyshopping.pojo.Goods">
+		<id property="id" column="id"/>
+		<result property="title" column="title"/>
+		<result property="introduce" column="introduce" />
+		<result property="minPrice" column="minPrice"/>
+		<result property="discount" column="discount"/>
+		<result property="saleCount" column="saleCount"/>
+		<result property="goodsTime" column="goodsTime"/>
+		<result property="status" column="status"/>
+		<result property="activity" column="activity"/>
+		<association property="type" column="type_id" select="edu.cslg.easyshopping.dao.GoodsTypeDao.getGoodsTypeById"/>
+		<association property="seller" column="seller_id" select="edu.cslg.easyshopping.dao.SellerDao.getSellerById" />
+		<association property="goodsImg" column="id" select="edu.cslg.easyshopping.dao.GoodsImgDao.getGoodsImgById"/>
+		<collection property="standards" column="id" select="edu.cslg.easyshopping.dao.StandardDao.listStandardByGoodsId"/>
+	</resultMap>
+	<insert id="saveGoods" useGeneratedKeys="true" keyProperty="id" parameterType="edu.cslg.easyshopping.pojo.Goods">
+		INSERT INTO t_goods (goodsNum, title, introduce, minPrice, discount, saleCount, goodsTime, type_id, seller_id, status, activity) VALUES (NULL ,#{title},#{introduce},NULL ,0,0,#{goodsTime},#{type.id},#{seller.id},TRUE ,0);
+	</insert>
+	<update id="updateGoods" parameterType="edu.cslg.easyshopping.pojo.Goods">
+		UPDATE t_goods SET title = #{title}, introduce = #{introduce}, minPrice = #{minPrice}, discount = #{discount}, saleCount = #{saleCount}, status = #{status}, activity = #{activity} WHERE id = #{id};
+	</update>
+	<select id="listGoodsBySeller" resultMap="goodsMap">
+		SELECT * FROM t_goods WHERE status = TRUE AND seller_id = #{id} ORDER BY goodsTime DESC LIMIT #{goodsIndex},#{pageSize};
+	</select>
+	<select id="countGoodsBySeller" resultType="Integer">
+		SELECT count(*) FROM t_goods WHERE status = TRUE AND seller_id = #{0};
+	</select>
+	<select id="listGoodsAll" resultMap="goodsMap">
+		SELECT * FROM t_goods WHERE status = TRUE ORDER BY goodsTime DESC LIMIT #{goodsIndex},#{pageSize};
+	</select>
+	<select id="countGoodsAll" resultType="Integer">
+		SELECT count(*) FROM t_goods WHERE status = TRUE;
+	</select>
+	<select id="getGoodsById" resultMap="goodsMap">
+		SELECT * FROM t_goods WHERE id = #{0} AND status = TRUE;
+	</select>
+	<select id="listGoodsByCategory" resultMap="goodsMap">
+		SELECT * FROM t_goods WHERE status = TRUE AND seller_id = #{sellerId} AND type_id = #{typeId} ORDER BY goodsTime DESC LIMIT 0,8 ;
+	</select>
+	<select id="listGoodsBySellerAll" resultMap="goodsMap">
+		SELECT * FROM t_goods WHERE status = TRUE AND seller_id = #{0};
+	</select>
+	<select id="countBuyerLikeGoods" resultType="Integer">
+		SELECT count(*) FROM t_goods tg RIGHT JOIN t_buyer_goods tbg ON tg.id = tbg.goods_id WHERE tg.id = #{0}
+	</select>
+</mapper>

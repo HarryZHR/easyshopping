@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.cslg.easyshopping.dao.CartItemDao">
+	<resultMap id="cartItemMap" type="edu.cslg.easyshopping.pojo.CartItem">
+		<id property="id" column="id"/>
+		<result property="buyCount" column="buyCount"/>
+		<association property="standard" column="standard_id" select="edu.cslg.easyshopping.dao.StandardDao.getStandardById"/>
+		<association property="buyer" column="buyer_id" select="edu.cslg.easyshopping.dao.BuyerDao.getBuyerById"/>
+	</resultMap>
+	<insert id="saveCartItem">
+		INSERT INTO t_cart_item VALUES (NULL ,#{buyCount},#{standard.id},#{buyer.id});
+	</insert>
+	<select id="getCartItemByStandardIdAndBuyerId" resultMap="cartItemMap">
+		SELECT * FROM t_cart_item WHERE buyer_id=#{buyerId} AND standard_id=#{standardId};
+	</select>
+	<update id="updateCartItem">
+		UPDATE t_cart_item SET buyCount = #{buyCount} WHERE id = #{id};
+	</update>
+	<select id="listCartItemByBuyerId" resultMap="cartItemMap">
+		SELECT * FROM t_cart_item WHERE buyer_id = #{0};
+	</select>
+</mapper>

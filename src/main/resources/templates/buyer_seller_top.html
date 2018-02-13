@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="buyer_seller_top">
+        <link rel="stylesheet" type="text/css" th:href="@{css/buyer_seller_top.css}">
+        <script type="text/javascript" th:src="@{js/buyer_seller_top.js}"></script>
+        <div id="div_border">
+            <input id="sellerId" th:value="${session.this_goods.seller.id}" type="hidden"/>
+            <input id="buyerLikeSeller" th:value="${session.buyerLikeSeller}" type="hidden">
+            <div id="div_top_inner">
+                <div id="div_top_left">
+                    <a>
+                        <img id="img_seller_icon" th:src="${session.this_goods.seller.icon}" src=""/>
+                    </a>
+                    <a>
+                        <span id="span_seller_name" th:text="${session.this_goods.seller.storeName}"></span>
+                    </a>
+                    <input class="btn_like" type="button" value="+收藏"/>
+                </div>
+                <div id="div_top_right">
+                    <input id="input_search" type="text"/>
+                    <span class="span_search_all">搜全站</span>
+                    <span class="span_search_seller">搜本店</span>
+                </div>
+                <div id="div_seller_intro">
+                    <div>
+                        <span class="span_th">创建时间：</span>
+                        <span class="span_num" th:text="${#dates.format(session.this_goods.seller.shopTime,'yyyy年MM月dd日')}"></span>
+                        <span class="span_th">销量：</span>
+                        <span class="span_num span_right" th:text="${session.this_goods.seller.sale}"></span>
+                    </div>
+                    <div>
+                        <span class="span_th">商品数量：</span>
+                        <span class="span_num">999+</span>
+                        <span class="span_th">收藏数：</span>
+                        <span class="span_num span_right">999+</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="div_seller_logo">
+            <img id="img_seller_logo" src="" th:src="${session.this_goods.seller.icon}" />
+            <div id="div_seller_logo_name" th:text="${session.this_goods.seller.storeName}"></div>
+        </div>
+        <div id="div_category_seller_border">
+            <ul id="ul_category_seller">
+                <li class="li_category_seller">首页</li>
+                <li class="li_category_seller" th:each="goods_types_in_seller : ${session.goods_types_in_seller}" th:text="${goods_types_in_seller}"></li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

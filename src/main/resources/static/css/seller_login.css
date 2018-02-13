@@ -1,0 +1,213 @@
+html,body,head{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+#toRegisterDiv>a{
+    font-size: 12px;
+    color: #666;
+}
+#toRegisterDiv a:HOVER {
+    text-decoration: underline;
+}
+.dotted {
+    /*竖线*/
+    font-size:10px;
+    color: #444;
+}
+#toRegisterDiv{
+    width: 402px;
+    height: 20px;
+    margin-right: 15px;
+}
+#commonFormDiv{
+    width: 100%;
+    height: 180px;
+}
+
+#loginTopDiv{
+    width: 100%;
+    height: 70px;
+}
+#loginTopContentDiv{
+    width: 100%;
+    height: 54px;
+    border-bottom: 1px solid #ccc;
+}
+#commonLoginDiv{
+    float: left;
+    width: 50%;
+    height: 63%;
+    padding-top: 20px;
+}
+#commonLoginSpan{
+    color: #ff4066;
+}
+#phoneLoginSpan{
+    color: #3c3c3c;
+}
+#phoneLoginDiv{
+    width: 50%;
+    margin-left: 50%;
+    height: 63%;
+    padding-top: 20px;
+}
+#loginTopContentDiv div span{
+    display: block;
+    height: 31px;
+    width: 60%;
+    font-size: 14px;
+    font-weight: 700;
+}
+#phonePwdDiv input[type="button"]{
+    width: 28%;
+}
+#phonePwdDiv input[type="text"]{
+    width: 35%;
+    margin-left: 5px;
+}
+#phoneFormDiv{
+    width: 100%;
+    height: 180px;
+}
+#loginTopContentDiv span:hover{
+    cursor: pointer;
+}
+#loginButDiv{
+    margin-bottom: 10px;
+}
+input{
+    margin-top: 12px;
+}
+#mainDiv{
+    width: 100%;
+    height: 70%;
+    margin-top: 20px;
+    background-image: url("../img/HomePageBackground.png");
+}
+input{
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #002;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1em;
+    height: 42px;
+    padding: 0 16px;
+    transition: background 0.3s ease-in-out;
+    width: 272px;
+}
+input:focus {
+    outline: none;
+    border-color: #FFDAB9;
+    box-shadow: 0 0 10px #FFDAB9;
+}
+.logo{
+    width: 50%;
+    height: 8%;
+    margin-left: 110px;
+    margin-top: 20px;
+}
+.button{
+    background: #ff5777;
+    border: none;
+    border-radius: 2px;
+    color: #fff;
+    cursor: pointer;
+    height: 42px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    text-align: center;
+    text-transform: uppercase;
+    transition: background 0.3s ease-in-out;
+    width: 305px;
+}
+.button:hover {
+    background: #FF3399;
+}
+a{
+    text-decoration: none;
+}
+.showLine{
+    border-bottom: 2px solid #ff4066;
+}
+.disappear{
+    display: none;
+}
+
+
+.loginDiv{
+    border: 1px solid #ccc;
+    font-size: 1em;
+    transition: background 0.3s ease-in-out;
+    z-index:1;
+    position:absolute;
+    width: 418px;
+    height: 316px;
+    margin-left: 65%;
+    margin-top: 7%;
+    background-color: #ffeceb;
+    opacity: 0.85;
+}
+#errorDiv{
+    width: 60%;
+    height: 24px;
+    border: 1px solid #ffeceb;
+    margin-top: 10px;
+}
+#errorDisDiv{
+    width: 100%;
+    height: 22px;
+    border: 1px solid #ffd797;
+    background-color: #fffff8;
+}
+.div_error{
+    background: url("../img/error.png") no-repeat;
+    color: #ff4066;
+    font-size: 12px;
+    text-align: left;
+    padding-left: 20px;
+    height: 20px;
+    padding-top: 1px;
+}
+/*.errorImg{
+    width: 15px;
+    height: 15px;
+    margin-top: 5px;
+    float: left;
+    margin-left: 10px;
+}
+.errorContent{
+    float: left;
+    width: 70%;
+    margin-top: 3px;
+    text-align: left;
+    margin-left: 5px;
+    color: #ff4066;
+    font-size: 12px;
+}*/
+.bottom{
+    background-color: #F2F2F2;
+    text-align: center;
+    color: #666;
+    font-size: 12px;
+    width: 100%;
+    height: 15%;
+    padding-top: 10px;
+}
+.tailDiv{
+    margin-left: 10%;
+    width: 80%;
+    border-top: 1px solid #e6e6e6;
+}
+#tailDiv>span{
+    margin-left: 10%;
+    width: 80%;
+    margin-top: 8px;
+    float: left;
+}
+#div_cut{
+    clear: both;
+    height: 0;
+}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="buyer_home_search">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/buyer_home_search.css}">
+        <div id="div_logo_search">
+            <a href="#" id="a_logo">
+                <img src="" th:src="@{/img/logo.png}"/>
+            </a>
+            <div class="input-group" id="div_search">
+                <div>
+                    <span id="span_title">宝贝</span>
+                </div>
+                <div>
+                    <input id="input_search" type="text"/>
+                    <span class="span_search"></span>
+                </div>
+            </div>
+        </div>
+        <div style="clear: both;height: 50px"></div>
+        <!--商品分类-->
+        <div id="div_type">
+            <ul id="ul_type">
+                <li class="li_type1">
+                    <a href="/buyer_index" class="a_type">首页</a>
+                </li>
+                <li class="li_type" th:each="goodsType : ${session.goodsTypeList}">
+                    <a href="#" class="a_type" th:text="${goodsType.type}"></a>
+                </li>
+            </ul>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+</body>
+</html>

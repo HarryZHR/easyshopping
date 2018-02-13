@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>嗨易购-店铺申请</title>
+    <script th:src="@{http://libs.baidu.com/jquery/2.1.4/jquery.min.js}"></script>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/seller_application.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/footer.css}">
+</head>
+<body>
+    <div class="top">
+        <span>商家注册</span>
+    </div>
+    <div class="main">
+        <span class="title">申请网上店铺需要提前准备以下材料</span>
+        <div class="background">
+            <div>
+                <div class="single">
+                    <img src="../static/img/front.jpg" th:src="@{/img/front.jpg}" class="cardPhoto">
+                    <span class="tip">1.身份证个人信息页的照片，确保图片清晰，四角完整。</span>
+                </div>
+                <span class="tip_bottom">个人信息页</span>
+            </div>
+            <div>
+                <div class="single">
+                    <img src="../static/img/back.jpg" th:src="@{/img/back.jpg}" class="cardPhoto">
+                    <span class="tip">2.身份证国徽页的照片，确保图片清晰，四角完整。</span>
+                </div>
+                <span class="tip_bottom">国徽页</span>
+            </div>
+            <div>
+                <div class="single">
+                    <img src="../static/img/hand.jpg" th:src="@{/img/hand.jpg}" class="personPhoto">
+                    <span class="tip">3.本人手持身份证照片，保证人证符合，本人面容清晰可辨。</span>
+                </div>
+                <span class="tip_bottom">本人手持身份证正面照片</span>
+            </div>
+        </div>
+        <input type="button" class="btn" value="已准备好，下一步">
+    </div>
+    <div th:include="footer :: footer"></div>
+</body>
+    <script th:inline="javascript">
+        $(function(){
+            $(".btn").on("click",function(){
+                window.location.href="/seller_input";
+            });
+        });
+    </script>
+</html>

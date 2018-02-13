@@ -1,0 +1,80 @@
+.div_border{
+  display: inline-block;
+}
+
+.select_small{
+  width: 120px;
+  height: 22px;
+  font-size: 12px;
+}
+
+select,input,textarea{
+  outline: none;
+}
+
+#input_seller_save{
+  width: 50px;
+  height: 30px;
+  padding: 5px;
+}
+
+textarea{
+  resize: none;
+}
+
+.label_text{
+  font-weight: 400;
+  font-size: 12px;
+  margin-left: 5px;
+}
+
+.div_content{
+  padding-top: 1%;
+  padding-bottom: 3%;
+}
+
+#img_seller_icon{
+  width: 50px;
+  height: 50px;
+}
+
+.input_seller_icon{
+  width: 80px;
+  margin-top: 20px;
+  z-index: 5;
+  position: absolute;
+  opacity: 0;
+}
+
+.input_seller_icon:hover{
+  cursor: pointer;
+}
+
+#span_seller_icon{
+  width: 80px;
+  height: 25px;
+  padding: 3px 3px;
+  position: absolute;
+  z-index: 2;
+  margin-top: 20px;
+}
+
+.span_error{
+  color: #ff1877;
+  font-size: 12px;
+  background: url("../img/ban.png") no-repeat;
+  padding-left: 16px;
+  padding-bottom: 2px;
+  display: none;
+}
+#span_name_error{
+  margin-top: -5px;
+}
+#span_icon_error{
+  margin-left: 10%;
+}
+
+#span_save_tip{
+  font-size: 12px;
+  color: #ff1877;
+}

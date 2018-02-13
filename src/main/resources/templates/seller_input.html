@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>嗨易购-店铺申请</title>
+    <script th:src="@{http://libs.baidu.com/jquery/2.1.4/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/seller_input.js}"></script>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/seller_input.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/footer.css}"/>
+
+</head>
+<body>
+    <div class="top">
+        <span>商家注册</span>
+    </div>
+    <div class="main">
+        <div class="div_inner">
+            <div class="logo">
+                <img src="../static/img/logo.png" th:src="@{img/logo.png}">
+            </div>
+            <div class="border">
+                <form method="post" action="/seller_info_sub" name="seller" id="form_seller">
+                    <div class="topTip">
+                        <div id="errorTip" class="disappear">
+                            请将信息填写完整
+                        </div>
+                    </div>
+                    <div class="lineClass">
+                        <label>店名：</label>
+                        <input type="text" class="input" name="storeName" id="storeName">
+                        <span id="storeNameError" class="error disappear"></span>
+                    </div>
+                    <div class="lineClass">
+                        <label>店主名：</label>
+                        <input type="text" class="input" name="hostName" id="hostName">
+                        <span id="hostNameError" class="error disappear"></span>
+                    </div>
+                    <div class="lineClass">
+                        <label>密码：</label>
+                        <input type="password" class="input" name="pwd" id="pwd">
+                        <span id="pwdError" class="error disappear"></span>
+                    </div>
+                    <div class="lineClass">
+                        <label>确认密码：</label>
+                        <input type="password" class="input" name="secondPwd" id="secondPwd">
+                        <span id="secondPwdError" class="error disappear"></span>
+                    </div>
+                    <div class="line_bottom">
+                        <input type="submit" value="确认" class="btn">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div th:include="footer :: footer"></div>
+</body>
+</html>

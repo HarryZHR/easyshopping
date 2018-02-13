@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.cslg.easyshopping.dao.StuffDao">
+	<resultMap id="stuffMap" type="edu.cslg.easyshopping.pojo.Stuff">
+		<id property="id" column="id"/>
+		<result property="faceImg" column="faceImg"/>
+		<result property="oppositeImg" column="oppositeImg"/>
+		<result property="handImg" column="handImg"/>
+		<result property="stuffStatus" column="stuffStatus"/>
+		<result property="reason" column="reason"/>
+		<association property="seller" javaType="edu.cslg.easyshopping.pojo.Seller" column="seller_id" resultMap="edu.cslg.easyshopping.dao.SellerDao.SellerMap">
+			<id property="id" column="id"/>
+		</association>
+	</resultMap>
+
+	<insert id="saveStuff" parameterType="edu.cslg.easyshopping.pojo.Stuff">
+		INSERT INTO t_stuff VALUES (NULL ,#{faceImg},#{oppositeImg},#{handImg},#{stuffStatus},#{reason},#{seller.id})
+	</insert>
+</mapper>

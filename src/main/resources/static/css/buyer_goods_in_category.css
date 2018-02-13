@@ -1,0 +1,35 @@
+/* 本店推荐同类商品 start */
+.div_goods_in_category{
+    margin-left: 3%;
+    float: left;
+    margin-top: 10px;
+}
+.img_goods_category{
+    width: 160px;
+    height: 240px;
+}
+.div_category_price{
+    float: left;
+    font-size: 12px;
+}
+.div_category_pay{
+    float: right;
+    font-size: 12px;
+}
+.div_category_title{
+    clear: both;
+    font-size: 12px;
+    overflow: hidden;
+    padding-left: 5px;
+}
+.a_goods_category_title{
+    text-decoration: none;
+    color: #333;
+}
+.a_goods_category_title:hover{
+    text-decoration: none;
+    color: #ff3366;
+}
+.div_category_price_pay{
+    padding: 0 5px;
+}

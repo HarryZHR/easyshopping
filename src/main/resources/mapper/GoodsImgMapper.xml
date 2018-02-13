@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.cslg.easyshopping.dao.GoodsImgDao">
+	<resultMap id="goodsImgMap" type="edu.cslg.easyshopping.pojo.GoodsImg">
+		<id property="id" column="id"/>
+		<result property="img1" column="img1"/>
+		<result property="img2" column="img2"/>
+		<result property="img3" column="img3"/>
+		<result property="img4" column="img4"/>
+		<result property="img5" column="img5"/>
+		<result property="detailImg" column="detailImg"/>
+	</resultMap>
+	<insert id="saveGoodsImg">
+		INSERT INTO t_goods_img VALUES (#{id} ,#{img1},#{img2},#{img3},#{img4},#{img5},#{detailImg})
+	</insert>
+	<select id="getGoodsImgById" resultMap="goodsImgMap">
+		SELECT * FROM t_goods_img WHERE id = #{0}
+	</select>
+</mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.cslg.easyshopping.dao.BuyerDao">
+	<resultMap id="buyerMap" type="edu.cslg.easyshopping.pojo.Buyer">
+		<id property="id" column="id"/>
+		<result property="nickName" column="nickName"/>
+		<result property="headImg" column="headImg"/>
+		<result property="tel" column="tel"/>
+		<result property="buyerStatus" column="buyerStatus"/>
+		<result property="registerDate" column="register_date"/>
+	</resultMap>
+	<insert id="saveBuyer" useGeneratedKeys="true" keyProperty="id" parameterType="edu.cslg.easyshopping.pojo.Buyer">
+		INSERT INTO t_buyer VALUES (NULL ,#{nickName},#{pwd},#{tel},#{headImg},#{buyerStatus},#{registerDate});
+	</insert>
+	<select id="getBuyerByTel" resultMap="buyerMap">
+		SELECT * FROM t_buyer WHERE tel = #{0};
+	</select>
+	<select id="getBuyerByLoginIdAndPwd" resultMap="buyerMap">
+		SELECT * FROM t_buyer WHERE pwd = #{pwd}
+			<if test="tel != null">AND tel = #{tel}</if>
+			<if test="nickName != null">AND nickName = #{nickName}</if>;
+	</select>
+	<select id="getBuyerById" resultMap="buyerMap">
+		SELECT * FROM t_buyer WHERE id = #{0} AND buyerStatus = TRUE ;
+	</select>
+	<insert id="buyerLikeSeller">
+		INSERT INTO t_buyer_seller VALUES (#{buyerId},#{sellerId});
+	</insert>
+	<delete id="buyerDislikeSeller">
+		DELETE FROM t_buyer_seller WHERE buyer_id = #{buyerId} AND seller_id=#{sellerId};
+	</delete>
+	<select id="buyerLikeSellerOr" resultType="Integer">
+		SELECT count(*) FROM t_buyer_seller WHERE buyer_id=#{buyerId} AND seller_id = #{sellerId};
+	</select>
+	<insert id="buyerLikeGoods">
+		INSERT INTO t_buyer_goods VALUES (#{buyerId},#{goodsId});
+	</insert>
+	<delete id="buyerDislikeGoods">
+		DELETE FROM t_buyer_goods WHERE buyer_id = #{buyerId} AND goods_id=#{goodsId};
+	</delete>
+	<select id="buyerLikeGoodsOr" resultType="Integer">
+		SELECT count(*) FROM t_buyer_goods WHERE buyer_id=#{buyerId} AND goods_id = #{goodsId};
+	</select>
+
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.cslg.easyshopping.dao.SellerDao">
+	<resultMap id="sellerMap" type="edu.cslg.easyshopping.pojo.Seller">
+		<id property="id" column="id"/>
+		<result property="email" column="email"/>
+		<result property="tel" column="tel"/>
+		<result property="storeName" column="storeName"/>
+		<result property="hostName" column="hostName"/>
+		<result property="pwd" column="pwd"/>
+		<result property="sellerProvince" column="seller_province"/>
+		<result property="sellerCity" column="seller_city"/>
+		<result property="sellerDistrict" column="seller_district"/>
+		<result property="sellerStreet" column="seller_street"/>
+		<result property="supply" column="supply"/>
+		<result property="score" column="score"/>
+		<result property="shopTime" column="shopTime"/>
+		<result property="icon" column="icon"/>
+		<result property="introduce" column="introduce"/>
+		<result property="sellerStatus" column="sellerStatus"/>
+	</resultMap>
+	<select id="getSellerByTel" resultMap="sellerMap">
+		SELECT * FROM t_seller WHERE tel = #{0}
+	</select>
+	<select id="getSellerByTelAndPwd" resultMap="sellerMap">
+		SELECT * FROM  t_seller WHERE tel = #{tel} AND pwd = #{pwd}
+	</select>
+	<insert id="saveSeller">
+		INSERT INTO t_seller VALUES (NULL ,#{tel},#{storeName},#{hostName},#{pwd},'请选择省/直辖市','请选择市' ,'请选择区/县' ,'' ,NULL ,#{score},#{shopTime},'img/seller_default.png' ,'',#{sellerStatus})
+	</insert>
+	<select id="getSellerById" resultMap="sellerMap">
+		SELECT * FROM t_seller WHERE id = #{0} AND sellerStatus = TRUE
+	</select>
+	<update id="updateSeller" parameterType="edu.cslg.easyshopping.pojo.Seller">
+		UPDATE t_seller SET storeName = #{storeName},icon = #{icon},introduce = #{introduce},seller_province=#{sellerProvince},pwd=#{pwd},
+			seller_city=#{sellerCity},seller_district=#{sellerDistrict},seller_street=#{sellerStreet},supply = #{supply},sellerStatus=#{sellerStatus},score=#{score} WHERE id=#{id}
+	</update>
+	<select id="listSellerLikeByBuyerId">
+		SELECT ts.* FROM t_buyer_seller tbs LEFT JOIN t_seller ts ON ts.id = tbs.seller_id WHERE ts.sellerStatus = TRUE ;
+	</select>
+</mapper>

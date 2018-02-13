@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.cslg.easyshopping.dao.StandardDao">
+	<resultMap id="standardMap" type="edu.cslg.easyshopping.pojo.Standard">
+		<id property="id" column="id"/>
+		<result property="color" column="color"/>
+		<result property="colorImg" column="colorImg"/>
+		<result property="size" column="size"/>
+		<result property="price" column="price"/>
+		<result property="count" column="count"/>
+		<association property="goods" column="goods_id" select="edu.cslg.easyshopping.dao.GoodsDao.getGoodsById"/>
+	</resultMap>
+	<insert id="saveStandard">
+		INSERT INTO t_standard VALUES (NULL ,#{color},#{colorImg},#{size},#{price},#{count},#{goods.id})
+	</insert>
+	<select id="listStandardByGoodsId" resultMap="standardMap">
+		SELECT * FROM t_standard WHERE goods_id = #{0}
+	</select>
+	<select id="getStandardById" resultMap="standardMap">
+		SELECT * FROM t_standard WHERE id = #{0}
+	</select>
+	<select id="getStandardToCart" resultMap="standardMap">
+		SELECT * FROM t_standard WHERE goods_id = #{goodsId} AND color = #{color} AND size = #{size};
+	</select>
+</mapper>

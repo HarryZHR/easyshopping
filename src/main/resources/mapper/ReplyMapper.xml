@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.cslg.easyshopping.dao.ReplyDao">
+	<resultMap id="replyMap" type="edu.cslg.easyshopping.pojo.Reply">
+		<id property="id" column="id"/>
+		<result property="type" column="type"/>
+		<result property="content" column="content"/>
+		<result property="replyTime" column="replyTime"/>
+		<result property="img" column="img"/>
+		<association property="standard" javaType="edu.cslg.easyshopping.pojo.Standard" column="standard_id" resultMap="edu.cslg.easyshopping.dao.StandardDao.standardMap">
+			<id property="id" column="id"/>
+		</association>
+	</resultMap>
+	<select id="getReplyById" resultMap="replyMap">
+		SELECT * FROM t_reply WHERE id = #{0}
+	</select>
+	<select id="listReplyByStandardId" resultMap="replyMap">
+		SELECT * FROM t_reply WHERE standard_id = #{0}
+	</select>
+</mapper>

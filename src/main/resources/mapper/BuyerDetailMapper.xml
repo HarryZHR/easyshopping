@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.cslg.easyshopping.dao.BuyerDetailDao">
+	<resultMap id="buyerDetailMap" type="edu.cslg.easyshopping.pojo.BuyerDetail">
+		<id property="id" column="id"/>
+		<result property="realName" column="realName"/>
+		<result property="gender" column="gender"/>
+		<result property="birthday" column="birthday"/>
+		<result property="location" column="location"/>
+		<result property="remark" column="remark"/>
+	</resultMap>
+	<insert id="saveBuyerDetail">
+		INSERT INTO t_buyer_detail VALUES (#{id},'','',#{birthday},'','');
+	</insert>
+
+</mapper>

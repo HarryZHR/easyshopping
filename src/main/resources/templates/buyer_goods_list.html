@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="buyer_goods_list">
+        <link rel="stylesheet" type="text/css" th:href="@{css/buyer_goods_list.css}">
+        <script type="text/javascript" th:src="@{js/buyer_goods_list.js}"></script>
+        <div id="div_goods_list">
+            <div class="div_goods" th:each="goods : ${session.buyerGoodsList}">
+                <a th:href="@{'buyer_goods_detail'(goodsId=${goods.id})}">
+                    <img class="img_goods" src="" th:src="${goods.goodsImg.img1}">
+                </a>
+                <div class="div_info">
+                    <div class="div_price_pay">
+                        <div class="div_price" th:text="'￥' + ${#numbers.formatDecimal(goods.minPrice,0,2)}"></div>
+                        <div class="div_pay" th:text="${goods.saleCount} + '人付款'"></div>
+                    </div>
+                    <div class="div_title" th:if="${#strings.length(goods.title) < 13}">
+                        <a th:href="@{'buyer_goods_detail'(goodsId=${goods.id})}"            class="a_title" th:text="${goods.title}"></a>
+                    </div>
+                    <div class="div_title" th:if="${#strings.length(goods.title) >= 13}">
+                        <a th:href="@{'buyer_goods_detail'(goodsId=${goods.id})}" class="a_title" th:text="${#strings.substring(goods.title,0,13)} + '...'"></a>
+                    </div>
+                    <div class="div_seller_info">
+                        <a class="a_seller_name" th:text="${goods.seller.storeName}"></a>
+                        <span class="a_seller_location" th:text="${#strings.substring(goods.seller.sellerProvince,0,2)} + ' ' + ${#strings.substring(goods.seller.sellerCity,0,2)}"></span>
+                    </div>
+                </div>
+            </div>
+            <div style="clear: both"></div>
+        </div>
+        <div class="div_more"></div>
+        <div class="div_load_more">
+            <input type="hidden" th:value="${session.buyerCurrPage}"/>
+            <span class="span_load_more">加载更多</span>
+        </div>
+    </div>
+</body>
+</html>

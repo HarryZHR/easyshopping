@@ -1,0 +1,120 @@
+@CHARSET "UTF-8";
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+#div_navbar{
+    width: 100%;
+    background-color: #f8f8f8;
+    height: 30px;
+}
+#navbar{
+    min-height: 30px;
+    border-bottom: 0;
+    min-width: 880px;
+}
+.navbar-nav>li>a{
+    padding: 5px 15px;
+}
+.a_top{
+    font-size: 12px;
+    height: 30px;
+    padding: 0 15px;
+}
+.navbar .container-fluid .navbar-header a:hover{
+    color: #FF3066;
+}
+#home_page_top{
+    width: 30%;
+}
+#a_home{
+    background: url("../img/home.png") no-repeat;
+    padding-left: 20px;
+    height: 20px;
+    margin-top: 5px;
+}
+#login_top{
+    margin-left: 15%;
+    padding-top: 5px;
+    height: 25px;
+}
+#register_top{
+    margin-left: 3%;
+    padding-top: 5px;
+    height: 25px;
+}
+#buyer_top{
+}
+#a_like_icon{
+    margin-left: 5%;
+    background: url("../img/like.png") no-repeat;
+    padding-left: 20px;
+    width: 100px;
+    margin-top: 5px;
+    height: 25px;
+    padding-top: 0;
+}
+#ul_buyer_like{
+    display: inline-block;
+}
+#ul_buyer_name{
+    display: inline-block;
+}
+#cart_top{
+}
+#a_cart{
+    background: url("../img/cart.png") no-repeat;
+    padding-left: 20px;
+    height: 20px;
+    margin-top: 5px;
+}
+#order_top{
+}
+#a_order{
+    background: url("../img/orderItem.png") no-repeat;
+    padding-left: 20px;
+    height: 20px;
+    margin-top: 5px;
+}
+#seller_login_top{
+    /*float: right;*/
+
+}
+#a_seller_login{
+    background: url("../img/seller.png") no-repeat;
+    padding-left: 20px;
+    height: 20px;
+    margin-top: 5px;
+}
+#ul_like{
+    min-width: 90px;
+    border: 1px solid #F0F0F0;
+}
+#ul_buyer{
+    min-width: 90px;
+    border: 1px solid #F0F0F0;
+}
+.a_like{
+    font-size: 12px;
+}
+.dropdown-menu>li>a{
+    padding: 5px 20px;
+}
+.dropdown-menu{
+    margin: 0;
+    padding: 0;
+}
+.dropdown-menu .divider{
+    margin: 0;
+}
+.a_buyer{
+    font-size: 12px;
+}
+.navbar-nav .dropdown li a:hover{
+    color: #FF3066;
+}
+.navbar-nav .dropdown .a_top:hover{
+    color: #FF3066;
+}

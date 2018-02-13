@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>嗨易购</title>
+    <!-- JQuery -->
+    <script th:src="@{http://libs.baidu.com/jquery/2.1.4/jquery.min.js}"></script>
+    <!-- 登录界面 -->
+    <link rel="stylesheet" href="../static/css/seller_login.css" th:href="@{/css/seller_login.css}" />
+    <script src="../static/js/buyer_login.js" th:src="@{/js/buyer_login.js}"></script>
+    <!-- 页尾 -->
+    <link type="text/css" rel="stylesheet" href="../static/css/footer.css" th:href="@{/css/footer.css}"/>
+
+</head>
+<body>
+<div class="logo">
+    <a href="/buyer_index">
+        <img src="../static/img/logo.png" th:src="@{/img/logo.png}"/>
+    </a>
+</div>
+<div id="mainDiv">
+    <div id="loginDiv" align="center" class="loginDiv">
+        <div id="loginTopContentDiv">
+            <div id="commonLoginDiv">
+                <span id="commonLoginSpan" class="showLine">普通登录</span>
+            </div>
+            <div id="phoneLoginDiv">
+                <span id="phoneLoginSpan">手机无密码登录</span>
+            </div>
+        </div>
+        <div id="errorDiv" >
+            <div id="errorDisDiv" class="disappear">
+                <div class="div_error"></div>
+            </div>
+        </div>
+        <div align="center" id="commonFormDiv">
+            <div id="loginIdDiv">
+                <input id="loginId" type="text" placeholder="用户名/手机号" value="15151793609">
+            </div >
+            <div id="pwdDiv">
+                <input type="password" id="pwd" placeholder="密码" value="123456">
+            </div>
+            <div id="btnDiv">
+                <input id="commonLogin" type="button" class="button" value="登录">
+            </div>
+        </div>
+        <div align="center" id="phoneFormDiv" class="disappear">
+            <div id="phoneDiv">
+                <input type="text" placeholder="手机号码" id="tel">
+            </div>
+            <div id="phonePwdDiv">
+                <input id="getActivePwd" type="button" value="获取动态密码" class="button">
+                <input type="text" placeholder="动态密码" id="activePwd">
+            </div>
+            <div>
+                <input id="phoneLogin" type="button" value="登录" class="button">
+            </div>
+        </div>
+        <div id="toRegisterDiv" align="right" >
+            <a href="findPwd_input.html" id="forget" >忘了密码？</a>
+            <span class="dotted">|</span>
+            <a href="/buyer_register" id="register">免费注册</a>
+        </div>
+    </div>
+</div>
+<div th:include="footer :: footer"></div>
+</body>
+</html>

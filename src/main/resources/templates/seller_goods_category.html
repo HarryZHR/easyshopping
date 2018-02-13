@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="goods_category">
+        <link rel="stylesheet" type="text/css" href="../static/css/seller_goods_category.css" th:href="@{/css/seller_goods_category.css}"/>
+        <div>
+            <form action="/goods_publish" method="post">
+                <label>
+                    请选择发布商品的所属分类：<br/>
+                    <select id="select_category" name="goods_type">
+                        <option th:each="goodsType : ${session.goodsTypeList}" th:text="${goodsType.type}">
+                        </option>
+                    </select>
+                </label><br/>
+                <input type="submit" value="确定" class="btn btn-info" id="input_sub" />
+            </form>
+        </div>
+    </div>
+</body>
+</html>

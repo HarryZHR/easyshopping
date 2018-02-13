@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:include="link :: index_header"></header>
+<head>
+    <meta charset="UTF-8">
+    <title>我的购物车</title>
+    <script type="text/javascript" th:src="@{/js/buyer_cart.js}"></script>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/buyer_cart.css}"/>
+</head>
+<body>
+    <div th:include="buyer_top :: buyer_top"></div>
+    <div th:include="buyer_pay_process :: buyer_pay_process"></div>
+    <div id="div_border">
+        <div id="div_null_cart" th:if="${session.cartItems.size() eq 0}">
+            <div id="inner_null_cart">
+                <div id="img_div">
+                    <img th:src="@{img/cart(nothing).png}">
+                </div>
+                <div id="right_null_cart">
+                    <ul>
+                        <li>
+                            <h5>您的购物车还是空的，赶快去挑选商品吧！</h5>
+                        </li>
+                        <li>
+                            <label>去看看优品吧</label>
+                            <a href=" ">首页</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="div_full_cart" th:if="${session.cartItems.size() != 0}">
+            <div class="div_full_cart_top">
+                <span>全部商品(<em id="allGoodsNum" th:text="${session.cartItems.size() eq 0 ? 0 : session.cartItems.size()}"></em>&nbsp;)</span>
+            </div>
+            <div class="div_cart_item">
+                <table class="table_cart_item">
+                    <tr>
+                        <th style="width: 10%">
+                            <div class="firstCheckbox">
+                                <label><input type="checkbox" name="allSelect" class="selectAll">全选</label>
+                            </div>
+                        </th>
+                        <th style="width: 35%;">商品</th>
+                        <th style="width: 10%">商品信息</th>
+                        <th style="width: 10%;">单价(元)</th>
+                        <th style="width: 15%;">数量</th>
+                        <th style="width: 10%;">小计(元)</th>
+                        <th style="width: 10%;">操作</th>
+                    </tr>
+                    <tr>
+                        <td colspan="7" id="store">
+                            <span id="store_tip">店铺：</span>
+                            <a href="" id="store_name"></a>
+                        </td>
+                    </tr>
+                    <tr class="cart_tr">
+                        <td>
+                            <input name="goods" type="checkbox" class="checkbox" value="">
+                        </td>
+                        <td>
+                            <div>
+                                <img class="img_goods" src="" />
+                                <a href=" " class="a_goods_title">${cartItem.key.goods.title }</a>
+                            </div>
+                        </td>
+                        <td class="data">
+                            <p>颜色：
+                                <span>${cartItem.key.color}</span>
+                            </p>
+                            <p>尺码：
+                                <span>${cartItem.key.size}</span>
+                            </p>
+                        </td>
+                        <td class="data">
+                            <span class="real-price">
+                                ${cartItem.key.price}
+                            </span>
+                            <span class="cancel-price">
+                            </span>
+                            <span class="real-price">
+                            </span>
+                        </td>
+                        <td class="data">
+                            <input type="hidden" value="${cartItem.key.colorImg}" class="colorImg">
+                            <input class="goodsId" value="${cartItem.key.goods.id}" type="hidden">
+                            <div id="buy_count">
+                                <span class="sy_minus glyphicon glyphicon-minus" ></span>
+                                <input class="sy_num" type="text" name="number" value="${cartItem.value}" />
+                                <span class="sy_plus glyphicon glyphicon-plus" ></span>
+                                <input type="hidden" value="${cartItem.value}" id="thisBuyCount">
+                            </div>
+                            <span class="count_tip">仅剩${cartItem.key.count}件</span>
+                            <input type="hidden" class="cart_count" value="${cartItem.key.count}">
+                        </td>
+                        <td class="data real_pay">
+                        </td>
+                        <td class="data">
+                            <input value="删除" type="button" class="delBtn">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="tbl_bottom" >
+                            <div class="lastCheckbox">
+                                <input id="lastSelect" type="checkbox" name="allSelect" class="selectAll">
+                                <label>全选</label>
+                                <input type="button" value="删除" class="delAll delBtn" disabled>
+                            </div>
+                        </td>
+                        <td id="right_bottom" colspan="5" class="tblbottom">
+                            <div class="total">
+                                共有
+                                <span id="allBuyCount">0</span>
+                                款商品，总计：
+                            </div>
+                            <div class="allCount">￥0.00</div>
+                            <input id="pay_cart" type="button" class="btn" value="去付款 >" disabled>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <!--<div style="clear: both;"></div>-->
+    </div>
+    <div th:include="footer :: footer"></div>
+</body>
+</html>

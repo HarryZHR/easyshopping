@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.cslg.easyshopping.dao.HostReplyDao">
+	<resultMap id="hostReplyMap" type="edu.cslg.easyshopping.pojo.HostReply">
+		<id property="id" column="id"/>
+		<result property="content" column="content"/>
+		<result property="hostReplyTime" column="hostReplyTime"/>
+		<result property="handImg" column="handImg"/>
+		<association property="reply" javaType="edu.cslg.easyshopping.pojo.Reply" column="reply_id" resultMap="edu.cslg.easyshopping.dao.ReplyDao.replyMap">
+			<id property="id" column="id"/>
+		</association>
+	</resultMap>
+
+</mapper>

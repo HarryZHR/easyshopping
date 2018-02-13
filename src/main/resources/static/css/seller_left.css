@@ -1,0 +1,13 @@
+#accordion .panel{
+    width: 250px;
+}
+#accordion a{
+    text-decoration: none;
+}
+#accordion .panel-body{
+    cursor: pointer;
+    height: 45px;
+}
+.panel-body,.panel-title{
+    text-align: center;
+}

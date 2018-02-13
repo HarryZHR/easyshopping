@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="goods_in_category_list">
+    <link rel="stylesheet" type="text/css" th:href="@{css/buyer_goods_in_category.css}">
+    <div id="div_goods_category_list">
+        <div class="div_goods_in_category" th:each="goods_in_category : ${session.list_goods_category}">
+            <a th:href="@{'buyer_goods_detail'(goodsId=${goods_in_category.id})}">
+                <img class="img_goods_category" src="" th:src="${goods_in_category.goodsImg.img1}">
+            </a>
+            <div class="div_goods_category_info">
+                <div class="div_category_price_pay">
+                    <div class="div_category_price" th:text="'￥' + ${#numbers.formatDecimal(goods_in_category.minPrice,0,2)}"></div>
+                    <div class="div_category_pay" th:text="${goods_in_category.saleCount} + '人付款'"></div>
+                </div>
+                <div class="div_category_title" th:if="${#strings.length(goods_in_category.title) < 12}">
+                    <a class="a_goods_category_title" th:href="@{'buyer_goods_detail'(goodsId=${goods_in_category.id})}" th:text="${goods_in_category.title}"></a>
+                </div>
+                <div class="div_category_title" th:if="${#strings.length(goods_in_category.title) >= 12}">
+                    <a class="a_goods_category_title" th:href="@{'buyer_goods_detail'(goodsId=${goods_in_category.id})}" th:text="${#strings.substring(goods_in_category.title,0,12)} + '...'"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

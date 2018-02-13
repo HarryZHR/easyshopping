@@ -1,0 +1,24 @@
+#div_carousel{
+    width: 78%;
+    margin-left: 11%;
+    height: 100%;
+}
+.carousel-control{
+    width: 10%;
+}
+#div_category{
+    width: 78%;
+    margin-left: 11%;
+    margin-top: 20px;
+}
+.a_category{
+    margin-left: 3.2%;
+}
+.a_category:hover{
+    text-decoration: none;
+    cursor: pointer;
+}
+.img_carousel{
+    width: 22%;
+    height: 10%;
+}

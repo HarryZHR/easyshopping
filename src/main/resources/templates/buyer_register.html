@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>嗨易购-买家注册</title>
+    <!-- JQuery -->
+    <script th:src="@{http://libs.baidu.com/jquery/2.1.4/jquery.min.js}"></script>
+    <!-- 登录界面 -->
+    <link rel="stylesheet" href="../static/css/seller_register.css" th:href="@{/css/seller_register.css}" />
+    <script src="../static/js/seller_register.js" th:src="@{/js/buyer_register.js}"></script>
+    <!-- 页尾 -->
+    <link type="text/css" rel="stylesheet" href="../static/css/footer.css" th:href="@{/css/footer.css}"/>
+</head>
+<body>
+<div class="logo">
+    <img src="../static/img/logo.png" th:src="@{/img/logo.png}"/>
+</div>
+<div id="mainDiv">
+    <div id="registerDiv" align="center" class="loginDiv">
+        <div align="left" id="topDiv" >
+            <span id="spanLogin">欢迎加入嗨易购</span>
+        </div>
+        <div id="errorDiv">
+            <div id="errorDisDiv" class="disappear">
+                <div class="errorImg" >
+                    <img src="../static/img/error.png" th:src="@{/img/error.png}" />
+                </div>
+                <div id="errorContent" class="errorContent"></div>
+            </div>
+        </div>
+        <div align="center" id="formDiv">
+            <div id="telDiv">
+                <input id="tel" type="text" name="tel" placeholder="手机号码">
+            </div>
+            <div id="pwdDiv">
+                <input id="getValidate" type="button" class="button" value="获取验证码">
+                <input id="validate" type="text" name="validation" placeholder="验证码">
+            </div>
+            <div id="btnDiv">
+                <input id="sub" type="button" class="button" value="注册">
+            </div>
+        </div>
+        <div id="agreeDiv">
+            <input type="checkbox" id="agreeBtn" checked>
+            <span>我已阅读并且同意嗨易购注册条款</span>
+        </div>
+        <div id="toLoginDiv" align="right" >
+            <a href="buyer_login" class="link"> << 已有账号，登录 </a>
+        </div>
+    </div>
+</div>
+<div th:include="footer :: footer"></div>
+</body>
+</html>

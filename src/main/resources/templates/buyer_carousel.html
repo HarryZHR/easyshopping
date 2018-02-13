@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="buyer_carousel">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/buyer_carousel.css}">
+        <div id="div_carousel" class="carousel slide" data-interval="3000" data-ride="carousel">
+            <!-- 轮播（Carousel）指标 -->
+            <ol class="carousel-indicators">
+                <li data-target="#div_carousel" data-slide-to="0" class="active"></li>
+                <li data-target="#div_carousel" data-slide-to="1"></li>
+                <li data-target="#div_carousel" data-slide-to="2"></li>
+            </ol>
+            <!-- 轮播（Carousel）项目 -->
+            <div class="carousel-inner">
+                <div class="item active">
+                    <img src="" th:src="@{img/carousel1.png}" />
+                </div>
+                <div class="item">
+                    <img src="" th:src="@{img/carousel2.png}" />
+                </div>
+                <div class="item">
+                    <img src="" th:src="@{img/carousel3.png}" />
+                </div>
+            </div>
+            <!-- 轮播（Carousel）导航 -->
+            <a data-slide="prev" href="#div_carousel" class="left carousel-control">
+                <span class="icon-prev"></span>
+            </a>
+            <a data-slide="next" href="#div_carousel" class="right carousel-control">
+                <span class="icon-next"></span>
+            </a>
+        </div>
+        <div id="div_category">
+            <a class="a_category1">
+                <img class="img_carousel" src="" th:src="@{img/category1.png}" />
+            </a>
+            <a class="a_category">
+                <img class="img_carousel" src="" th:src="@{img/category2.png}" />
+            </a>
+            <a class="a_category">
+                <img class="img_carousel" src="" th:src="@{img/category3.png}" />
+            </a>
+            <a class="a_category">
+                <img class="img_carousel" src="" th:src="@{img/category4.png}" />
+            </a>
+        </div>
+    </div>
+</body>
+</html>

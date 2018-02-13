@@ -1,0 +1,40 @@
+html,head,body{
+    margin: 0;
+    padding: 0;
+}
+#div_seller_top{
+    height: 25px;
+    font-size: 12px;
+    padding-top: 5px;
+}
+#a_nickName{
+    margin-left: 15%;
+}
+#a_firstPage{
+    margin-left: 50%;
+}
+#div_seller_top a{
+    text-decoration: none;
+    color: #949494;
+    cursor: pointer;
+}
+#div_seller_bottom{
+    background-color: #1C86EE;
+}
+#ul_select li{
+    margin-left: 10px;
+}
+#ul_select a{
+    color: white;
+    height: 60px;
+    padding-top: 20px;
+}
+#div_logo{
+    margin-left: 14%;
+}
+#ul_select{
+    margin-left: 5%;
+}
+#ul_select a:hover{
+    background-color: #1874CD;
+}

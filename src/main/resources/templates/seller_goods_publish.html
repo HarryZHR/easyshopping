@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="goods_publish">
+        <link rel="stylesheet" type="text/css" href="../static/css/seller_goods_publish.css" th:href="@{/css/seller_goods_publish.css}"/>
+        <script type="text/javascript" src="../static/js/seller_goods_publish.js" th:src="@{/js/seller_goods_publish.js}"></script>
+        <form id="form_goods_publish" action="/goods_save" method="post" enctype ="multipart/form-data">
+            <label>宝贝标题：<input id="goods_title" type="text" name="title" size="60"/></label><br/>
+            <label>颜色分类：</label>
+            <div class="div_goods_color">
+                <table id="table_goods_color">
+                    <tr id="0" class="tr_goods_color">
+                        <td>
+                            <input type="checkbox" name="goods_color" class="input_check_color" onclick="selectColor($(this))"/>
+                            <input type="text" size="10" class="input_goods_color" placeholder="颜色" onblur="updColor($(this))"/><br/>
+                            <img src=" " class="img_goods_color"/>
+                            <input id="color0" type="file" class="input_up_file" accept="image/gif,image/jpeg,image/jpg,image/png" onchange="upColorImg($(this))"/>
+                            <input type="button" class="btn btn-info input_up_css" value="上传图片">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div th:switch="${session.goods_type}" style="margin-top: 50px">
+                <label class="label_size">尺寸大小：</label>
+                <div class="div_cloth" th:case="上衣">
+                    <div th:each="clothSize : ${session.clothSizes}" class="div_cloth_size">
+                        <input type="checkbox" name="goods_size" class="input_check_size"/>
+                        <label th:text="${clothSize}"></label>
+                    </div>
+                </div>
+                <div class="div_cloth" th:case="裙子">
+                    <div th:each="clothSize : ${session.clothSizes}" class="div_cloth_size">
+                        <input type="checkbox" name="goods_size" class="input_check_size"/>
+                        <label th:text="${clothSize}"></label>
+                    </div>
+                </div>
+                <div class="div_cloth" th:case="裤子">
+                    <div th:each="clothSize : ${session.clothSizes}" class="div_cloth_size">
+                        <input type="checkbox" name="goods_size" class="input_check_size"/>
+                        <label th:text="${clothSize}"></label>
+                    </div>
+                </div>
+                <div class="div_shoe" th:case="鞋子">
+                    <div th:each="shoesSize : ${session.shoesSizes}" class="div_shoe_size">
+                        <input type="checkbox" name="goods_size" class="input_check_size"/>
+                        <label th:text="${shoesSize} + '码'"></label>
+                    </div>
+                </div>
+                <div class="div_child" th:case="童装">
+                    <div th:each="childSize : ${session.childSizes}" class="div_child_size">
+                        <input type="checkbox" name="goods_size" class="input_check_size"/>
+                        <label th:text="${childSize} + 'cm'"></label>
+                    </div>
+                </div>
+            </div>
+            <div id="div_price_count">
+                <label>商品规格：</label>
+                <table id="table_price_count">
+                    <tr id="a_a">
+                        <td>颜色分类</td>
+                        <td>尺码</td>
+                        <td>价格</td>
+                        <td>数量</td>
+                    </tr>
+                </table>
+            </div>
+            <label id="label_description">商品描述：</label><br/>
+            <textarea id="textarea_description" cols="55" rows="4" name="introduce"></textarea>
+            <label id="label_goods_main">商品主图：</label>
+            <div id="div_goods_main_img">
+                <div class="div_goods" th:each="i: ${#numbers.sequence(0,4)}">
+                    <img src="" class="img_goods_main"/>
+                    <input type="file" class="input_up_goods_main" accept="image/gif,image/jpeg,image/jpg,image/png"/>
+                    <i class="i_add_img"></i>
+                    <img class="img_delete" src="../static/img/delete.png" th:src="@{/img/delete.png}"/>
+                    <input type="hidden" th:name="img+${i+1}" class="input_src"/>
+                </div>
+            </div>
+            <div id="div_goods_detail">
+                <label id="label_goods_detail">商品详情图：</label>
+                <div id="div_goods_info">
+                    <div id="div_goods_detail_img"></div>
+                    <div id="div_goods_detail_add">
+                        <input type="file" id="input_up_goods_detail" multiple accept="image/gif,image/jpeg,image/jpg,image/png"/>
+                        <i class="i_add_img"></i>
+                    </div>
+                </div>
+            </div>
+            <input type="submit" value="发布" class="btn btn-info input_sub">
+        </form>
+    </div>
+</body>
+</html>
