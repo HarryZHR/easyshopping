@@ -1,7 +1,11 @@
-#div_goods_list,.div_more{
+#div_goods_list{
     width: 80%;
     margin-left: 10.5%;
     margin-top: 4%;
+}
+.div_more{
+    width: 80%;
+    margin-left: 10.5%;
 }
 .div_goods{
     float: left;

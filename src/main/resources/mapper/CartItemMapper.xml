@@ -20,4 +20,10 @@
 	<select id="listCartItemByBuyerId" resultMap="cartItemMap">
 		SELECT * FROM t_cart_item WHERE buyer_id = #{0};
 	</select>
+	<select id="getCartItemById" resultMap="cartItemMap">
+		SELECT * FROM t_cart_item WHERE id = #{0};
+	</select>
+	<delete id="deleteCartItem">
+		DELETE FROM t_cart_item WHERE id = #{0};
+	</delete>
 </mapper>

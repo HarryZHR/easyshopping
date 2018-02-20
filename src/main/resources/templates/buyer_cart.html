@@ -11,10 +11,11 @@
     <div th:include="buyer_top :: buyer_top"></div>
     <div th:include="buyer_pay_process :: buyer_pay_process"></div>
     <div id="div_border">
-        <div id="div_null_cart" th:if="${session.cartItems.size() eq 0}">
+        <input type="hidden" id="cart_item_id" th:value="${session.cartItems.size()}"/>
+        <div id="div_null_cart">
             <div id="inner_null_cart">
                 <div id="img_div">
-                    <img th:src="@{img/cart(nothing).png}">
+                    <img th:src="@{img/cart(nothing).png}" src="">
                 </div>
                 <div id="right_null_cart">
                     <ul>
@@ -29,12 +30,99 @@
                 </div>
             </div>
         </div>
-        <div id="div_full_cart" th:if="${session.cartItems.size() != 0}">
+        <div id="div_full_cart">
             <div class="div_full_cart_top">
-                <span>全部商品(<em id="allGoodsNum" th:text="${session.cartItems.size() eq 0 ? 0 : session.cartItems.size()}"></em>&nbsp;)</span>
+                <span id="span_cart_goods_num">全部商品(<em id="allGoodsNum" th:text="${session.cartItems.size() eq 0 ? 0 : session.cartItems.size()}"></em>&nbsp;)</span>
             </div>
             <div class="div_cart_item">
-                <table class="table_cart_item">
+                <div class="row">
+                    <div class="col-xs-1">
+                        <label class="label_all_select"><input class="all_check" type="checkbox"/>&nbsp;全选</label>
+                    </div>
+                    <div class="col-xs-4">商品</div>
+                    <div class="col-xs-2">商品信息</div>
+                    <div class="col-xs-1">单价(元)</div>
+                    <div class="col-xs-2">数量</div>
+                    <div class="col-xs-1">小计(元)</div>
+                    <div class="col-xs-1">操作</div>
+                </div>
+                <div class="row div_cart_item_seller" th:each="cartItemMap : ${session.cartItemInSeller}">
+                    <div class="row div_seller_tr">
+                        <div class="col-xs-1">
+                            <label>
+                                <input type="checkbox" class="seller_check"/>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            </label>
+                        </div>
+                        <div class="col-xs-10">
+                            <span class="store_tip">店铺：</span>
+                            <a class="store_name" th:text="${cartItemMap.key.storeName}"></a>
+                        </div>
+                    </div>
+                    <div class="row div_cart_item_tr" th:each="cartItem : ${cartItemMap.value}">
+                        <div class="col-xs-1">
+                            <label class="checkbox_label">
+                                <input type="checkbox" class="checkbox" th:value="${cartItem.id}"/>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            </label>
+                        </div>
+                        <div class="col-xs-4" >
+                            <img class="goods_img" src="" th:src="${cartItem.standard.goods.goodsImg.img1}"/>
+                            <a th:text="${cartItem.standard.goods.title}" class="a_title" th:href="@{'buyer_goods_detail'(goodsId=${cartItem.standard.goods.id})}"></a>
+                        </div>
+                        <div class="col-xs-2">
+                            <div>
+                                <span class="title">尺寸：</span>
+                                <span th:text="${cartItem.standard.size}" class="data"></span>
+                            </div>
+                            <div>
+                                <span class="title">颜色：</span>
+                                <span th:text="${cartItem.standard.color}" class="data"></span>
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <div th:if="${cartItem.standard.goods.discount eq 0}">
+                                <span class="span_real_price" th:text="${#numbers.formatDecimal(cartItem.standard.price,0,2)}"></span>
+                            </div>
+                            <div th:if="${cartItem.standard.goods.discount != 0}">
+                                <span class="span_primary_price" th:text="${#numbers.formatDecimal(cartItem.standard.price,0,2)}"></span>
+                                <span class="span_real_price" th:text="${#numbers.formatDecimal(cartItem.standard.price - cartItem.standard.goods.discount,0,2)}"></span>
+                            </div>
+
+                        </div>
+                        <div class="col-xs-2">
+                            <div class="buy_count" >
+                                <span class="sy_minus glyphicon glyphicon-minus" ></span>
+                                <input class="sy_num" type="text" th:value="${cartItem.buyCount}"/>
+                                <span class="sy_plus glyphicon glyphicon-plus" ></span>
+                                <input class="count" type="hidden" th:value="${cartItem.standard.count}"/>
+                            </div>
+                            <div th:if="${cartItem.standard.count <= 10}">
+                                <span class="span_count_tips" th:text="'仅剩' + ${cartItem.standard.count} + '件'" ></span>
+                            </div>
+                        </div>
+                        <div class="col-xs-1 div_subtotal" th:text="${#numbers.formatDecimal((cartItem.standard.price - cartItem.standard.goods.discount) * cartItem.buyCount,0,2)}"></div>
+                        <div class="col-xs-1">
+                            <a class="a_delete">删除</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="div_cart_bottom">
+                    <div class="col-xs-1 div_bottom_left">
+                        <label class="label_all_select">
+                            <input type="checkbox" class="all_check" />&nbsp;全选</label>
+                    </div>
+                    <div class="col-xs-6 div_bottom_left">
+                        <a id="a_select_delete">删除</a>
+                    </div>
+                    <div class="col-xs-4">
+                        共有&nbsp;<span id="span_cart_item_num">0</span>&nbsp;款商品，总计：&nbsp;&nbsp;<span id="total">￥0.00</span>&nbsp;&nbsp;
+                    </div>
+                    <div class="col-xs-1" id="div_right_bottom">
+                        <input id="to_pay" type="button" value="去付款>" disabled/>
+                    </div>
+                </div>
+                <!--<table class="table_cart_item">
                     <tr>
                         <th style="width: 10%">
                             <div class="firstCheckbox">
@@ -48,15 +136,15 @@
                         <th style="width: 10%;">小计(元)</th>
                         <th style="width: 10%;">操作</th>
                     </tr>
-                    <tr>
+                    <tr th:each="cartItemMap : ${session.cartItemInSeller}">
                         <td colspan="7" id="store">
                             <span id="store_tip">店铺：</span>
-                            <a href="" id="store_name"></a>
+                            <a href="" id="store_name" th:text="${cartItemMap.key.storeName}"></a>
                         </td>
                     </tr>
-                    <tr class="cart_tr">
+                    <tr class="cart_tr" th:text="">
                         <td>
-                            <input name="goods" type="checkbox" class="checkbox" value="">
+                            <input name="goods" type="checkbox" class="checkbox" th:value="${cartItem.key.id}">
                         </td>
                         <td>
                             <div>
@@ -117,7 +205,7 @@
                             <input id="pay_cart" type="button" class="btn" value="去付款 >" disabled>
                         </td>
                     </tr>
-                </table>
+                </table>-->
             </div>
         </div>
         <!--<div style="clear: both;"></div>-->

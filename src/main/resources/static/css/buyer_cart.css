@@ -2,7 +2,7 @@
     width: 100%;
     background-color: #f2f2f2;
     min-height: 475px;
-    padding-top: 5%;
+    padding-top: 3%;
 }
 #div_null_cart{
     width: 80%;
@@ -40,77 +40,93 @@ ul{
 .div_full_cart_top{
     width: 80%;
     margin-left: 10%;
+    height: 30px;
 }
 .div_cart_item{
     width: 80%;
     margin-left: 10%;
     background-color: #fff;
     margin-top: 20px;
+    padding-top: 20px;
 }
-.table_cart_item{
-    width: 100%;
-}
-.table_cart_item th{
-    text-align: center;
-    color: #666;
-    border-color: grey;
-    font-size: 12px;
+.goods_img{
+    width: 40px;
     height: 40px;
-    font-weight: 200;
-    border-bottom: 1px solid #ddd;
+    display: inline-block;
+    vertical-align: middle;
 }
-#store_tip{
-    margin-left: 110px;
+.a_title{
+    display: inline-block;
+    width: 80%;
     font-size: 12px;
-    color: #999;
+    color: #333;
+    text-align: left;
+    vertical-align: middle;
 }
-#store_name{
-    margin-left: 10px;
-    font-size: 12px;
+.a_title:hover{
+    cursor: pointer;
+    text-decoration: none;
+    color: #ff3366;
 }
-#store{
+.div_seller_tr{
     height: 40px;
+    padding-top: 10px;
     border-bottom: 1px solid #ddd;
     border-top: 1px solid #ddd;
 }
-.img_goods{
-    width: 40px;
-    height: 40px;
-}
-.a_goods_title{
-    line-height: 20px;
-    color: #333;
+.store_tip{
+    color: #999;
+    margin-left: 20%;
     font-size: 12px;
-    width: 260px;
-    display: inline-block;
-    margin-left: 20px;
+}
+.store_name{
+    font-size: 12px;
+    color: #333;
+    text-decoration: none;
+}
+.store_name:hover{
+    color: #ff3366;
+    text-decoration: none;
+}
+.row{
+    margin: 0;
+}
+.div_cart_item_tr{
+    height: 80px;
+    padding-top: 15px;
 }
 .data{
     color: #666;
-    text-align: center;
-    font-size: 12px;
-}
-.data p{
     text-align: left;
-    margin-left: 30px;
+    font-size: 12px;
+    display: inline-block;
+    width: 30%;
 }
-.cancel-price{
-    text-decoration: line-through;
-    display: block;
+.title{
+    font-size: 12px;
+    color: #333;
+    display: inline-block;
+    width: 40px;
+    text-align: right;
 }
-.real-price{
+.col-xs-1, .col-xs-2, .col-xs-4{
+    text-align: center;
+}
+.span_primary_price{
+    text-decoration-line: line-through;
+}
+.count_tip{
+    color: #fb5e00;
     font-weight: 700;
-    font-size: 14px;
-}
-.cart_tr{
-    height: 80px;
+    display:block;
+    text-align: center;
 }
 span.sy_minus,span.sy_plus {
     width: 20px;
     height: 27px;
     line-height: 24px;
     text-align: center;
-    display: block;
+    display: inline-block;
     font-size: 14px;
     border: solid 1px #ddd;
     cursor: pointer;
@@ -119,76 +135,95 @@ span.sy_minus,span.sy_plus {
     color: #CDC9C9;
 }
 input.sy_num {
-    width: 44px;
-    height: 17px;
+    width: 20px;
+    height: 20px;
     line-height: 24px;
     text-align: center;
     border: 0;
     padding-top: 5px;
+    outline: none;
 }
-.count_tip{
-    color: #fb5e00;
-    font-weight: 700;
-    display:block;
-    text-align: center;
-    margin-top: 35px;
+.buy_count{
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    width: 68px;
+    margin-left: 28%;
 }
-.real_pay{
-    color: #f13e3a;
-    font-size: 16px!important;
-}
-.checkbox{
-    text-align: center;
-    margin-left: 32px;
-    margin-top: 10%;
-}
-.tbl_bottom{
-    color: #666;
-    border-color: grey;
+.a_delete{
+    color: #333;
+    text-decoration: none;
     font-size: 12px;
-    height: 40px;
-    font-weight: 200;
+}
+.a_delete:hover{
+    color: #ef2f23;
+    text-decoration: none;
+    cursor: pointer;
+}
+.label_all_select{
+    font-weight: 100;
+}
+.checkbox_label{
+    margin-top: 15px;
+}
+#div_cart_bottom{
+    margin-top: 20px;
     border-top: 1px solid #ddd;
 }
-.lastCheckbox{
+input[type='checkbox']{
+    outline: none;
+}input[type='checkbox']:hover{
+    cursor: pointer;
+ }
+#span_cart_goods_num{
     display: inline-block;
-    width: 140px;
-    margin-left: 29px;
+    height: 100%;
+    background-color: #333;
+    color: #fff;
+    padding-top: 5px;
+    width: 120px;
+    text-align: center;
+    border-radius: 5px;
 }
-.lastCheckbox input,label{
-    float: left;
-}
-#right_bottom>div,input{
-    float: left;
-}
-.total{
-    color: #666;
+.span_count_tips{
+    color: #fb5e00;
     font-size: 12px;
-    width:130px;
-    margin-left: 250px;
-    margin-top: 20px;
+    font-weight: 700;
+    text-align: center;
 }
-.total span{
-    color: #f36;
+#total{
+    font-size: 24px;
+    color: #ef2f23;
+    font-weight: 700;
+    vertical-align: middle;
 }
-.btn{
-    float: right;
-    border: 0;
-    width: 152px;
-    height: 50px;
+#to_pay{
+    height: 100%;
     background: #ddd;
     color: #fff;
     font-size: 20px;
+    font-weight: 700;
+    border: 0;
+    display: inline-block;
+    float: right;
+    padding: 5px 10px;
+    outline: none;
 }
-#buy_count span,input{
-    float: left;
+#div_right_bottom{
+    padding-right: 0;
 }
-#buy_count{
-    border-bottom: 1px solid #ddd;
-    border-top: 1px solid #ddd;
-    width: 88px;
-    height:26px;
-    margin-left: 50px;
-    float: left;
-    margin-top: 4px;
+.div_bottom_left{
+    margin-top: 10px;
+}
+a:hover{
+    cursor: pointer;
+}
+#a_select_delete{
+    color: #333;
+    font-size: 12px;
+}
+#a_select_delete:hover{
+    color: #ff3366;
+}
+#span_cart_item_num{
+    color: #ff3366;
 }

@@ -34,4 +34,17 @@ public interface CartItemDao {
      * @return 购物详情
      */
     List<CartItem> listCartItemByBuyerId(Integer buyerId);
+
+    /**
+     * 通过id获取购物车详情
+     * @param id 购物车id
+     * @return 购物车详情对象
+     */
+    CartItem getCartItemById(Integer id);
+
+    /**
+     * 删除购物车详情
+     * @param id 购物车详情
+     */
+    void deleteCartItem(Integer id);
 }

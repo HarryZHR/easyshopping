@@ -47,4 +47,20 @@ public class CartItemService {
         return cartItemDao.listCartItemByBuyerId(buyerId);
     }
 
+    /**
+     * 通过id获取购物车详情
+     * @param id 购物车id
+     * @return 购物车详情对象
+     */
+    public CartItem getCartItemById(Integer id){
+        return cartItemDao.getCartItemById(id);
+    }
+
+    /**
+     * 删除购物车详情
+     * @param id 购物车详情
+     */
+    public void deleteCartItem(Integer id){
+        cartItemDao.deleteCartItem(id);
+    }
 }

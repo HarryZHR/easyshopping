@@ -57,7 +57,6 @@ public class BuyerController {
         List<Goods> goodsList = GoodsCountUtil.setGoodsListCount(goodsService.listGoodsAll(pageSize * (currPage - 1), pageSize));
         session.setAttribute("buyerGoodsList",goodsList);
         session.setAttribute("buyerPageCount",pageCount);
-        session.setAttribute("buyerCurrPage",currPage);
         return "buyer_index";
     }
 
@@ -80,7 +79,6 @@ public class BuyerController {
             currPage = pageCount;
         }
         List<Goods> goodsList = GoodsCountUtil.setGoodsListCount(goodsService.listGoodsAll(pageSize * (currPage - 1), pageSize));
-        session.setAttribute("buyerCurrPage",currPage);
         session.setAttribute("buyerNewGoodsList",goodsList);
         if(currPage < pageCount){
             return "true";
@@ -188,12 +186,17 @@ public class BuyerController {
             Integer buyerCount = buyerService.buyerLikeSellerOr(currBuyer.getId(),goods.getSeller().getId());
             if(buyerCount > 0){
                 session.setAttribute("buyerLikeSeller","like");
+            }else {
+                session.setAttribute("buyerLikeSeller","dislike");
             }
             // 当前买家是否收藏商品
             Integer goodsCount = buyerService.buyerLikeGoodsOr(currBuyer.getId(),goodsId);
             if(goodsCount > 0){
                 session.setAttribute("buyerLikeGoods","like");
+            }else {
+                session.setAttribute("buyerLikeGoods","dislike");
             }
+
         }
         return "buyer_goods_detail";
     }
@@ -471,21 +474,58 @@ public class BuyerController {
         Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
         if(currBuyer != null){
             List<CartItem> cartItems = cartItemService.listCartItemByBuyerId(currBuyer.getId());
-            Map<Seller,CartItem> cartItemInSellerMap = new HashMap<>();
-            Seller seller = null;
-            for (CartItem cartItem: cartItems) {
-                seller = cartItem.getStandard().getGoods().getSeller();
-                if(cartItemInSellerMap.keySet().contains(seller)) {
-                    cartItemInSellerMap.put(seller,cartItem);
-                }else{
-                    Seller newSeller = cartItem.getStandard().getGoods().getSeller();
-                    cartItemInSellerMap.put(newSeller,cartItem);
-                }
-            }
             session.setAttribute("cartItems",cartItems);
-            session.setAttribute("cartItemInsellerMap",cartItemInSellerMap);
+            Map<Seller,List<CartItem>> cartItemsInSeller = new HashMap<>();
+            for (CartItem cartItem : cartItems){
+                Seller seller = cartItem.getStandard().getGoods().getSeller();
+                List<CartItem> cartItemList = cartItemsInSeller.get(seller);
+                if(null == cartItemList){
+                    cartItemList = new ArrayList<>();
+                    cartItemList.add(cartItem);
+                }else {
+                    cartItemList.add(cartItem);
+                }
+                cartItemsInSeller.put(seller,cartItemList);
+            }
+            session.setAttribute("cartItemInSeller",cartItemsInSeller);
             return "buyer_cart";
         }
         return "buyer_login";
+    }
+
+    @ResponseBody
+    @GetMapping(value = "update_cart_num")
+    public String updateCartNum(Integer cartId, Integer num){
+        CartItem cartItem = cartItemService.getCartItemById(cartId);
+        cartItem.setBuyCount(num);
+        cartItemService.updateCartItem(cartItem);
+        return "success";
+    }
+
+    @ResponseBody
+    @GetMapping(value = "delete_cart_item")
+    public String deleteCartItem(HttpSession session,Integer cartId){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        cartItemService.deleteCartItem(cartId);
+        List<CartItem> cartItems = cartItemService.listCartItemByBuyerId(currBuyer.getId());
+        if (cartItems.size() == 0){
+            return "zero";
+        }
+        return "success";
+    }
+
+    @ResponseBody
+    @GetMapping(value = "delete_select_cart_item")
+    public String deleteSelectCartItem(String cartItemIdStr,HttpSession session){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        String[] cartItemIdArr = cartItemIdStr.split("_");
+        for (String cartItemId : cartItemIdArr){
+            cartItemService.deleteCartItem(Integer.valueOf(cartItemId));
+        }
+        List<CartItem> cartItems = cartItemService.listCartItemByBuyerId(currBuyer.getId());
+        if (cartItems.size() == 0){
+            return "zero";
+        }
+        return "success";
     }
 }

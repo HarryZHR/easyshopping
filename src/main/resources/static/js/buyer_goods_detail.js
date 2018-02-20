@@ -145,11 +145,11 @@ $(function(){
             $("#ul_extra").find("li").removeClass('li_hover');
             $("#li_extra1").addClass('li_hover');
         }
-        if(extraTop - parseInt(height2) >= 0 && extraTop - parseInt(height3) < 0){
+        if(extraTop - parseInt(height2.toString()) >= 0 && extraTop - parseInt(height3) < 0){
             $("#ul_extra").find("li").removeClass('li_hover');
             $("#li_extra2").addClass('li_hover');
         }
-        if(extraTop - parseInt(height3) + 1 >= 0){
+        if(extraTop - parseInt(height3.toString()) + 1 >= 0){
             $("#ul_extra").find("li").removeClass('li_hover');
             $("#li_extra3").addClass('li_hover');
         }
@@ -257,6 +257,9 @@ $(function(){
                     }
                 });
         }
+    });
+    $("#toCart").on("click",function () {
+        window.location.href = "buyer_cart";
     });
 });
 

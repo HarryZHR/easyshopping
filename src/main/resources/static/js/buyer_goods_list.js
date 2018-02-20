@@ -1,6 +1,9 @@
 $(function() {
+    // 点击加载更多
     $(".span_load_more").on("click",function(){
-        var currPage = $(this).prev().val() + 1;
+        var $currPage = $(this).prev();
+        var currPage = parseInt($currPage.val()) + 1;
+        console.log("当前页码："+currPage);
         $(this).html('加载中...');
         $.get("buyer_load_goods",
             {"currPage":currPage},
@@ -12,6 +15,7 @@ $(function() {
                         success: function (returnData) {
                             $(".div_more").append(returnData);
                             $(".span_load_more").html('加载更多');
+                            $currPage.val(currPage);
                         }
                     });
                 }else if(data === "false"){
