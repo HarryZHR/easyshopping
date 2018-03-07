@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <div class="main" th:fragment="buyer_save_address">
+        <link rel="stylesheet" type="text/css" th:href="@{css/buyer_save_address.css}"/>
+        <script type="text/javascript" th:src="@{/dist/distpicker.data.js}"></script>
+        <script type="text/javascript" th:src="@{/dist/distpicker.js}"></script>
+        <script type="text/javascript" th:src="@{js/buyer_save_address.js}"></script>
+        <div class="row div_tr" id="distpicker">
+            <div class="col-xs-2 td_width">
+                <label for="province">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;省：</label>
+            </div>
+            <div class="col-xs-8">
+                <select id="province"></select>
+                <label for="city" class="select_label">市：</label>
+                <select id="city"></select>
+                <label for="district" class="select_label">区：</label>
+                <select id="district"></select>
+            </div>
+        </div>
+        <div class="row div_tr">
+            <div class="col-xs-2 td_width">
+                <label class="street_label">&nbsp;&nbsp;街道地址：</label>
+            </div>
+            <div class="col-xs-5">
+                <textarea id="addressStreet" cols="50" rows="4" name="street"></textarea>
+            </div>
+        </div>
+        <div class="row div_tr">
+            <div class="col-xs-2 td_width"></div>
+            <div class="col-xs-5" id="div_tip">请填写街道地址，最少5个字，最多不能超过100个字</div>
+        </div>
+        <div class="row div_tr">
+            <div class="col-xs-2 td_width">
+                <label>收货人姓名：</label>
+            </div>
+            <div class="col-xs-5">
+                <input id="receiver" type="text" name="receiver" class="text_info">
+            </div>
+        </div>
+        <div class="row div_tr">
+            <div class="col-xs-2 td_width">
+                <label class="tel_label">&nbsp;&nbsp;&nbsp;手机号码：</label>
+            </div>
+            <div class="col-xs-5">
+                <input id="tel" type="text" name="tel" class="text_info">
+            </div>
+        </div>
+        <div class="row div_tr">
+            <div class="col-xs-2 td_width">
+                &nbsp;
+            </div>
+            <div class="col-xs-5">
+                <input type="button" value="确认" id="subAdd" class="address-btn">
+                <input type="button" value="取消" id="cancelAdd" class="address-btn">
+                <span id="add_error"></span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

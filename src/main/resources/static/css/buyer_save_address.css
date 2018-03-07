@@ -1,0 +1,73 @@
+#distpicker{
+    display: block;
+    margin-top: 0;
+}
+#distpicker div{
+    float: left;
+}
+textarea{
+    outline: none;
+    border: 1px solid #ddd;
+    resize: none;
+    font-size: 12px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+select{
+    font-size: 12px;
+    height: 25px;
+}
+.street_label{
+    display: block;
+    float: left;
+}
+label{
+    font-size: 12px;
+    color: rgb(102, 102, 102);
+}
+input,select{
+    outline: none;
+    border: 1px solid #ddd;
+}
+.address-btn{
+    font-size: 16px;
+    font-weight: 700;
+    width: 104px;
+    height: 34px;
+}
+#subAdd{
+    background-color: rgb(255, 165, 0);
+    color: #fff;
+    border: 0;
+}
+#cancelAdd{
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #ddd;
+}
+#province,#city,#district{
+    font-size: 12px;
+}
+a{
+    color: #333;
+}
+#add_error{
+    color: #f36;
+    font-size: 12px;
+    margin-left: 10px;
+    display: none;
+}
+.text_info{
+    font-size: 12px;
+}
+.div_tr{
+    margin-top: 1%;
+}
+.td_width{
+    width: 110px;
+}
+#div_tip{
+    font-size: 12px;
+    color: #333;
+    padding-left: 30px;
+}

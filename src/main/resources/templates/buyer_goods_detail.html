@@ -53,8 +53,8 @@
             </div>
             <div id="div_goods_right">
                 <div id="div_goods_right_topper">
-                    <form action="" method="post" id="subOrderForm">
-                        <input id="goodsId" th:value="${session.this_goods.id}" type="hidden" name="id" />
+                    <form action="buyer_straight_submit_order" method="post" id="subOrderForm">
+                        <input id="goodsId" th:value="${session.this_goods.id}" type="hidden" name="goods_id" />
                         <div class="div_right_inner" id="div_title">
                             <span class="span_title" th:text="${session.this_goods.title}"></span>
                         </div>
@@ -68,7 +68,7 @@
                                 <span class="span_real_price" th:if="${session.this_goods.discount != 0}" th:text="'￥' +${#numbers.formatDecimal(session.this_goods.minPrice - session.this_goods.discount,0,2)}"></span>
                             </div>
                         </div>
-                        <div class="div_right_inner">
+                        <div class="div_right_inner" id="div_sell_num">
                             <span class="span_goods_th">月销量</span>
                             <span class="span_goods_td"></span>
                             <span class="span_goods_th">累计评价</span>
@@ -103,7 +103,7 @@
                             <span id="span_error_num">库存不足</span>
                         </div>
                         <div id="div_submit">
-                            <input class="input_submit btn-input" type="button" th:value="确认"/>
+                            <input id="to_submit" class="input_submit btn-input" type="button" th:value="确认"/>
                         </div>
                         <div class="div_right_inner">
                             <div th:if="${session.this_goods.status eq true}">
@@ -229,7 +229,7 @@
                     <div id="div_extra">
                         <div id="div_extra_top">
                             <img id="add_img" th:src="@{img/addCart.png}" src=""/>
-                            <span>加入购物车</span>
+                            <span class="span_cart">加入购物车</span>
                         </div>
                         <div id="div_extra_bottom">
                             <ul id="ul_extra">

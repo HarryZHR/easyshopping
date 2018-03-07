@@ -1,6 +1,6 @@
 package edu.cslg.easyshopping.controller;
 
-import edu.cslg.easyshopping.dao.BuyerDetailDao;
+import com.sun.org.apache.xpath.internal.operations.Or;
 import edu.cslg.easyshopping.pojo.*;
 import edu.cslg.easyshopping.service.*;
 import edu.cslg.easyshopping.util.GoodsCountUtil;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -37,6 +38,14 @@ public class BuyerController {
     private StandardService standardService;
     @Resource
     private CartItemService cartItemService;
+    @Resource
+    private AddressService addressService;
+    @Resource
+    private OrderService orderService;
+    @Resource
+    private OrderItemService orderItemService;
+    @Resource
+    private OrderStatusService orderStatusService;
     /**
      * 跳转买家的首页
      * @return 首页
@@ -220,11 +229,50 @@ public class BuyerController {
     @ResponseBody
     @GetMapping(value = "get_standard_count")
     public String getStandardCount(Integer goodsId, String color, String size){
-        Standard standard = standardService.getStandardToCart(goodsId, color, size);
+        Standard standard = standardService.getStandardByIdAndSizeAndColor(goodsId, size, color);
         Integer count = standard.getCount();
         return count.toString();
     }
 
+    /**
+     * 通过商品id和颜色判断哪些尺寸没有库存
+     * @param goodsId 商品的id
+     * @param color 颜色
+     * @return 没有库存的尺寸的字符串
+     */
+    @ResponseBody
+    @GetMapping(value = "check_standard_count_by_color")
+    public String checkStandardCountByColor(Integer goodsId, String color){
+        List<Standard> standards = standardService.listStandardByGoodsIdAndColor(goodsId,color);
+        StringBuilder size = new StringBuilder();
+        for(Standard standard : standards){
+            Integer count = standard.getCount();
+            if(count <= 1){
+                size.append(standard.getSize()).append("_");
+            }
+        }
+        return size.toString();
+    }
+
+    /**
+     * 通过商品id和尺寸确定哪些颜色没有库存
+     * @param goodsId 商品id
+     * @param size 尺寸
+     * @return 没有库存的颜色的字符串
+     */
+    @ResponseBody
+    @GetMapping(value = "check_standard_count_by_size")
+    public String checkStandardCountBySize(Integer goodsId, String size){
+        List<Standard> standards = standardService.listStandardByGoodsIdAndSize(goodsId, size);
+        StringBuilder color = new StringBuilder();
+        for (Standard standard : standards){
+            Integer count = standard.getCount();
+            if(count <= 1){
+                color.append(standard.getColor()).append("_");
+            }
+        }
+        return color.toString();
+    }
     /* 下面是需要用户登录的模块 */
 
     /**
@@ -451,7 +499,7 @@ public class BuyerController {
     public String addCart(String color, String size, Integer goodsId, Integer buyCount,HttpSession session){
         Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
         if(currBuyer != null){
-            Standard standard = standardService.getStandardToCart(goodsId, color, size);
+            Standard standard = standardService.getStandardByIdAndSizeAndColor(goodsId, size, color);
             CartItem cartItem = cartItemService.getCartItemByStandardIdAndBuyerId(currBuyer.getId(),standard.getId());
             if(cartItem != null){
                 cartItem.setBuyCount(cartItem.getBuyCount() + buyCount);
@@ -493,6 +541,12 @@ public class BuyerController {
         return "buyer_login";
     }
 
+    /**
+     * 更新购物车的购买数量
+     * @param cartId 购物车的id
+     * @param num 更新后的数量
+     * @return 返回更新成功
+     */
     @ResponseBody
     @GetMapping(value = "update_cart_num")
     public String updateCartNum(Integer cartId, Integer num){
@@ -502,6 +556,12 @@ public class BuyerController {
         return "success";
     }
 
+    /**
+     * 删除一条购物车详情
+     * @param session 保存作用域
+     * @param cartId 购物车的id
+     * @return 返回当前购物车是否还有0条记录
+     */
     @ResponseBody
     @GetMapping(value = "delete_cart_item")
     public String deleteCartItem(HttpSession session,Integer cartId){
@@ -514,18 +574,271 @@ public class BuyerController {
         return "success";
     }
 
+    /**
+     * 删除多条购物车详情
+     * @param cartItemIdStr 详情的id的字符串
+     * @return 返回当前购物车是否还有0条记录
+     */
     @ResponseBody
     @GetMapping(value = "delete_select_cart_item")
     public String deleteSelectCartItem(String cartItemIdStr,HttpSession session){
         Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
         String[] cartItemIdArr = cartItemIdStr.split("_");
         for (String cartItemId : cartItemIdArr){
-            cartItemService.deleteCartItem(Integer.valueOf(cartItemId));
+            if(cartItemId != null && !"".equals(cartItemId)){
+                cartItemService.deleteCartItem(Integer.valueOf(cartItemId));
+            }
         }
         List<CartItem> cartItems = cartItemService.listCartItemByBuyerId(currBuyer.getId());
         if (cartItems.size() == 0){
             return "zero";
         }
         return "success";
+    }
+
+    /**
+     * 跳转提交订单的页面
+     * @return 提交订单的页面
+     */
+    @GetMapping(value = "buyer_submit_order")
+    public String buyerSubmitOrder(HttpSession session,String cartItemIdStr){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if(currBuyer != null){
+            // 获取用户的收货地址
+            List<Address> addresses = addressService.listAddressByBuyerId(currBuyer.getId());
+            session.setAttribute("addresses",addresses);
+            Address addressDefault = addressService.getDefaultAddress();
+            session.setAttribute("addressDefault",addressDefault);
+            List<Address> addressNonDefault = addressService.listNonDefaultAddress();
+            session.setAttribute("addressNonDefault",addressNonDefault);
+
+            // 解析购物车中选择的商品
+            session.setAttribute("cartItemIdStr",cartItemIdStr);
+            String[] cartItemIdArr = cartItemIdStr.split("_");
+            Map<Seller,List<CartItem>> cartItemsInSeller = new HashMap<>();
+            Float totalMoney = 0.0f;
+            for(String cartItemId : cartItemIdArr){
+                if(cartItemId != null && !"".equals(cartItemId)){
+                    CartItem cartItem = cartItemService.getCartItemById(Integer.parseInt(cartItemId));
+                    Seller seller = cartItem.getStandard().getGoods().getSeller();
+                    List<CartItem> cartItemList = cartItemsInSeller.get(seller);
+                    Standard standard = cartItem.getStandard();
+                    totalMoney += cartItem.getBuyCount() * (standard.getPrice() - standard.getGoods().getDiscount());
+                    if(null == cartItemList){
+                        cartItemList = new ArrayList<>();
+                        cartItemList.add(cartItem);
+                    }else {
+                        cartItemList.add(cartItem);
+                    }
+                    cartItemsInSeller.put(seller,cartItemList);
+                }
+            }
+            session.setAttribute("cartItemSelectInSeller",cartItemsInSeller);
+            DecimalFormat decimalFormat = new DecimalFormat(".00");
+            String totalMoneyStr = decimalFormat.format(totalMoney);
+            session.setAttribute("totalMoney",totalMoneyStr);
+            return "buyer_submit_order :: buyer_submit_order";
+        }
+        return "buyer_login";
+    }
+
+    /**
+     * 保存地址
+     * @param address 地址的参数
+     * @param session 保存作用域
+     * @return 保存成功与否
+     */
+    @ResponseBody
+    @GetMapping(value = "buyer_save_address")
+    public String buyerSaveAddress(Address address,HttpSession session){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if(currBuyer != null){
+            List<Address> addresses = addressService.listAddressByBuyerId(currBuyer.getId());
+            address.setBuyer(currBuyer);
+            address.setDelFlag(true);
+            if(addresses.size() != 0){
+                address.setDefaultAddress(false);
+            }else {
+                address.setDefaultAddress(true);
+            }
+            addressService.saveAddress(address);
+            return "success";
+        }
+        return "fail";
+    }
+
+    /**
+     * 生成订单
+     * @param addressId 地址id
+     * @param orderAll 所有的订单的信息
+     * @return 生成与否
+     */
+    @GetMapping(value = "buyer_save_order")
+    public String buyerSaveOrder(HttpSession session,Integer addressId,String orderAll){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if(currBuyer != null) {
+            String cartItemIdStr = (String) session.getAttribute("cartItemIdStr");
+            // 保存订单
+            Address address = addressService.getAddressById(addressId);
+            String[] orderInfoArr = orderAll.split("_");
+            List<Order> orders = new ArrayList<>();
+            for (String orderInfo : orderInfoArr){
+                Order order = new Order();
+                Seller seller = sellerService.getSellerById(Integer.parseInt(orderInfo.split(":")[0]));
+                String remark = orderInfo.split(":")[1];
+                order.setSeller(seller);
+                order.setRemark(remark);
+                order.setOrderTime(new Date());
+                String orderNum = String.valueOf(System.currentTimeMillis()) + String.format("%03d", currBuyer.getId() % 1000);
+                order.setOrderNum(orderNum);
+                order.setDelFlag(true);
+                order.setAddress(address);
+                order.setBuyer(currBuyer);
+                orderService.saveOrder(order);
+                order.setId(order.getId());
+                orders.add(order);
+            }
+            // 购物车中购买付款的流程 保存订单详情
+            StringBuilder orderItemIdStr = new StringBuilder();
+            if(cartItemIdStr != null){
+                String[] cartItemIdArr = cartItemIdStr.split("_");
+                for(String cartItemId : cartItemIdArr){
+                    OrderItem orderItem = new OrderItem();
+                    CartItem cartItem = cartItemService.getCartItemById(Integer.parseInt(cartItemId));
+                    orderItem.setBuyCount(cartItem.getBuyCount());
+                    orderItem.setOrderStatus(orderStatusService.getOrderStatusById(1));
+                    orderItem.setStandard(cartItem.getStandard());
+                    for (Order order : orders){
+                        if(order.getSeller().getId().equals(cartItem.getStandard().getGoods().getSeller().getId())){
+                            orderItem.setOrder(order);
+                        }
+                    }
+                    orderItemService.saveOrderItem(orderItem);
+                    Goods goods = orderItem.getStandard().getGoods();
+                    goods.setSaleCount(goods.getSaleCount() + 1);
+                    goodsService.updateGoods(goods);
+                    orderItemIdStr.append(orderItem.getId()).append("_");
+                    Standard standard = orderItem.getStandard();
+                    standard.setCount(orderItem.getStandard().getCount() - cartItem.getBuyCount());
+                    standardService.updateStandard(standard);
+                    cartItemService.deleteCartItem(Integer.parseInt(cartItemId));
+                }
+                // 直接购买付款的流程 保存订单详情
+            }else {
+                CartItem cartItemStraight = (CartItem) session.getAttribute("cartItemStraight");
+                OrderItem orderItem = new OrderItem();
+                orderItem.setBuyCount(cartItemStraight.getBuyCount());
+                orderItem.setOrderStatus(orderStatusService.getOrderStatusById(1));
+                orderItem.setStandard(cartItemStraight.getStandard());
+                for (Order order : orders){
+                    orderItem.setOrder(order);
+                }
+                orderItemService.saveOrderItem(orderItem);
+                Goods goods = orderItem.getStandard().getGoods();
+                goods.setSaleCount(goods.getSaleCount() + 1);
+                goodsService.updateGoods(goods);
+                orderItemIdStr.append(orderItem.getId()).append("_");
+                Standard standard = orderItem.getStandard();
+                standard.setCount(orderItem.getStandard().getCount() - cartItemStraight.getBuyCount());
+                standardService.updateStandard(standard);
+            }
+            session.setAttribute("orderItemIdStr",orderItemIdStr);
+            session.setAttribute("orders",orders);
+            return "buyer_pay_order :: buyer_pay_order";
+        }
+        return "buyer_login";
+    }
+
+    /**
+     * 直接提交商品购买
+     * @param num 购买商品的数量
+     * @param goods_color 商品的颜色
+     * @param goods_size 商品的尺码
+     * @param goods_id 商品的id
+     * @return 确认订单的页面
+     */
+    @PostMapping(value = "buyer_straight_submit_order")
+    public String buyerStraightSubmitOrder(HttpSession session,Integer num,String goods_color,String goods_size,Integer goods_id){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if(currBuyer != null){
+            // 获取用户的收货地址
+            List<Address> addresses = addressService.listAddressByBuyerId(currBuyer.getId());
+            session.setAttribute("addresses",addresses);
+            Address addressDefault = addressService.getDefaultAddress();
+            session.setAttribute("addressDefault",addressDefault);
+            List<Address> addressNonDefault = addressService.listNonDefaultAddress();
+            session.setAttribute("addressNonDefault",addressNonDefault);
+            // 提交的商品
+            Standard standard = standardService.getStandardByIdAndSizeAndColor(goods_id,goods_size,goods_color);
+            CartItem cartItem = new CartItem();
+            cartItem.setStandard(standard);
+            cartItem.setBuyCount(num);
+            cartItem.setBuyer(currBuyer);
+            Seller seller = standard.getGoods().getSeller();
+            Map<Seller,List<CartItem>> cartItemSelectInSeller = new HashMap<>();
+            List<CartItem> cartItems = new ArrayList<>();
+            cartItems.add(cartItem);
+            cartItemSelectInSeller.put(seller,cartItems);
+            session.setAttribute("cartItemStraight",cartItem);
+            session.setAttribute("cartItemSelectInSeller",cartItemSelectInSeller);
+            //构造方法的字符格式这里如果小数不足2位,会以0补足.
+            DecimalFormat decimalFormat = new DecimalFormat(".00");
+            Float totalMoney = num * (standard.getPrice() - standard.getGoods().getDiscount());
+            String totalMoneyStr = decimalFormat.format(totalMoney);
+            session.setAttribute("totalMoney",totalMoneyStr);
+            return "buyer_submit_order";
+        }
+        return "buyer_login";
+    }
+
+    /**
+     * 付款
+     * @param session 保存作用域
+     * @param orderItemIdStr 订单详情id
+     * @return 付款的页面
+     */
+    @GetMapping(value = "buyer_pay_money")
+    public String buyerPayMoney(HttpSession session, String orderItemIdStr){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if(currBuyer != null){
+            String[] orderItemIdArr = orderItemIdStr.split("_");
+            for(String orderItemId : orderItemIdArr){
+                OrderItem orderItem = orderItemService.getOrderItemById(Integer.parseInt(orderItemId));
+                orderItem.setOrderStatus(orderStatusService.getOrderStatusById(2));
+                orderItemService.updateOrderItem(orderItem);
+            }
+            return "buyer_pay_success :: buyer_pay_success";
+        }
+        return "buyer_login";
+    }
+
+    @GetMapping(value = "buyer_user_info")
+    public String buyerUserInfo(HttpSession session){
+
+        return "buyer_info";
+    }
+
+    @GetMapping(value = "buyer_order_show")
+    public String buyerOrderAll(Integer orderCurrPage, HttpSession session,Integer orderStatus){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if(currBuyer != null){
+            Integer pageSize = 5;
+            Integer goodsCount = orderService.countOrderByStatusAndBuyer(currBuyer.getId(),null);
+            Integer pageCount = (goodsCount + pageSize - 1) / pageSize;
+            if(orderCurrPage == null || orderCurrPage <= 0){
+                orderCurrPage = 1;
+            }
+            if(orderCurrPage > pageCount){
+                orderCurrPage = pageCount;
+            }
+            List<Order> orders = orderService.listOrderByStatusAndBuyer(currBuyer.getId(),pageSize * (orderCurrPage - 1), pageSize,null);
+            session.setAttribute("orders",orders);
+            session.setAttribute("orderCurrPage",orderCurrPage);
+            session.setAttribute("orderPageCount",pageCount);
+            session.setAttribute("orderStatus",orderStatus);
+            session.setAttribute("order_type","buyer_order_show");
+            return "buyer_info";
+        }
+        return "buyer_login";
     }
 }

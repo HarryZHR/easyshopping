@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>支付订单</title>
+
+</head>
+<body>
+    <div th:fragment="buyer_pay_order">
+        <link rel="stylesheet" type="text/css" th:href="@{css/buyer_pay_order.css}"/>
+        <script type="text/javascript" th:src="@{jquery/jquery_validate.js}"></script>
+        <div class="contain">
+            <div class="inner">
+                <input id="orderItemIdStr" type="hidden" th:value="${session.orderItemIdStr}"/>
+                <div >
+                    <span class="moneyTip">本次订单需要支付的金额为：<span id="money" th:text="${session.totalMoney}"></span>元</span>
+                </div>
+                <div id="payPassword_container" class="alieditContainer clearfix" data-busy="0">
+                    <label class="i-block">支付密码：</label>
+                    <div class="i-block" data-error="i_error">
+                        <div class="i-block six-password">
+                            <input class="i-text sixDigitPassword" id="payPassword_rsainput" type="password" autocomplete="off" required="required" value="" name="payPassword_rsainput" data-role="sixDigitPassword" tabindex="" maxlength="6" minlength="6" aria-required="true">
+                            <div tabindex="0" class="sixDigitPassword-box" style="width: 180px;">
+                                <i class="i_first"><b class="b_hide"></b></i>
+                                <i class="i"><b class="b_hide"></b></i>
+                                <i class="i"><b class="b_hide"></b></i>
+                                <i class="i"><b class="b_hide"></b></i>
+                                <i class="i"><b class="b_hide"></b></i>
+                                <i class="i"><b class="b_hide"></b></i>
+                                <span id="cardwrap" data-role="cardwrap"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="button" class="sub_pay" value="确认付款"/>
+            </div>
+        </div>
+        <script type="text/javascript" th:src="@{js/buyer_pay_order.js}"></script>
+    </div>
+</body>
+</html>

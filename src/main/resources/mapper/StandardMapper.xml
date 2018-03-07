@@ -20,7 +20,20 @@
 	<select id="getStandardById" resultMap="standardMap">
 		SELECT * FROM t_standard WHERE id = #{0}
 	</select>
-	<select id="getStandardToCart" resultMap="standardMap">
+	<!--<select id="getStandardToCart" resultMap="standardMap">
 		SELECT * FROM t_standard WHERE goods_id = #{goodsId} AND color = #{color} AND size = #{size};
+	</select>-->
+	<select id="getStandardByIdAndSizeAndColor" resultMap="standardMap">
+		SELECT * FROM t_standard WHERE goods_id = #{goodsId} AND size = #{size} AND color = #{color};
 	</select>
+	<update id="updateStandard" parameterType="edu.cslg.easyshopping.pojo.Standard">
+		UPDATE t_standard SET count = #{count} WHERE id = #{id};
+	</update>
+	<select id="listStandardByGoodsIdAndColor" resultMap="standardMap">
+		SELECT * FROM t_standard WHERE goods_id = #{goodsId} AND color = #{color};
+	</select>
+	<select id="listStandardByGoodsIdAndSize" resultMap="standardMap">
+		SELECT * FROM t_standard WHERE goods_id = #{goodsId} AND size = #{size};
+	</select>
+
 </mapper>

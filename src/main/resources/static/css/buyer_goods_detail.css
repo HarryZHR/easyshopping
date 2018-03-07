@@ -525,3 +525,11 @@ input.sy_num {
     font-size: 20px;
     outline: none;
 }
+.disable{
+    color: #e0e0e0;
+    border: 1px solid #dddddd;
+    opacity: 0.5;
+}
+.disable:hover{
+    cursor: default;
+}

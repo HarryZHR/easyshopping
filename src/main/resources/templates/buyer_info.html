@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:include="link :: index_header"></header>
+<head>
+    <meta charset="UTF-8">
+    <title>订单列表-嗨易购</title>
+    <style>
+        #div-left{
+            width: 25%;
+            float: left;
+        }
+        .div-right{
+            width: 75%;
+            float: right;
+            padding-right: 11%;
+        }
+    </style>
+</head>
+<body>
+    <div th:include="buyer_top :: buyer_top"></div>
+    <div th:include="buyer_home_search :: buyer_home_search"></div>
+    <div id="div-left" th:include="buyer_order_left :: buyer_order_left"></div>
+    <div class="div-right" th:if="${session.order_type eq 'userInfo'}" th:include="buyer_user_info :: buyer_user_info"></div>
+    <div class="div-right" th:if="${session.order_type eq 'buyer_order_show'}" th:include="buyer_order_show :: buyer_order_show"></div>
+    <div th:include="footer :: footer"></div>
+</body>
+</html>

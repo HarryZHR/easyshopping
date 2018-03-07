@@ -1,0 +1,60 @@
+#div_border{
+    background-color: #f2f2f2;
+    padding-top: 50px;
+}
+.container{
+    width: 80%;
+    background-color: #fff;
+    text-align: center;
+    height: 400px;
+    padding-top: 50px;
+}
+#div_cut{
+    height: 0;
+}
+.left{
+    text-align: right;
+}
+.right{
+    text-align: left;
+}
+#div_tip{
+    font-size: 20px;
+    color: #ff3366;
+    text-align: center;
+    font-weight: 700;
+}
+.row{
+    height: 40px;
+}
+.bottom{
+    text-align: center;
+}
+#buy_more{
+    background-color: #ff3366;
+    color: #fff;
+    border: 0;
+    margin-left: 40px;
+}
+#buy_more:hover{
+    color: #fff;
+}
+#back_cart{
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #333;
+}
+#back_cart:hover{
+    color: #333;
+}
+.button{
+    width: 100px;
+    height: 30px;
+    font-size: 14px;
+    border-radius: 5px;
+    display: inline-block;
+    padding-top: 5px;
+}
+a:hover{
+    text-decoration: none;
+}

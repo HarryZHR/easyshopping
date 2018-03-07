@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title th:text="'卖家中心-' + ${session.currSeller.storeName}"></title>
-</head>
-<header th:include="link :: index_header">
-</header>
-<link rel="stylesheet" type="text/css" href="../static/css/seller_left.css" th:href="@{/css/seller_left.css}" />
-<link rel="stylesheet" type="text/css" href="../static/css/seller_top_title.css" th:href="@{/css/seller_top_title.css}" />
-<link rel="stylesheet" type="text/css" href="../static/css/index.css" th:href="@{/css/index.css}" />
-<body>
+    <head>
+        <title th:text="'卖家中心-' + ${session.currSeller.storeName}"></title>
+    </head>
+    <header th:include="link :: index_header">
+    </header>
+    <link rel="stylesheet" type="text/css" href="../static/css/seller_left.css" th:href="@{/css/seller_left.css}" />
+    <link rel="stylesheet" type="text/css" href="../static/css/seller_top_title.css" th:href="@{/css/seller_top_title.css}" />
+    <link rel="stylesheet" type="text/css" href="../static/css/index.css" th:href="@{/css/index.css}" />
+    <body>
         <div id="div_nav">
             <div id="div_seller_top">
                 <a id="a_nickName" th:text="${session.currSeller.storeName}"></a>，
@@ -28,7 +28,7 @@
                 </div>
             </div>
         </div>
-        <div id="div_left" >
+        <div id="div_left">
             <div class="panel-group" id="accordion">
                 <div class="panel panel-success">
                     <div class="panel-heading">

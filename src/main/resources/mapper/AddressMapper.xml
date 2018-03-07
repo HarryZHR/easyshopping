@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.cslg.easyshopping.dao.AddressDao">
+	<resultMap id="addressMap" type="edu.cslg.easyshopping.pojo.Address">
+		<id property="id" column="id"/>
+		<result property="receiver" column="receiver"/>
+		<result property="tel" column="tel"/>
+		<result property="province" column="province"/>
+		<result property="city" column="city"/>
+		<result property="district" column="district"/>
+		<result property="street" column="street"/>
+		<result property="defaultAddress" column="defaultAddress"/>
+		<result property="delFlag" column="delFlag"/>
+		<association property="buyer" select="edu.cslg.easyshopping.dao.BuyerDao.getBuyerById" column="buyer_id"/>
+	</resultMap>
+	<select id="listAddressByBuyerId" resultMap="addressMap">
+		SELECT * FROM t_address WHERE buyer_id = #{0};
+	</select>
+	<select id="getAddressById" resultMap="addressMap">
+		SELECT * FROM t_address WHERE id = #{0};
+	</select>
+	<insert id="saveAddress">
+		INSERT INTO t_address VALUES (NULL ,#{receiver},#{tel},#{province},#{city},#{district},#{street},#{buyer.id},#{defaultAddress},#{delFlag});
+	</insert>
+	<select id="getDefaultAddress" resultMap="addressMap">
+		SELECT * FROM t_address WHERE defaultAddress = TRUE AND delFlag = TRUE ;
+	</select>
+	<select id="listNonDefaultAddress" resultMap="addressMap">
+		SELECT * FROM t_address WHERE defaultAddress = FALSE AND delFlag = TRUE ;
+	</select>
+</mapper>

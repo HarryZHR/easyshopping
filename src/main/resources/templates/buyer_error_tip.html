@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:include="link :: index_header"></header>
+<head>
+    <meta charset="UTF-8">
+    <title>嗨易购-提示</title>
+    <style>
+        #div_border{
+            background-color: #f2f2f2;
+            padding-top: 50px;
+        }
+        .container{
+            width: 80%;
+            background-color: #fff;
+            text-align: center;
+            height: 420px;
+            padding-top: 100px;
+        }
+        #div_cut{
+            height: 0;
+        }
+        #error_tip{
+            font-size: 20px;
+            font-weight: 400;
+        }
+        #img_tip{
+            width: 30px;
+            height: 30px;
+        }
+        .row{
+            height: 50px;
+        }
+        a:hover{
+            cursor: pointer;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div th:include="buyer_top :: buyer_top"></div>
+    <div th:include="buyer_pay_process :: buyer_pay_process"></div>
+    <div id="div_border">
+        <div class="container">
+            <div class="row" id="error_tip">
+                <img id="img_tip" src="" th:src="@{img/tip.png}"/>
+                <span>请勿重复提交订单</span>
+            </div>
+            <div class="row">
+                返回<a href="/buyer_cart">我的购物车</a>|
+                <a href="/buyer_index">嗨易购首页</a>
+            </div>
+        </div>
+    </div>
+    <div th:include="footer :: footer"></div>
+</body>
+</html>

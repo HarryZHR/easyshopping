@@ -1,0 +1,208 @@
+.div_main{
+    background-color: #f2f2f2;
+}
+.div_inner{
+    background-color: #fff;
+    margin-left: 10%;
+    width: 80%;
+    padding: 10px;
+    min-width: 830px;
+}
+.div_title{
+    font-size: 14px;
+    font-weight: 700;
+    height: 40px;
+}
+#ul_select li{
+    float: left;
+    margin-left: 30px;
+    font-size: 12px;
+    color: #333;
+}
+#ul_select li a:hover{
+    cursor: pointer;
+    color: #333;
+}
+.div_select{
+    height: 40px;
+}
+.div_order{
+    margin-top: 40px;
+}
+#div_cut{
+    height: 0;
+}
+
+.goods_img{
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.a_title{
+    display: inline-block;
+    width: 80%;
+    font-size: 12px;
+    color: #333;
+    text-align: left;
+    vertical-align: middle;
+}
+.a_title:hover{
+    cursor: pointer;
+    text-decoration: none;
+    color: #ff3366;
+}
+.title{
+    font-size: 12px;
+    color: #333;
+    display: inline-block;
+    width: 40px;
+    text-align: right;
+}
+.center{
+    text-align: center;
+}
+.width{
+    width: 9%;
+    padding: 0;
+}
+.info{
+    width: 110px;
+}
+.data{
+    color: #666;
+    text-align: left;
+    font-size: 12px;
+    display: inline-block;
+}
+.div_cart_item_tr{
+    height: 80px;
+    padding-top: 15px;
+}
+.store_tip{
+    color: #999;
+    margin-left: 4%;
+    font-size: 12px;
+}
+.store_name{
+    font-size: 12px;
+    color: #333;
+    text-decoration: none;
+}
+.store_name:hover{
+    color: #ff3366;
+    text-decoration: none;
+    cursor: pointer;
+}
+.div_table_th{
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    margin: 0;
+    height: 40px;
+    padding-top: 10px;
+}
+.div_data{
+    padding-top: 10px;
+    text-align: center;
+}
+.row{
+    margin: 0;
+}
+#save_order{
+    background-color: #FF7F00;
+    color: #fff;
+    width: 100px;
+    height: 40px;
+    font-size: 18px;
+    border: 0;
+}
+.div_remark{
+    padding-left: 5%;
+}
+.input_remark{
+    padding-left: 5px;
+}
+#div_order_bottom{
+    margin-top: 40px;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+}
+#div_save_order{
+    float: right;
+    padding: 0;
+}
+#a_back_cart{
+    font-size: 12px;
+    color: #333;
+}
+#a_back_cart:hover{
+    cursor: pointer;
+}
+#div_back_to_cart{
+    padding-top: 10px;
+}
+.div_cart_item_tr_back{
+    background-color: #F0F0F0;
+    padding-top: 10px;
+}
+.div_remark_border{
+    background-color: #F0F0F0;
+    height: 50px;
+    padding-top: 10px;
+}
+.div_seller_tr{
+    margin-top: 20px;
+}
+#div_total{
+    text-align: right;
+    margin-top: 10px;
+}
+#total_num{
+    color: #ff3366;
+    font-style: normal;
+}
+#total_money{
+    color: #ff3366;
+    font-style: normal;
+    font-size: 18px;
+    font-weight: 700;
+}
+.div_buyer_address_select{
+    width: 240px;
+    height: 160px;
+    margin-left: 40px;
+    margin-top: 20px;
+    float: left;
+}
+.div_buyer_address_select:hover{
+    cursor: pointer;
+}
+.div_buyer_address_select h5{
+    padding-left: 20px;
+    color: #333;
+    margin-top: 10px;
+}
+.div_buyer_address_select p{
+    margin-left: 20px;
+    color: #666;
+    font-size: 12px;
+    margin-top: 20px;
+}
+.selectAddress{
+    background: url(../img/address.png) 0 0 no-repeat;
+}
+.unselectedAddress{
+    background: url(../img/address.png) -240px 0 no-repeat;
+}
+.hoverAddress{
+    background: url(../img/address.png) -480px 0 no-repeat;
+}
+input[type='radio']{
+    display: none;
+}
+#div_address{
+    margin-bottom: 50px;
+}
+input{
+    outline: none;
+}

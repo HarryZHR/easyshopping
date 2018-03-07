@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:include="link :: index_header"></header>
+<head>
+    <meta charset="UTF-8">
+    <title>支付成功</title>
+</head>
+<body>
+    <div th:fragment="buyer_pay_success">
+        <link rel="stylesheet" type="text/css" th:href="@{css/buyer_pay_success.css}" />
+        <script>
+            $(function () {
+                // 流程的更新
+                $("#two").addClass("round-active");
+                $("#two_line").addClass("line-active");
+                $("#two_text").addClass("content-active");
+                $("#three").addClass("round-active");
+                $("#three_line").addClass("line-active");
+                $("#three_text").addClass("content-active");
+                $("#four").addClass("round-active");
+                $("#four_text").addClass("content-active");
+                $("#html_title").text("支付成功");
+            });
+        </script>
+        <div id="div_border">
+            <div class="container">
+                <div class="row" id="div_tip">
+                    恭喜您，成功支付！
+                </div>
+                <div class="row">
+                    <div class="col-xs-6 left">您的订单号：</div>
+                    <div class="col-xs-6 right">
+                        <span th:each="order : ${session.orders}">
+                            <span th:text="' ' + ${order.orderNum}"></span>
+                        </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6 left">您的账号是：</div>
+                    <div class="col-xs-6 right" th:text="${session.currBuyer.nickName}"></div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6 left">您支付的金额是：</div>
+                    <div class="col-xs-6 right" th:text="${session.totalMoney} +' 元'"></div>
+                </div>
+                <div class="row bottom">
+                    <a href="/buyer_cart" class="button" id="back_cart">返回购物车</a>
+                    <a href="/buyer_index" class="button" id="buy_more">继续购买</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -11,6 +11,9 @@ $(function(){
         $span_like_num.css("color","#666");
         $div_like.css("border","1px solid #ddd");
     }
+    $("input[type='radio']").each(function () {
+        $(this).prop("checked",false);
+    });
     // 点击收藏商品
     $div_like.on("click",function () {
         var likeNum = parseInt($span_like_num.text());
@@ -43,7 +46,7 @@ $(function(){
 
     // 放大镜
     $(".jqzoom").imagezoom();
-    $("#ul_goods_image li a").on("click",function(){
+    $("#ul_goods_image").find("li").find("a").on("click",function(){
         //增加点击的li的class:tb-selected，去掉其他的tb-selecte
         $(this).parents("li").addClass("tb-selected").siblings().removeClass("tb-selected");
         //赋值属性
@@ -51,60 +54,117 @@ $(function(){
     });
     // 商品的尺寸选择
     $(".span_goods_size").on("click",function () {
-        $(".span_goods_size").each(function () {
-            $(this).css("border","1px solid #dddddd");
-        });
-        // 如果未选中
-        if(!$(this).prev().prop("checked")){
-            $(this).prev().prop("checked",true);
-            var size = $(this).prev().val();
-            $(this).css("border","2px solid #333");
-            $("input[name='goods_color']").each(function () {
-                if($(this).is(":checked")){
-                    $.get("get_standard_count",
-                        {"goodsId":$("#goodsId").val(),"size":size, "color": $(this).val()},
-                        function (data) {
-                            $("#count").text(data);
-                            if($num_input.val() > data){
-                                $num_input.val(data);
-                            }
-                        })
-                }
+        if(!$(this).hasClass("disable")){
+
+            $(".span_goods_size").each(function () {
+                $(this).css("border","1px solid #dddddd");
             });
-            // 如果选中
-        }else {
-            $(this).css("border","1px solid #dddddd");
-            $(this).prev().prop("checked",false);
-            $("#count").text($("#all_count").val());
+            $(".img_goods_color_img").each(function () {
+                $(this).removeClass("disable");
+                $(this).prev().prop("disabled",false);
+            });
+            var color_flag = false;
+            // 如果未选中
+            if(!$(this).prev().prop("checked")){
+                var size = $(this).prev().val();
+                $(this).prev().prop("checked",true);
+                $(this).css("border","2px solid #333");
+                $("input[name='goods_color']").each(function () {
+                    if($(this).is(":checked")){
+                        color_flag = true;
+                        $.get("get_standard_count",
+                            {"goodsId":$("#goodsId").val(),"size":size, "color": $(this).val()},
+                            function (data) {
+                                $("#count").text(data);
+                                if($num_input.val() > data){
+                                    $num_input.val(data);
+                                }
+                            });
+                    }
+                });
+                $.get("check_standard_count_by_size",
+                    {"goodsId":$("#goodsId").val(),"size":size},
+                    function (data) {
+                        var sizeArr = data.split("_");
+                        for (var i = 0; i < sizeArr.length; i++){
+                            $("input[name='goods_color']").each(function () {
+                                if(sizeArr[i] === $(this).val()){
+                                    $(this).prop("disabled",true);
+                                    $(this).next().addClass("disable");
+                                }
+                            });
+                        }
+                    });
+
+                // 如果选中
+            }else {
+                $(this).css("border","1px solid #dddddd");
+                $(this).prev().prop("checked",false);
+                $("#count").text($("#all_count").val());
+            }
+            // 如果颜色有被选中
+            if(color_flag && !$(this).is(":checked")){
+                $(".input_submit").removeClass("input_inactive").addClass("input_active").prop("disabled",false);
+            }else {
+                $(".input_submit").removeClass("input_active").addClass("input_inactive").prop("disabled",true);
+            }
         }
     });
     // 商品的颜色选择
     $(".img_goods_color_img").on("click",function () {
-        $(".img_goods_color_img").each(function () {
-            $(this).css("border","1px solid #dddddd");
-        });
-        // 如果未选中
-        if(!$(this).prev().prop("checked")){
-            $(this).prev().prop("checked",true);
-            var color = $(this).prev().val();
-            $(this).css("border","2px solid #333");
-            $("input[name='goods_size']").each(function () {
-                if($(this).is(":checked")){
-                    $.get("get_standard_count",
-                        {"goodsId":$("#goodsId").val(),"color":color, "size": $(this).val()},
-                    function (data) {
-                        $("#count").text(data);
-                        if($num_input.val() > data){
-                            $num_input.val(data);
-                        }
-                    })
-                }
+        if(!$(this).hasClass("disable")) {
+            $(".img_goods_color_img").each(function () {
+                $(this).css("border", "1px solid #dddddd");
             });
-            // 如果选中
-        }else {
-            $(this).css("border","1px solid #dddddd");
-            $(this).prev().prop("checked",false);
-            $("#count").text($("#all_count").val());
+            $(".span_goods_size").each(function () {
+                $(this).removeClass("disable");
+                $(this).prev().prop("disabled", false);
+            });
+            var size_flag = false;
+            // 如果未选中
+            if (!$(this).prev().prop("checked")) {
+                var color = $(this).prev().val();
+
+                $(this).prev().prop("checked", true);
+                $(this).css("border", "2px solid #333");
+                $("input[name='goods_size']").each(function () {
+                    if ($(this).is(":checked")) {
+                        size_flag = true;
+                        $.get("get_standard_count",
+                            {"goodsId": $("#goodsId").val(), "color": color, "size": $(this).val()},
+                            function (data) {
+                                $("#count").text(data);
+                                if ($num_input.val() > data) {
+                                    $num_input.val(data);
+                                }
+                            });
+                    }
+                });
+                $.get("check_standard_count_by_color",
+                    {"goodsId": $("#goodsId").val(), "color": color},
+                    function (data) {
+                        var sizeArr = data.split("_");
+                        for (var i = 0; i < sizeArr.length; i++) {
+                            $("input[name='goods_size']").each(function () {
+                                if (sizeArr[i] === $(this).val()) {
+                                    $(this).prop("disabled", true);
+                                    $(this).next().addClass("disable");
+                                }
+                            });
+                        }
+                    });
+
+                // 如果选中
+            } else {
+                $(this).css("border", "1px solid #dddddd");
+                $(this).prev().prop("checked", false);
+                $("#count").text($("#all_count").val());
+            }
+            if (size_flag && !$(this).is(":checked")) {
+                $(".input_submit").removeClass("input_inactive").addClass("input_active").prop("disabled", false);
+            } else if (size_flag && $(this).is(":checked")) {
+                $(".input_submit").removeClass("input_active").addClass("input_inactive").prop("disabled", true);
+            }
         }
     });
     // 点击三个选项
@@ -118,14 +178,14 @@ $(function(){
     $("#li_goods_reply").on("click",function () {
         $("#ul_goods_info_nav").find("li").removeClass("active").addClass("inactive");
         $(this).addClass("active");
-        $("#div_goods_content>div").css("display","none");
+        $("#div_goods_content > div").css("display","none");
         $(".div_goods_reply").css("display","block");
         $("#ul_extra").css("display","none");
     });
     $("#li_goods_category").on("click",function () {
         $("#ul_goods_info_nav").find("li").removeClass("active").addClass("inactive");
         $(this).addClass("active");
-        $("#div_goods_content>div").css("display","none");
+        $("#div_goods_content > div").css("display","none");
         $(".div_goods_category").css("display","block");
         $("#ul_extra").css("display","none");
     });
@@ -145,7 +205,7 @@ $(function(){
             $("#ul_extra").find("li").removeClass('li_hover');
             $("#li_extra1").addClass('li_hover');
         }
-        if(extraTop - parseInt(height2.toString()) >= 0 && extraTop - parseInt(height3) < 0){
+        if(extraTop - parseInt(height2.toString()) >= 0 && extraTop - parseInt(height3.toString()) < 0){
             $("#ul_extra").find("li").removeClass('li_hover');
             $("#li_extra2").addClass('li_hover');
         }
@@ -155,13 +215,13 @@ $(function(){
         }
     });
     $("#li_extra1").on("click",function () {
-       $(window).scrollTop($("#div_goods_intro").offset().top);
+        $(window).scrollTop($("#div_goods_intro").offset().top);
     });
     $("#li_extra2").on("click",function () {
-       $(window).scrollTop($("#div_goods_detail_image").offset().top);
+        $(window).scrollTop($("#div_goods_detail_image").offset().top);
     });
     $("#li_extra3").on("click",function () {
-       $(window).scrollTop($("#div_goods_category_in").offset().top);
+        $(window).scrollTop($("#div_goods_category_in").offset().top);
     });
 
     // 数量框输入控制
@@ -221,41 +281,25 @@ $(function(){
         // 如果尺寸和颜色没有选择
         if(!colorAndSizeCheck()) {
             openSubmit();
-            $(".input_submit").addClass("input_inactive") .prop("disabled","true");
+            $(".input_submit").addClass("input_inactive") .prop("disabled",true);
+            $("#to_submit").addClass("buyer_buy").prop("type","submit");
             return false;
         }else{
             // 跳转生成订单的界面
-            alert("跳转生成订单的界面");
+            return true;
         }
     });
 
-    $(".input_cart").on("click",function () {
-        // 如果尺寸和颜色没有选择
-        if (!colorAndSizeCheck()) {
-            // 当前为游客状态
-            if (!$("#currBuyer").val()) {
-                window.location.href = "buyer_login";
-            } else {
-                openSubmit();
-                $(".input_submit").addClass("input_inactive")
-                    .prop("disabled", "true");
-            }
-        } else {
-            // 弹窗添加购物车成功
-            var color = $("input[name='goods_color']:checked").val();
-            var size = $("input[name='goods_size']:checked").val();
-            var goodsId = $("#goodsId").val();
-            var buyCount = $("#sy_num_gid").val();
-            $.get("add_cart",
-                {"color":color,"size":size,"goodsId":goodsId,"buyCount":buyCount},
-                function (data) {
-                    if(data === "success"){
-                        $("#add_cart_success").css("display","block");
-                        colseSubmit();
-                    }else if(data === "fail"){
-                        window.location.href = "buyer_login";
-                    }
-                });
+    // 上面的加入购物车
+    $(".input_cart").on("click",clickCart);
+    // 下面的购物车
+    $(".span_cart").on("click",function () {
+        $("html").animate({scrollTop:$("#div_goods_info_border").offset().top});
+        clickCart();
+    });
+    $("#to_submit").on("click",function () {
+        if($(this).hasClass("buyer_add_cart")){
+            addCart();
         }
     });
     $("#toCart").on("click",function () {
@@ -268,21 +312,21 @@ function colorAndSizeCheck() {
     var colorFlag = false;
     var sizeFlag = false;
     $("input[name='goods_color']").each(function () {
-        if($(this).is(":checked")){
+        if($(this).prop("checked")){
             colorFlag = true;
         }
     });
     $("input[name='goods_size']").each(function () {
-       if($(this).is(":checked")){
-           sizeFlag = true;
-       }
+        if($(this).prop("checked")){
+            sizeFlag = true;
+        }
     });
     return (colorFlag && sizeFlag);
 }
 
 // 购物信息界面弹窗
 function openSubmit() {
-    $(".div_buy_goods").css("display","block");
+    $(".div_buy_goods").css("display","block").css("top",$("#div_sell_num").offset().top - 265);
     $("#div_close_buy_info").css("display","block");
     $("#div_submit").css("display","block");
 }
@@ -291,4 +335,36 @@ function colseSubmit() {
     $("#div_close_buy_info").css("display","none");
     $(".div_buy_goods").css("display","none");
     $("#div_submit").css("display","none");
+}
+function clickCart() {
+    // 如果尺寸和颜色没有选择
+    if (!colorAndSizeCheck()) {
+        // 当前为游客状态
+        if (!$("#currBuyer").val()) {
+            window.location.href = "buyer_login";
+        } else {
+            openSubmit();
+            $(".input_submit").addClass("input_inactive").prop("disabled", "true");
+            $("#to_submit").addClass("buyer_add_cart");
+        }
+    } else {
+        addCart();
+    }
+}
+function addCart() {
+    // 弹窗添加购物车成功
+    var color = $("input[name='goods_color']:checked").val();
+    var size = $("input[name='goods_size']:checked").val();
+    var goodsId = $("#goodsId").val();
+    var buyCount = $("#sy_num_gid").val();
+    $.get("add_cart",
+        {"color":color,"size":size,"goodsId":goodsId,"buyCount":buyCount},
+        function (data) {
+            if(data === "success"){
+                $("#add_cart_success").css("display","block");
+                colseSubmit();
+            }else if(data === "fail"){
+                window.location.href = "buyer_login";
+            }
+        });
 }

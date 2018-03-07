@@ -1,0 +1,43 @@
+.img_order_item{
+    width: 40px;
+    height: 40px;
+}
+.order-data{
+    font-size: 12px;
+    vertical-align: middle;
+}
+.img_order_del{
+    width: 25px;
+    height: 25px;
+}
+.order-title{
+    font-size: 12px;
+    text-align: center;
+}
+.div_del{
+    text-align: right;
+}
+#order_tr{
+    height: 40px;
+    padding-top: 10px;
+    background-color: #f5f5f5;
+    border: 1px solid #e8e8e8;
+}
+.order_seller{
+    border: 1px solid #ececec;
+    background-color: #f5f5f5;
+    padding-top: 10px;
+}
+.order_item_tr{
+    padding: 10px;
+}
+.order_item_all{
+    border: 1px solid #e8e8e8;
+    border-top: 0;
+}
+.order_info_tr{
+    margin-top: 10px;
+}
+.order_info_tr:hover{
+    border: 1px solid #CFCFCF;
+}

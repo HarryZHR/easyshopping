@@ -2,6 +2,10 @@
     width: 78%;
     margin-left: 11%;
     margin-top: 20px;
+    min-width: 900px;
+}
+#div_type{
+    min-width: 900px;
 }
 #a_logo{
     float: left;

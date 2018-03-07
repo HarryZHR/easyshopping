@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.cslg.easyshopping.dao.ComplainDao">
+	<resultMap id="complainMap" type="edu.cslg.easyshopping.pojo.Complain">
+		<id property="id" column="id"/>
+		<result property="type" column="type"/>
+		<result property="content" column="content"/>
+		<result property="cutScore" column="cutScore"/>
+		<result property="complainTime" column="complainTime"/>
+		<result property="checkFlag" column="checkFlag"/>
+		<association property="orderItem" column="orderItem_id"/>
+	</resultMap>
+</mapper>

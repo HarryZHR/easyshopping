@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:include="link :: index_header"></header>
+<body>
+<div th:include="buyer_top :: buyer_top"></div>
+<div th:include="buyer_pay_process :: buyer_pay_process"></div>
+    <div id="div_mid">
+
+        <div th:fragment="buyer_submit_order">
+            <link rel="stylesheet" type="text/css" th:href="@{css/buyer_submit_order.css}"/>
+            <script type="text/javascript" th:src="@{js/buyer_submit_order.js}"></script>
+            <div class="div_main">
+                <div class="div_inner">
+                    <div class="row">
+                        <div class="div_title">选择收货地址</div>
+                        <div class="div_select row">
+                            <ul id="ul_select">
+                                <li>
+                                    <a id="manage_address">管理收货地址</a>
+                                </li>
+                                <li>
+                                    <a id="use_new_address">使用新地址</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <input type="hidden" id="addressSize" th:value="${session.addresses.size()}"/>
+                        <div id="div_address" th:if="${session.addresses.size() != 0}" class="row">
+                            <div class="div_buyer_address_select">
+                                <input type="radio" checked th:value="${session.addressDefault.id}">
+                                <h5 th:text="${session.addressDefault.receiver}"></h5>
+                                <p th:text="${session.addressDefault.street}"></p>
+                                <p th:text="${session.addressDefault.province} +' '+ ${session.addressDefault.city} +' '+ ${session.addressDefault.district}"></p>
+                                <p th:text="${session.addressDefault.tel}"></p>
+                            </div>
+                            <div class="div_buyer_address_select" th:each="address : ${session.addressNonDefault}">
+                                <input type="radio" th:value="${address.id}">
+                                <h5 th:text="${address.receiver}"></h5>
+                                <p th:text="${address.street}"></p>
+                                <p th:text="${address.province} +' '+ ${address.city} +' '+ ${address.district}"></p>
+                                <p th:text="${address.tel}"></p>
+                            </div>
+                        </div>
+                        <!-- 如果没有默认地址 -->
+                        <div id="div_input_address">
+                            <div th:include="buyer_save_address :: buyer_save_address"></div>
+                        </div>
+                    </div>
+                    <div class="div_order">
+                        <div class="div_title">确认订单信息</div>
+                        <div class="row div_table_th">
+                            <div class="col-xs-6 center">商品</div>
+                            <div class="col-xs-2 info center">商品信息</div>
+                            <div class="col-xs-1 width center">单价（元）</div>
+                            <div class="col-xs-1 width center">数量</div>
+                            <div class="col-xs-1 width center">优惠（元）</div>
+                            <div class="col-xs-1 width center">小计（元）</div>
+                        </div>
+                        <div class="row div-row" th:each="cartItemMap,cartItemMapStat: ${session.cartItemSelectInSeller}">
+                            <div class="row div_seller_tr">
+                                <div class="col-xs-12">
+                                    <span class="store_tip">店铺：</span>
+                                    <a class="store_name" th:text="${cartItemMap.key.storeName}"></a>
+                                    <input class="seller_id" type="hidden" th:value="${cartItemMap.key.id}" />
+                                </div>
+                            </div>
+                            <div class="row div_cart_item_tr_back" th:each="cartItem,cartItemStat : ${cartItemMap.value}">
+                                <input type="hidden" th:value="${cartItem.id}"/>
+                                <div class="col-xs-6 center">
+                                    <img class="goods_img" src="" th:src="${cartItem.standard.colorImg}"/>
+                                    <a th:text="${cartItem.standard.goods.title}" class="a_title" th:href="@{'buyer_goods_detail'(goodsId=${cartItem.standard.goods.id})}"></a>
+                                </div>
+                                <div class="col-xs-2 info center">
+                                    <div>
+                                        <span class="title">尺寸：</span>
+                                        <span th:text="${cartItem.standard.size}" class="data"></span>
+                                    </div>
+                                    <div>
+                                        <span class="title">颜色：</span>
+                                        <span th:text="${cartItem.standard.color}" class="data"></span>
+                                    </div>
+                                </div>
+                                <div class="col-xs-1 width center">
+                                    <div class="div_data" th:text="${#numbers.formatDecimal(cartItem.standard.price,0,2)}">
+                                    </div>
+                                </div>
+                                <div class="col-xs-1 width center">
+                                    <div class="div_data order_item_num" th:text="${cartItem.buyCount}"></div>
+                                </div>
+                                <div class="col-xs-1 width center">
+                                    <div class="div_data" th:text="${cartItem.standard.goods.discount}"></div>
+                                </div>
+                                <div class="col-xs-1 width center">
+                                    <div class="div_data order_item_subtotal" th:text="(${#numbers.formatDecimal(cartItem.standard.price,0,2)} - ${cartItem.standard.goods.discount}) * ${cartItem.buyCount}"></div>
+                                </div>
+                            </div>
+                            <div class="row div_remark_border">
+                                <div class="col-xs-12 div_remark">
+                                    <input type="text" class="input_remark" size="60" placeholder="补充填写其他信息，如有快递不到也请留言备注"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" id="div_order_bottom">
+                            <div class="col-xs-3" id="div_back_to_cart">
+                                <a id="a_back_cart" th:href="buyer_cart">&lt;=返回购物车</a>
+                            </div>
+                            <div class="col-xs-9" id="div_total">
+                                <span>共有 <i id="total_num"></i> 件商品，总计： <i id="total_money"></i> 元</span>
+                                <input id="hidden_operate" type="hidden" value="incomplete"/>
+                                <input id="save_order" type="button" value="生成订单"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:include="footer :: footer"></div>
+</body>
+</html>

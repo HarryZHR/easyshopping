@@ -9,54 +9,36 @@
     <div th:fragment="buyer_top">
         <script type="text/javascript" th:src="@{/js/buyer_top.js}"></script>
         <link type="text/css" rel="stylesheet" th:href="@{/css/buyer_top.css}"/>
-        <div id="div_navbar" style="min-width: 800px">
-            <nav id="navbar" class="navbar navbar-default navbar-static-top" role="navigation">
-                <div class="container-fluid">
-                    <input type="hidden" id="currBuyer" th:value="${session.currBuyer}" />
-                    <div class="navbar-header" id="home_page_top">
-                        <a id="a_home" class="navbar-brand a_top" href="/buyer_index">嗨易购首页</a>
-                    </div>
-                    <div class="navbar-header" id="login_top" th:if="${session.currBuyer eq null}">
-                        <a class="navbar-brand a_top" href="buyer_login">登录</a>
-                    </div>
-                    <div class="navbar-header" id="register_top" th:if="${session.currBuyer eq null}">
-                        <a class="navbar-brand a_top" href="buyer_register">注册</a>
-                    </div>
-                    <div id="buyer_top" th:if="${session.currBuyer != null}">
-                        <ul class="nav navbar-nav" id="ul_buyer_name">
-                            <li class="dropdown">
-                                <a href="#" class="a_top" th:text="${session.currBuyer.nickName}"></a>
-                                <ul class="dropdown-menu" id="ul_buyer">
-                                    <li><a href="#" class="a_buyer">个人中心</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="buyer_exit" class="a_buyer">退出</a></li>
-                                </ul>
-                            </li>
+        <div id="div_navbar">
+            <input type="hidden" id="currBuyer" th:value="${session.currBuyer}" />
+            <div id="home_page_top">
+                <span id="a_home"><a href="/buyer_index">嗨易购首页</a></span>
+                <a class="a_top" id="a_login" href="buyer_login" th:if="${session.currBuyer == null}">登录</a>
+                <a class="a_top right_nav" href="buyer_register" th:if="${session.currBuyer == null}">注册</a>
+                <ul id="ul_buyer_name" th:if="${session.currBuyer !=null}">
+                    <li class="dropdown">
+                        <a href="/buyer_user_info" id="a_user" class="a_top" th:text="${session.currBuyer.nickName}"></a>
+                        <ul class="dropdown-menu" id="ul_buyer">
+                            <li><a href="/buyer_user_info" class="a_buyer">个人中心</a></li>
+                            <li class="divider"></li>
+                            <li><a href="buyer_exit" class="a_buyer">退出</a></li>
                         </ul>
-                    </div>
-                    <div id="like_top">
-                        <ul class="nav navbar-nav" id="ul_buyer_like">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle a_top" id="a_like_icon" data-toggle="dropdown">我的收藏</a>
-                                <ul class="dropdown-menu" id="ul_like">
-                                    <li class="li_like"><a href="#" class="a_like">收藏宝贝</a></li>
-                                    <li id="divder" class="divider"></li>
-                                    <li class="li_like"><a href="#" class="a_like">收藏店铺</a></li>
-                                </ul>
-                            </li>
+                    </li>
+                </ul>
+                <ul id="ul_buyer_like" class="right_nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle a_top" id="a_like_icon" data-toggle="dropdown">我的收藏</a>
+                        <ul class="dropdown-menu" id="ul_like">
+                            <li class="li_like"><a href="#" class="a_like">收藏宝贝</a></li>
+                            <li id="divder" class="divider"></li>
+                            <li class="li_like"><a href="#" class="a_like">收藏店铺</a></li>
                         </ul>
-                    </div>
-                    <div class="navbar-header" id="cart_top">
-                        <a class="navbar-brand a_top" id="a_cart" href="buyer_cart">购物车</a>
-                    </div>
-                    <div class="navbar-header" id="order_top">
-                        <a class="navbar-brand a_top" id="a_order" href="#">我的订单</a>
-                    </div>
-                    <div class="navbar-header" id="seller_login_top">
-                        <a class="navbar-brand a_top" id="a_seller_login" href="/seller_login">商家后台</a>
-                    </div>
-                </div>
-            </nav>
+                    </li>
+                </ul>
+                <a class="a_top right_nav" id="a_cart" href="buyer_cart">购物车</a>
+                <a class="a_top right_nav" id="a_order" th:href="@{'buyer_order_show'(orderStatus = 1)}">我的订单</a>
+                <a class="a_top right_nav" id="a_seller_login" href="/seller_login">商家后台</a>
+            </div>
         </div>
     </div>
 </body>

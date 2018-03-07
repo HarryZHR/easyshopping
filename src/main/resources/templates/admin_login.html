@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:include="link :: header_index"></header>
+<head>
+    <meta charset="UTF-8">
+    <title>管理员-登录</title>
+    <script type="text/javascript" th:src="@{js/admin_login}"></script>
+</head>
+<body>
+    <div>
+        <input id="loginId" type="text" placeholder="用户名"/>
+        <input id="pwd" type="password" placeholder="密码"/>
+        <input id="input_login" type="button" value="登录"/>
+    </div>
+    <div th:include="footer :: footer"></div>
+</body>
+</html>

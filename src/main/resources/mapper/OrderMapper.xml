@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.cslg.easyshopping.dao.OrderDao">
+	<resultMap id="orderMap" type="edu.cslg.easyshopping.pojo.Order">
+		<id property="id" column="id"/>
+		<result property="orderTime" column="orderTime"/>
+		<result property="orderNum" column="orderNum"/>
+		<result property="remark" column="remark"/>
+		<result property="delFlag" column="delFlag"/>
+		<association property="address" column="address_id" select="edu.cslg.easyshopping.dao.AddressDao.getAddressById"/>
+		<association property="buyer" column="buyer_id" select="edu.cslg.easyshopping.dao.BuyerDao.getBuyerById"/>
+		<association property="seller" column="seller_id" select="edu.cslg.easyshopping.dao.SellerDao.getSellerById"/>
+		<collection property="orderItems" column="id" select="edu.cslg.easyshopping.dao.OrderItemDao.listOrderItemByOrderId"/>
+	</resultMap>
+	<insert id="saveOrder" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO t_order VALUES (NULL ,#{orderTime},#{orderNum},#{buyer.id},#{seller.id},#{address.id},#{remark},#{delFlag});
+	</insert>
+	<select id="getOrderById" resultMap="orderMap">
+		SELECT * FROM t_order WHERE id = #{0};
+	</select>
+	<!--<select id="listOrderAllByBuyer" resultMap="orderMap">
+		SELECT * FROM t_order WHERE buyer_id = #{buyerId} AND delFlag = TRUE ORDER BY orderTime DESC LIMIT #{goodsIndex},#{pageSize};
+	</select>
+	<select id="countOrderAllByBuyer" resultType="Integer">
+		SELECT count(*) FROM t_order WHERE buyer_id = #{0} AND delFlag = TRUE ;
+	</select>-->
+	<select id="listOrderByStatusAndBuyer" resultMap="orderMap">
+		SELECT * FROM t_order t1 LEFT JOIN t_order_item t2 ON t1.id = t2.order_id WHERE
+			<if test="orderStatusId != null">t2.orderStatus_id = #{orderStatusId} AND </if>
+			t1.buyer_id = #{buyerId} AND t1.delFlag = TRUE
+			ORDER BY t1.orderTime DESC
+			LIMIT #{orderIndex},#{pageSize};
+	</select>
+	<select id="countOrderByStatusAndBuyer" resultType="Integer">
+		SELECT count(*) FROM t_order t1 LEFT JOIN t_order_item t2 ON t1.id = t2.order_id WHERE
+			<if test="orderStatusId != null">t2.orderStatus_id = #{orderStatusId} AND </if>
+			t1.buyer_id = #{buyerId} AND t1.delFlag = TRUE ;
+	</select>
+</mapper>

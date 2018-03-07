@@ -1,0 +1,19 @@
+#div_user_list{
+    padding-left: 40%;
+}
+#ul_select{
+    list-style: none;
+    border: 1px solid #333;
+    width: 180px;
+}
+#ul_select li{
+    text-align: left;
+}
+.li_big_title{
+    font-size: 14px;
+    font-weight: 700;
+}
+.li_small_title{
+    font-size: 12px;
+
+}

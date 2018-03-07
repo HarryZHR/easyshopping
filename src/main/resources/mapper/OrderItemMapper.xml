@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.cslg.easyshopping.dao.OrderItemDao">
+	<resultMap id="orderItemMap" type="edu.cslg.easyshopping.pojo.OrderItem">
+		<id property="id" column="id"/>
+		<result property="buyCount" column="buyCount"/>
+		<result property="sendNum" column="sendNum"/>
+		<association property="standard" column="standard_id" select="edu.cslg.easyshopping.dao.StandardDao.getStandardById"/>
+		<association property="order" column="order_id" select="edu.cslg.easyshopping.dao.OrderDao.getOrderById"/>
+		<association property="orderStatus" column="orderStatus_id" select="edu.cslg.easyshopping.dao.OrderStatusDao.getOrderStatusById"/>
+	</resultMap>
+	<insert id="saveOrderItem" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO t_order_item VALUES (NULL ,#{buyCount},#{standard.id},#{orderStatus.id},#{order.id},#{sendNum});
+	</insert>
+	<select id="getOrderItemById" resultMap="orderItemMap">
+		SELECT * FROM t_order_item WHERE id = #{0};
+	</select>
+	<update id="updateOrderItem" parameterType="edu.cslg.easyshopping.pojo.OrderItem">
+		UPDATE t_order_item SET orderStatus_id = #{orderStatus.id} WHERE id = #{id};
+	</update>
+	<select id="listOrderItemByOrderId" resultMap="orderItemMap">
+		SELECT * FROM t_order_item WHERE order_id = #{0} ;
+	</select>
+</mapper>

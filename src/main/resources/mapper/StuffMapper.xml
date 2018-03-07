@@ -9,12 +9,13 @@
 		<result property="handImg" column="handImg"/>
 		<result property="stuffStatus" column="stuffStatus"/>
 		<result property="reason" column="reason"/>
-		<association property="seller" javaType="edu.cslg.easyshopping.pojo.Seller" column="seller_id" resultMap="edu.cslg.easyshopping.dao.SellerDao.SellerMap">
-			<id property="id" column="id"/>
-		</association>
+		<association property="seller" column="seller_id" select="edu.cslg.easyshopping.dao.SellerDao.getSellerById"/>
 	</resultMap>
 
 	<insert id="saveStuff" parameterType="edu.cslg.easyshopping.pojo.Stuff">
 		INSERT INTO t_stuff VALUES (NULL ,#{faceImg},#{oppositeImg},#{handImg},#{stuffStatus},#{reason},#{seller.id})
 	</insert>
+	<select id="listStuffByStatus" resultMap="stuffMap">
+		SELECT * FROM t_stuff WHERE stuffStatus = FALSE ;
+	</select>
 </mapper>

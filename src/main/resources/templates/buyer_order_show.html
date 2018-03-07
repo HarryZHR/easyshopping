@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <div th:fragment="buyer_order_show">
+        <link rel="stylesheet" type="text/css" th:href="@{css/buyer_order_show.css}" />
+        <div class="row" id="order_tr">
+            <div class="col-xs-6 order-title">商品</div>
+            <div class="col-xs-1 order-title">单价</div>
+            <div class="col-xs-1 order-title">数量</div>
+            <div class="col-xs-1 order-title">商品操作</div>
+            <div class="col-xs-1 order-title">实付款</div>
+            <div class="col-xs-1 order-title">交易状态</div>
+            <div class="col-xs-1 order-title">交易操作</div>
+        </div>
+        <div class="row" th:each="order : ${session.orders}">
+            <div class="order_info_tr">
+                <div class="order_seller row">
+                    <div class="col-xs-6 order-data" th:text="'下单时间：' + ${#dates.format(order.orderTime,'yyyy-MM-dd HH:mm:ss')} + '&nbsp;&nbsp;&nbsp;&nbsp;订单编号：' + ${order.orderNum}"></div>
+                    <div class="col-xs-3 order-data" th:text="'店铺：' + ${order.seller.storeName}"></div>
+                    <div class="col-xs-3 div_del">
+                        <img class="img_order_del" src="" th:src="@{/img/delete(grey).png}" />
+                    </div>
+                </div>
+                <div class="row order_item_all">
+                    <div class="row order_item_tr" th:each="orderItem : ${order.orderItems}">
+                        <div class="col-xs-6">
+                            <img class="img_order_item" src="" th:src="${orderItem.standard.colorImg}">
+                            <a class="order-data" th:text="${orderItem.standard.goods.title}"></a>
+                        </div>
+                        <div class="col-xs-1">
+                            <span class="order-data" th:text="'￥' + ${#numbers.formatDecimal(orderItem.standard.price,0,2)}"></span>
+                        </div>
+                        <div class="col-xs-1">
+                            <span class="order-data" th:text="${orderItem.buyCount}"></span>
+                        </div>
+                        <div class="col-xs-1">
+                            <a class="order-data" th:if="${orderItem.orderStatus.id eq 7}">申请售后</a>
+                            <a class="order-data" th:if="${orderItem.orderStatus.id eq 2 || orderItem.orderStatus.id eq 3}">申请退款</a>
+                            <a class="order-data" th:if="${orderItem.orderStatus.id < 8}">投诉卖家</a>
+                        </div>
+                        <div class="col-xs-1" th:text="'￥' + ${#numbers.formatDecimal(orderItem.standard.price - orderItem.standard.goods.discount,0,2)}"></div>
+                        <div class="col-xs-1">
+                            <a class="order-data" th:text="${orderItem.orderStatus.status}"></a>
+                        </div>
+                        <div class="col-xs-1">
+                            <a class="order-data" th:if="${orderItem.orderStatus.id eq 1}">立即付款</a>
+                            <a class="order-data" th:if="${orderItem.orderStatus.id eq 3}">确认收货</a>
+                            <a class="order-data" th:if="${orderItem.orderStatus.id eq 6}">评价</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="div_page" class="row">
+            <ul class="pagination">
+                <li th:class="${(session.orderCurrPage le 1) ? 'disabled':''}">
+                    <a th:if="${session.orderCurrPage eq 1}" href="javascript:void(0)">&laquo;</a>
+                    <a th:if="${session.orderCurrPage > 1}" th:href="@{${session.order_type}(orderCurrPage=1,orderStatus=${session.orderStatus})}">&laquo;</a>
+                </li>
+                <li th:class="${(session.orderCurrPage le 1) ? 'disabled':''}">
+                    <a th:if="${session.orderCurrPage eq 1}" href="javascript:void(0)">&lt;</a>
+                    <a th:if="${session.orderCurrPage > 1}" th:href="@{${session.order_type}(orderCurrPage=${session.orderCurrPage - 1},orderStatus=${session.orderStatus})}">&lt;</a>
+                </li>
+                <li><a href="#" th:text="${session.orderCurrPage}"></a></li>
+                <li th:class="${(session.orderCurrPage eq session.orderPageCount) ? 'disabled':''}">
+                    <a th:if="${(session.orderCurrPage eq session.orderPageCount)}" href="javascript:void(0)">&gt;</a>
+                    <a th:if="${(session.orderCurrPage < session.orderPageCount)}" th:href="@{${session.order_type}(orderCurrPage=${session.orderCurrPage + 1},orderStatus=${session.orderStatus})}">&gt;</a>
+                </li>
+                <li th:class="${(session.orderCurrPage eq session.orderPageCount)? 'disabled':''}">
+                    <a th:if="${(session.orderCurrPage eq session.orderPageCount)}" href="javascript:void(0)">&raquo;</a>
+                    <a th:if="${(session.orderCurrPage < session.orderPageCount)}" th:href="@{${session.order_type}(orderCurrPage=${session.orderPageCount},orderStatus=${session.orderStatus})}">&raquo;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

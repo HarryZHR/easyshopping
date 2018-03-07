@@ -1,0 +1,138 @@
+
+.moneyTip{
+    color: #333;
+    margin-left: 23px;
+}
+#money{
+    color: #f36;
+    font-size: 16px;
+}
+
+/* 输入密码的样式 */
+.clearfix:after {
+    clear: both;
+}
+.clearfix:before, .clearfix:after {
+    content: " ";
+    display: table;
+}
+.alieditContainer{
+    position: relative;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+.i-block{
+    display:inline-block;
+    color: #333;
+    font-size: 14px;
+    font-weight: 100;
+}
+.six-password{
+    position: relative;
+    height:33px;
+    width:182px;
+    overflow: hidden;
+    vertical-align: middle;
+}
+.sixDigitPassword {
+    position: absolute;
+    left: -122px;
+    top: 0;
+    width: 1000px;
+    height: 26px;
+    color: #fff;
+    font-size: 12px;
+    -webkit-box-sizing: content-box;
+    -webkit-user-select: initial;
+    outline: none;
+    z-index: 999;
+    opacity:0;
+    filter:alpha(opacity=0);
+}
+.sixDigitPassword-box {
+    box-sizing: content-box;
+    cursor:text;
+    background: #fff;
+    outline: none;
+    position: relative;
+    padding: 8px 0;
+    height: 15px;
+    border: 1px solid #cccccc;
+    border-radius: 2px;
+}
+.sixDigitPassword-box i {
+    box-sizing: content-box;
+    float: left;
+    display: block;
+    padding: 4px 0;
+    height: 7px;
+    border-left: 1px solid #cccccc;
+}
+.sixDigitPassword-box .active {
+    background: url('../img/password-blink.gif') no-repeat center center;
+}
+.sixDigitPassword-box b {
+    display: block;
+    margin: 0 auto;
+    width: 7px;
+    height: 7px;
+    overflow: hidden;
+    visibility:hidden;
+    background: url('../img/passeord-dot.png') no-repeat;
+}
+.sixDigitPassword-box span {
+    position: absolute;
+    display: block;
+    left: 0;
+    top: 0;
+    height: 30px;
+    border: 1px solid rgba(82, 168, 236, .8);
+    border-radius: 2px;
+    visibility: hidden;
+    -webkit-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.75), 0 0 8px rgba(82, 168, 236, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+}
+.sub_pay{
+    width: 100px;
+    height: 30px;
+    background-color: #ff4f7c;
+    color: #fff;
+    border: 0;
+    font-size: 16px;
+    margin-top: 20px;
+    margin-left: 20px;
+    outline: none;
+    border-radius: 5px;
+    display: inline-block;
+    padding: 4px 15px;
+}
+.contain{
+    padding-top: 50px;
+    background-color: #f2f2f2;
+    text-align: center;
+}
+.inner{
+    width: 80%;
+    margin-left: 10%;
+    background-color: #fff;
+    height: 400px;
+    padding-top: 50px;
+}
+#div_cut{
+    height: 0;
+}
+.b_hide{
+    visibility: hidden;
+}
+#cardwrap{
+    width: 29px;
+    left: 0;
+    visibility: hidden;
+}
+.i{
+    width: 29px;
+}
+.i_first{
+    width: 29px;
+    border-color: transparent;
+}
