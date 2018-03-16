@@ -104,4 +104,20 @@ public class BuyerService {
         return buyerDao.buyerLikeGoodsOr(buyerId,goodsId);
     }
 
+    /**
+     * 通过昵称获取用户
+     * @param nickName 昵称
+     * @return 买家
+     */
+    public Buyer getBuyerByNickName(String nickName){
+        return buyerDao.getBuyerByNickName(nickName);
+    }
+
+    /**
+     * 更新买家信息
+     * @param buyer 参数
+     */
+    public void updateBuyer(Buyer buyer){
+        buyerDao.updateBuyer(buyer);
+    }
 }

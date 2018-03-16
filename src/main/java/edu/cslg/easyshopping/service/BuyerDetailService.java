@@ -18,4 +18,12 @@ public class BuyerDetailService {
     public void saveBuyerDetail(BuyerDetail buyerDetail){
         buyerDetailDao.saveBuyerDetail(buyerDetail);
     }
+
+    /**
+     * 更新买家详情
+     * @param buyerDetail 参数
+     */
+    public void updateBuyerDetail(BuyerDetail buyerDetail){
+        buyerDetailDao.updateBuyerDetail(buyerDetail);
+    }
 }

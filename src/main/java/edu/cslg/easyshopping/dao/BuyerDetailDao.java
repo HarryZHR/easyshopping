@@ -10,4 +10,10 @@ public interface BuyerDetailDao {
      * @param buyerDetail 买家详情的参数
      */
     void saveBuyerDetail(BuyerDetail buyerDetail);
+
+    /**
+     * 更新买家详情
+     * @param buyerDetail 参数
+     */
+    void updateBuyerDetail(BuyerDetail buyerDetail);
 }

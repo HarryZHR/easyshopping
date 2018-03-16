@@ -1,0 +1,47 @@
+i{
+    font-style: normal;
+}
+.first-content{
+    padding: 10px;
+    font-size: 12px;
+    color: #333;
+}
+.second-title{
+    font-size: 16px;
+    font-weight: 700;
+    padding: 5px 10px;
+}
+.info{
+    display: block;
+    padding: 3px 10px;
+    font-size: 12px;
+}
+#table-head{
+    background-color: #eff7ff;
+    padding: 5px;
+    text-align: center;
+    margin: 0;
+}
+#order_info_table{
+    border: 1px solid #c9d8e6;
+    font-size: 12px;
+}
+.table-body{
+    padding: 10px 0;
+}
+.order_item_standard{
+    color: #999;
+}
+.order-data{
+    display: block;
+}
+#div_order_remark{
+    margin-top: 20px;
+    font-size: 12px;
+}
+.all-money{
+    font-size: 14px;
+}
+.order_item_tr{
+    padding-top: 10px;
+}

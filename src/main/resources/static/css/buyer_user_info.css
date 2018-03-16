@@ -1,0 +1,74 @@
+.user-info-left{
+    text-align: right;
+    color: #666;
+    font-size: 12px;
+}
+.user-info-tr{
+    margin-top: 20px;
+}
+input, textarea{
+    outline: none;
+}
+.user-info-input{
+    height: 25px;
+    width: 250px;
+    padding: 3px 5px;
+    color: #999;
+    font-size: 12px;
+}
+.user-info-input:focus{
+    border: 1px solid #333;
+}
+.label-gender{
+    color: #999;
+    font-weight: 100;
+}
+.user-info-remark{
+    width: 250px;
+    resize: none;
+    overflow-x: hidden;
+    font-size: 12px;
+    color: #999;
+}
+.user-info-error{
+    background: url("../img/error.png") no-repeat;
+    display: inline-block;
+    width: 200px;
+    height: 20px;
+    vertical-align: middle;
+    padding-left: 23px;
+    font-size: 12px;
+    color: #ff3366;
+    padding-top: 1px;
+}
+.user-info-true{
+    background: url("../img/true(red).png") no-repeat;
+    height: 30px;
+    width: 200px;
+    vertical-align: middle;
+    padding-left: 30px;
+    display: inline-block;
+    font-size: 12px;
+    color: #ff3366;
+}
+.nick_tip{
+    font-size: 12px;
+}
+.div_nick_name_tip{
+    border: 1px dashed #333;
+    width: 250px;
+    padding: 5px;
+    color: #ff3366;
+}
+.sub-btn{
+    background-color: #ff3366;
+    border: 0;
+    width: 80px;
+    height: 30px;
+    color: #fff;
+}
+.save_tip{
+    font-size: 12px;
+    color: #ff3366;
+    margin-left: 10px;
+}

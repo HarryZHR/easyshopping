@@ -12,7 +12,9 @@ public class Order {
     private Address address;
     private Buyer buyer;
     private Seller seller;
+    private OrderStatus orderStatus;
     private List<OrderItem> orderItems;
+    private Float orderMoney;
 
     public Order(){}
 
@@ -86,5 +88,21 @@ public class Order {
 
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
+    }
+
+    public Float getOrderMoney() {
+        return orderMoney;
+    }
+
+    public void setOrderMoney(Float orderMoney) {
+        this.orderMoney = orderMoney;
+    }
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
     }
 }

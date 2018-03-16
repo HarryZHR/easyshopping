@@ -13,5 +13,10 @@
 	<insert id="saveBuyerDetail">
 		INSERT INTO t_buyer_detail VALUES (#{id},'','',#{birthday},'','');
 	</insert>
-
+	<select id="getBuyerDetailById" resultMap="buyerDetailMap">
+		SELECT * FROM t_buyer_detail WHERE id = #{0} ;
+	</select>
+	<update id="updateBuyerDetail" parameterType="edu.cslg.easyshopping.pojo.BuyerDetail">
+		UPDATE t_buyer_detail SET realName = #{realName},gender = #{gender}, birthday = #{birthday},location = #{location},remark = #{remark} WHERE id = #{id};
+	</update>
 </mapper>

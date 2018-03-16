@@ -11,30 +11,33 @@
 		<association property="address" column="address_id" select="edu.cslg.easyshopping.dao.AddressDao.getAddressById"/>
 		<association property="buyer" column="buyer_id" select="edu.cslg.easyshopping.dao.BuyerDao.getBuyerById"/>
 		<association property="seller" column="seller_id" select="edu.cslg.easyshopping.dao.SellerDao.getSellerById"/>
+		<association property="orderStatus" column="status_id" select="edu.cslg.easyshopping.dao.OrderStatusDao.getOrderStatusById"/>
 		<collection property="orderItems" column="id" select="edu.cslg.easyshopping.dao.OrderItemDao.listOrderItemByOrderId"/>
 	</resultMap>
 	<insert id="saveOrder" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO t_order VALUES (NULL ,#{orderTime},#{orderNum},#{buyer.id},#{seller.id},#{address.id},#{remark},#{delFlag});
+		INSERT INTO t_order VALUES (NULL ,#{orderTime},#{orderNum},#{buyer.id},#{seller.id},#{address.id},#{remark},#{orderStatus.id},#{delFlag});
 	</insert>
 	<select id="getOrderById" resultMap="orderMap">
 		SELECT * FROM t_order WHERE id = #{0};
 	</select>
-	<!--<select id="listOrderAllByBuyer" resultMap="orderMap">
-		SELECT * FROM t_order WHERE buyer_id = #{buyerId} AND delFlag = TRUE ORDER BY orderTime DESC LIMIT #{goodsIndex},#{pageSize};
-	</select>
-	<select id="countOrderAllByBuyer" resultType="Integer">
-		SELECT count(*) FROM t_order WHERE buyer_id = #{0} AND delFlag = TRUE ;
-	</select>-->
-	<select id="listOrderByStatusAndBuyer" resultMap="orderMap">
-		SELECT * FROM t_order t1 LEFT JOIN t_order_item t2 ON t1.id = t2.order_id WHERE
-			<if test="orderStatusId != null">t2.orderStatus_id = #{orderStatusId} AND </if>
-			t1.buyer_id = #{buyerId} AND t1.delFlag = TRUE
-			ORDER BY t1.orderTime DESC
+	<select id="listOrderByMoreStatusAndBuyer" resultMap="orderMap">
+		SELECT * FROM t_order WHERE
+		<if test="small != null and big != null">
+				status_id &gt;= #{small} AND status_id &lt;= #{big} AND
+			</if>
+			buyer_id = #{buyerId} AND delFlag = TRUE
+			ORDER BY orderTime DESC
 			LIMIT #{orderIndex},#{pageSize};
 	</select>
-	<select id="countOrderByStatusAndBuyer" resultType="Integer">
-		SELECT count(*) FROM t_order t1 LEFT JOIN t_order_item t2 ON t1.id = t2.order_id WHERE
-			<if test="orderStatusId != null">t2.orderStatus_id = #{orderStatusId} AND </if>
-			t1.buyer_id = #{buyerId} AND t1.delFlag = TRUE ;
+	<select id="countOrderByMoreStatusAndBuyer" resultType="Integer">
+		SELECT count(*) FROM t_order WHERE
+			<if test="small != null and big != null">status_id &gt;= #{small} AND status_id &lt;= #{big} AND</if>
+			buyer_id = #{buyerId} AND delFlag = TRUE ;
 	</select>
+	<update id="deleteOrder">
+		UPDATE t_order SET delFlag = FALSE WHERE id = #{0} ;
+	</update>
+	<update id="updateOrderStatus">
+		UPDATE t_order SET status_id = #{orderStatus.id} WHERE id = #{id};
+	</update>
 </mapper>

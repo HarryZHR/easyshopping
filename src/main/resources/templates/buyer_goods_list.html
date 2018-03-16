@@ -19,7 +19,7 @@
                         <div class="div_pay" th:text="${goods.saleCount} + '人付款'"></div>
                     </div>
                     <div class="div_title" th:if="${#strings.length(goods.title) < 13}">
-                        <a th:href="@{'buyer_goods_detail'(goodsId=${goods.id})}"            class="a_title" th:text="${goods.title}"></a>
+                        <a th:href="@{'buyer_goods_detail'(goodsId=${goods.id})}" class="a_title" th:text="${goods.title}"></a>
                     </div>
                     <div class="div_title" th:if="${#strings.length(goods.title) >= 13}">
                         <a th:href="@{'buyer_goods_detail'(goodsId=${goods.id})}" class="a_title" th:text="${#strings.substring(goods.title,0,13)} + '...'"></a>

@@ -7,9 +7,9 @@ import java.util.Date;
  */
 public class BackGoodsInfo {
     private Integer id;
-    private OrderItem orderItem;
     private String content;
     private Date backTime;
+    private String backStatus;
 
     public BackGoodsInfo(){}
 
@@ -19,14 +19,6 @@ public class BackGoodsInfo {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public OrderItem getOrderItem() {
-        return orderItem;
-    }
-
-    public void setOrderItem(OrderItem orderItem) {
-        this.orderItem = orderItem;
     }
 
     public String getContent() {
@@ -43,5 +35,13 @@ public class BackGoodsInfo {
 
     public void setBackTime(Date backTime) {
         this.backTime = backTime;
+    }
+
+    public String getBackStatus() {
+        return backStatus;
+    }
+
+    public void setBackStatus(String backStatus) {
+        this.backStatus = backStatus;
     }
 }

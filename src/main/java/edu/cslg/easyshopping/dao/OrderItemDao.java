@@ -3,6 +3,8 @@ package edu.cslg.easyshopping.dao;
 import edu.cslg.easyshopping.pojo.OrderItem;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface OrderItemDao {
     /**
@@ -18,9 +20,4 @@ public interface OrderItemDao {
      */
     OrderItem getOrderItemById(Integer id);
 
-    /**
-     * 更新订单详情
-     * @param orderItem 订单详情的参数
-     */
-    void updateOrderItem(OrderItem orderItem);
 }

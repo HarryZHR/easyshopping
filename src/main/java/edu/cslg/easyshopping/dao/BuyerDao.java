@@ -75,4 +75,17 @@ public interface BuyerDao {
      * @return 匹配数量
      */
     Integer buyerLikeGoodsOr(@Param(value = "buyerId") Integer buyerId, @Param(value = "goodsId") Integer goodsId);
+
+    /**
+     * 通过昵称获取用户
+     * @param nickName 昵称
+     * @return 买家
+     */
+    Buyer getBuyerByNickName(String nickName);
+
+    /**
+     * 更新买家信息
+     * @param buyer 参数
+     */
+    void updateBuyer(Buyer buyer);
 }

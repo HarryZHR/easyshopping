@@ -1,5 +1,6 @@
 package edu.cslg.easyshopping.service;
 
+import com.sun.org.apache.xpath.internal.operations.Or;
 import edu.cslg.easyshopping.dao.OrderDao;
 import edu.cslg.easyshopping.pojo.Order;
 import org.apache.ibatis.annotations.Param;
@@ -22,42 +23,51 @@ public class OrderService {
     }
 
     /**
-     * 分页获取所有订单
+     * 多个订单状态获取订单
+     * @param small 小的状态
+     * @param big 大的状态
      * @param buyerId 买家id
-     * @param orderIndex 订单的索引
-     * @param pageSize 一页订单的数量
+     * @param orderIndex 订单开头索引
+     * @param pageSize 一页的个数
      * @return 订单
      */
-    /*public List<Order> listOrderAllByBuyer(Integer buyerId,Integer orderIndex,Integer pageSize){
-        return orderDao.listOrderAllByBuyer(buyerId, orderIndex, pageSize);
-    }*/
-
-    /**
-     * 获取买家所有的订单总数
-     * @param buyerId 买家id
-     * @return 总数
-     */
-    /*public Integer countOrderAllByBuyer(Integer buyerId){
-        return orderDao.countOrderAllByBuyer(buyerId);
-    }*/
-
-    /**
-     * 根据订单状态获取订单
-     * @param buyerId 买家id
-     * @param orderIndex 订单的索引
-     * @param pageSize 一页的订单数量
-     * @return 订单
-     */
-    public List<Order> listOrderByStatusAndBuyer(Integer buyerId,Integer orderIndex,Integer pageSize,Integer orderStatusId){
-        return orderDao.listOrderByStatusAndBuyer(buyerId, orderIndex, pageSize, orderStatusId);
+    public List<Order> listOrderByMoreStatusAndBuyer(Integer small, Integer big, Integer buyerId, Integer orderIndex, Integer pageSize){
+        return orderDao.listOrderByMoreStatusAndBuyer(small, big, buyerId, orderIndex, pageSize);
     }
 
     /**
-     * 根据订单状态获取不同的订单数量
+     * 多个订单状态获取订单数量
+     * @param small 小的状态
+     * @param big 大的状态
      * @param buyerId 买家id
-     * @return 数量
+     * @return 订单个数
      */
-    public Integer countOrderByStatusAndBuyer(Integer buyerId,Integer orderStatusId){
-        return orderDao.countOrderByStatusAndBuyer(buyerId,orderStatusId);
+    public Integer countOrderByMoreStatusAndBuyer(Integer small, Integer big, Integer buyerId){
+        return orderDao.countOrderByMoreStatusAndBuyer(small, big, buyerId);
+    }
+
+    /**
+     * 删除order
+     * @param orderId 订单的id
+     */
+    public void deleteOrder(Integer orderId){
+        orderDao.deleteOrder(orderId);
+    }
+
+    /**
+     * 更新订单状态
+     * @param order 订单参数
+     */
+    public void updateOrderStatus(Order order){
+        orderDao.updateOrderStatus(order);
+    }
+
+    /**
+     * 通过id获取订单
+     * @param id 订单的id
+     * @return 订单
+     */
+    public Order getOrderById(Integer id){
+        return orderDao.getOrderById(id);
     }
 }

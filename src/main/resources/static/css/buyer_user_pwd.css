@@ -1,0 +1,52 @@
+.input_pwd{
+    width: 250px;
+    height: 30px;
+    border: 1px solid #ddd;
+    color: #999;
+    outline: none;
+    padding: 5px 10px;
+}
+.input_pwd:focus{
+    border: 1px solid #333;
+}
+.tr{
+    margin-top: 30px;
+}
+.pwd_tip{
+    font-size: 12px;
+    font-weight: 100;
+    color: #333;
+}
+.btn_pwd_sub{
+    width: 80px;
+    height: 30px;
+    background-color: #ff3366;
+    color: #fff;
+    border: 0;
+    outline: none;
+}
+.user-pwd-error{
+    background: url("../img/error.png") no-repeat;
+    display: inline-block;
+    width: 200px;
+    height: 20px;
+    vertical-align: middle;
+    padding-left: 23px;
+    font-size: 12px;
+    color: #ff3366;
+    padding-top: 1px;
+}
+.user-pwd-true{
+    background: url("../img/true(red).png") no-repeat;
+    height: 30px;
+    width: 30px;
+    vertical-align: middle;
+    padding-left: 30px;
+    display: inline-block;
+    font-size: 12px;
+    color: #ff3366;
+}
+.pwd-success-tip{
+    color: #ff3366;
+    font-size: 12px;
+}

@@ -1,6 +1,5 @@
 package edu.cslg.easyshopping.dao;
 
-import com.sun.org.apache.xpath.internal.operations.Or;
 import edu.cslg.easyshopping.pojo.Order;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -16,34 +15,41 @@ public interface OrderDao {
     void saveOrder(Order order);
 
     /**
-     * 分页获取所有订单
+     * 多个订单状态获取订单
+     * @param small 小的状态
+     * @param big 大的状态
      * @param buyerId 买家id
-     * @param orderIndex 订单的索引
-     * @param pageSize 一页订单的数量
+     * @param orderIndex 订单开头索引
+     * @param pageSize 一页的个数
      * @return 订单
      */
-//    List<Order> listOrderAllByBuyer(@Param(value = "buyerId") Integer buyerId, @Param(value = "orderIndex")Integer orderIndex,@Param(value = "pageSize")Integer pageSize);
+    List<Order> listOrderByMoreStatusAndBuyer(@Param(value = "small") Integer small,@Param(value = "big") Integer big,@Param(value = "buyerId") Integer buyerId, @Param(value = "orderIndex")Integer orderIndex, @Param(value = "pageSize")Integer pageSize);
 
     /**
-     * 获取买家所有的订单总数
+     * 多个订单状态获取订单数量
+     * @param small 小的状态
+     * @param big 大的状态
      * @param buyerId 买家id
-     * @return 总数
+     * @return 订单个数
      */
-//    Integer countOrderAllByBuyer(Integer buyerId);
+    Integer countOrderByMoreStatusAndBuyer(@Param(value = "small") Integer small,@Param(value = "big") Integer big,@Param(value = "buyerId") Integer buyerId);
 
     /**
-     * 根据订单状态获取订单
-     * @param buyerId 买家id
-     * @param orderIndex 订单的索引
-     * @param pageSize 一页的订单数量
+     * 删除order
+     * @param orderId 订单的id
+     */
+    void deleteOrder(Integer orderId);
+
+    /**
+     * 更新订单状态
+     * @param order 订单参数
+     */
+    void updateOrderStatus(Order order);
+
+    /**
+     * 通过id获取订单
+     * @param id id
      * @return 订单
      */
-    List<Order> listOrderByStatusAndBuyer(@Param(value = "buyerId") Integer buyerId, @Param(value = "orderIndex")Integer orderIndex, @Param(value = "pageSize")Integer pageSize,@Param(value = "orderStatusId") Integer orderStatusId);
-
-    /**
-     * 根据订单状态获取不同的订单数量
-     * @param buyerId 买家id
-     * @return 数量
-     */
-    Integer countOrderByStatusAndBuyer(@Param(value = "buyerId") Integer buyerId,@Param(value = "orderStatusId") Integer orderStatusId);
+    Order getOrderById(Integer id);
 }

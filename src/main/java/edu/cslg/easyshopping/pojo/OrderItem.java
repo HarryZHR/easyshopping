@@ -4,8 +4,6 @@ public class OrderItem {
     private Integer id;
     private Integer buyCount;
     private String sendNum;
-    private OrderStatus orderStatus;
-    private Complain complain;
     private Order order;
     private Standard standard;
     private BackGoodsInfo backGoodsInfo;
@@ -42,22 +40,6 @@ public class OrderItem {
 
     public void setOrder(Order order) {
         this.order = order;
-    }
-
-    public Complain getComplain() {
-        return complain;
-    }
-
-    public void setComplain(Complain complain) {
-        this.complain = complain;
-    }
-
-    public OrderStatus getOrderStatus() {
-        return orderStatus;
-    }
-
-    public void setOrderStatus(OrderStatus orderStatus) {
-        this.orderStatus = orderStatus;
     }
 
     public String getSendNum() {

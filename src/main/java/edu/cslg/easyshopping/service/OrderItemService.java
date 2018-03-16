@@ -5,6 +5,7 @@ import edu.cslg.easyshopping.pojo.OrderItem;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class OrderItemService {
@@ -29,11 +30,5 @@ public class OrderItemService {
         return orderItemDao.getOrderItemById(id);
     }
 
-    /**
-     * 更新订单详情
-     * @param orderItem 订单详情的参数
-     */
-    public void updateOrderItem(OrderItem orderItem){
-        orderItemDao.updateOrderItem(orderItem);
-    }
+
 }

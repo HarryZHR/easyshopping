@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="buyer_user_pwd">
+        <link rel="stylesheet" type="text/css" th:href="@{css/buyer_user_pwd.css}" />
+        <script type="text/javascript" th:src="@{js/buyer_user_pwd.js}"></script>
+        <div class="first-title">
+            <h3>用户密码</h3>
+        </div>
+        <div class="row tr">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-11">
+                <label class="pwd_tip">当前密码&nbsp;
+                    <input id="curr_pwd" class="input_pwd" type="password" />
+                </label>
+                <span></span>
+            </div>
+        </div>
+        <div class="row tr">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-11">
+                <label class="pwd_tip">&nbsp;&nbsp;&nbsp;新密码&nbsp;
+                    <input id="new_pwd" class="input_pwd" type="password" />
+                </label>
+                <span></span>
+            </div>
+        </div>
+        <div class="row tr">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-11">
+                <label class="pwd_tip">确认密码&nbsp;
+                    <input id="sub_pwd" class="input_pwd" type="password" />
+                </label>
+                <span></span>
+            </div>
+        </div>
+        <div class="row tr">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-6">
+                <input type="button" class="btn_pwd_sub" value="确定"/>
+                <span class="pwd-success-tip"></span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

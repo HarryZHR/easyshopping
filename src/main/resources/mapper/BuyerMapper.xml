@@ -9,6 +9,7 @@
 		<result property="tel" column="tel"/>
 		<result property="buyerStatus" column="buyerStatus"/>
 		<result property="registerDate" column="register_date"/>
+		<association property="buyerDetail" column="id" select="edu.cslg.easyshopping.dao.BuyerDetailDao.getBuyerDetailById"/>
 	</resultMap>
 	<insert id="saveBuyer" useGeneratedKeys="true" keyProperty="id" parameterType="edu.cslg.easyshopping.pojo.Buyer">
 		INSERT INTO t_buyer VALUES (NULL ,#{nickName},#{pwd},#{tel},#{headImg},#{buyerStatus},#{registerDate});
@@ -42,5 +43,10 @@
 	<select id="buyerLikeGoodsOr" resultType="Integer">
 		SELECT count(*) FROM t_buyer_goods WHERE buyer_id=#{buyerId} AND goods_id = #{goodsId};
 	</select>
-
+	<select id="getBuyerByNickName" resultMap="buyerMap">
+		SELECT * FROM t_buyer WHERE nickName = #{0};
+	</select>
+	<update id="updateBuyer" parameterType="edu.cslg.easyshopping.pojo.Buyer">
+		UPDATE t_buyer SET nickName = #{nickName},pwd = #{pwd},tel = #{tel}, headImg = #{headImg},buyerStatus = #{buyerStatus} WHERE id = #{id} ;
+	</update>
 </mapper>

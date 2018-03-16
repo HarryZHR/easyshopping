@@ -14,14 +14,38 @@
             float: right;
             padding-right: 11%;
         }
+        body{
+            min-width: 1255px;
+        }
+        .first-title{
+            background-color: #f2f2f2;
+            padding-left: 10px;
+            border: 1px solid #ececec;
+            margin-bottom: 40px;
+        }
+        .first-title h3{
+            font-size: 20px;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
     <div th:include="buyer_top :: buyer_top"></div>
     <div th:include="buyer_home_search :: buyer_home_search"></div>
     <div id="div-left" th:include="buyer_order_left :: buyer_order_left"></div>
-    <div class="div-right" th:if="${session.order_type eq 'userInfo'}" th:include="buyer_user_info :: buyer_user_info"></div>
-    <div class="div-right" th:if="${session.order_type eq 'buyer_order_show'}" th:include="buyer_order_show :: buyer_order_show"></div>
+    <div class="div-right" th:if="${session.operate eq 'buyer_order_all'}" th:include="buyer_order_show :: buyer_order_show"></div>
+    <div class="div-right" th:if="${session.operate eq 'buyer_order_info'}" th:include="buyer_order_info :: buyer_order_info"></div>
+    <div class="div-right" th:if="${session.operate eq 'buyer_user_info'}" th:include="buyer_user_info :: buyer_user_info"></div>
+    <div class="div-right" th:if="${session.operate eq 'buyer_user_head'}" th:include="buyer_user_head :: buyer_user_head"></div>
+    <div class="div-right" th:if="${session.operate eq 'buyer_user_pwd'}" th:include="buyer_user_pwd :: buyer_user_pwd"></div>
     <div th:include="footer :: footer"></div>
 </body>
+<style>
+    .contain{
+        background-color: #fff;
+    }
+    #div_border{
+        background-color: #fff;
+    }
+</style>
 </html>

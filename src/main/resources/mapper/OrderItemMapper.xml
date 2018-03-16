@@ -8,17 +8,14 @@
 		<result property="sendNum" column="sendNum"/>
 		<association property="standard" column="standard_id" select="edu.cslg.easyshopping.dao.StandardDao.getStandardById"/>
 		<association property="order" column="order_id" select="edu.cslg.easyshopping.dao.OrderDao.getOrderById"/>
-		<association property="orderStatus" column="orderStatus_id" select="edu.cslg.easyshopping.dao.OrderStatusDao.getOrderStatusById"/>
+		<association property="backGoodsInfo" column="backInfo_id" select="edu.cslg.easyshopping.dao.BackGoodsInfo.getBackGoodsInfoById"/>
 	</resultMap>
 	<insert id="saveOrderItem" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO t_order_item VALUES (NULL ,#{buyCount},#{standard.id},#{orderStatus.id},#{order.id},#{sendNum});
+		INSERT INTO t_order_item VALUES (NULL ,#{buyCount},#{standard.id},#{order.id},0,#{sendNum});
 	</insert>
 	<select id="getOrderItemById" resultMap="orderItemMap">
 		SELECT * FROM t_order_item WHERE id = #{0};
 	</select>
-	<update id="updateOrderItem" parameterType="edu.cslg.easyshopping.pojo.OrderItem">
-		UPDATE t_order_item SET orderStatus_id = #{orderStatus.id} WHERE id = #{id};
-	</update>
 	<select id="listOrderItemByOrderId" resultMap="orderItemMap">
 		SELECT * FROM t_order_item WHERE order_id = #{0} ;
 	</select>

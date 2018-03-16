@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="buyer_user_head">
+        <link rel="stylesheet" type="text/css" th:href="@{css/buyer_user_head.css}" />
+        <script type="text/javascript" th:src="@{js/buyer_user_head.js}"></script>
+        <div class="first-title">
+            <h3>个人头像</h3>
+        </div>
+        <div class="row tr">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-6 upload-back">
+                <span class="btn-upload">选择上传的图片</span>
+                <input type="file" id="input_img_submit" accept="image/jpeg, image/jpg, image/png"/>
+            </div>
+        </div>
+        <div class="row tr" id="tips">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-6">
+                <span>建议使用正方形图片，支持JPG、JPEG、PNG格式</span>
+            </div>
+        </div>
+        <div class="row tr">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-6">
+                <img src="" class="img_head_show" th:src="${session.currBuyer.headImg}"/>
+            </div>
+        </div>
+        <div class="row tr">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-6">
+                <input type="button" class="btn-user-head-up" value="确 认"/>
+                <span class="up_success"></span>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

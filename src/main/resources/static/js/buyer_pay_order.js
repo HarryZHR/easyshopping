@@ -97,13 +97,14 @@ $(function(){
     init();
 
     $(".sub_pay").on("click",function () {
+        var $border = $(this).parent().parent().parent();
         $.get("buyer_pay_money",
-            {"orderItemIdStr":$("#orderItemIdStr").val()},
+            {"orderIdStr":$("#orderIdStr").val()},
             function (data) {
                 if(data === "buyer_login"){
                     window.location.href = "buyer_login";
                 }else {
-                    $("#div_mid").html(data);
+                    $border.html(data);
                 }
             });
     });

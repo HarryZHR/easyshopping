@@ -60,7 +60,7 @@ $(function () {
         $(".div-row").each(function () {
             var remark = $(this).find(".input_remark").val();
             if(remark === null || remark === ""){
-                remark = " ";
+                remark = "暂无备注";
             }
             var orderOne = $(this).find(".seller_id").val() + ":" + remark;
             orderAll += orderOne +"_";

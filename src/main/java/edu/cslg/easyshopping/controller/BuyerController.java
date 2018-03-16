@@ -1,19 +1,22 @@
 package edu.cslg.easyshopping.controller;
 
-import com.sun.org.apache.xpath.internal.operations.Or;
 import edu.cslg.easyshopping.pojo.*;
 import edu.cslg.easyshopping.service.*;
 import edu.cslg.easyshopping.util.GoodsCountUtil;
 import edu.cslg.easyshopping.util.NumberUtil;
 import edu.cslg.easyshopping.util.ValidationCode;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -46,6 +49,12 @@ public class BuyerController {
     private OrderItemService orderItemService;
     @Resource
     private OrderStatusService orderStatusService;
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }
     /**
      * 跳转买家的首页
      * @return 首页
@@ -366,7 +375,7 @@ public class BuyerController {
     public String saveBuyer(Buyer buyer,HttpSession session){
         Buyer newBuyer = buyerService.getBuyerByTel((String) session.getAttribute("newBuyerTel"));
         if(newBuyer == null){
-            buyer.setNickName("默认用户" + buyer.getTel());
+            buyer.setNickName("user" + buyer.getTel());
             buyer.setHeadImg("img/buyer_default.jpg");
             buyer.setBuyerStatus(true);
             buyer.setRegisterDate(new Date());
@@ -377,7 +386,6 @@ public class BuyerController {
             buyerDetail.setBirthday(new Date());
             buyerDetailService.saveBuyerDetail(buyerDetail);
         }
-
         return "buyer_login";
     }
 
@@ -694,21 +702,22 @@ public class BuyerController {
                 order.setDelFlag(true);
                 order.setAddress(address);
                 order.setBuyer(currBuyer);
+                order.setOrderStatus(orderStatusService.getOrderStatusById(1));
                 orderService.saveOrder(order);
                 order.setId(order.getId());
                 orders.add(order);
             }
             // 购物车中购买付款的流程 保存订单详情
-            StringBuilder orderItemIdStr = new StringBuilder();
+            StringBuilder orderIdStr = new StringBuilder();
             if(cartItemIdStr != null){
                 String[] cartItemIdArr = cartItemIdStr.split("_");
                 for(String cartItemId : cartItemIdArr){
                     OrderItem orderItem = new OrderItem();
                     CartItem cartItem = cartItemService.getCartItemById(Integer.parseInt(cartItemId));
                     orderItem.setBuyCount(cartItem.getBuyCount());
-                    orderItem.setOrderStatus(orderStatusService.getOrderStatusById(1));
                     orderItem.setStandard(cartItem.getStandard());
                     for (Order order : orders){
+                        orderIdStr.append(order.getId()).append("_");
                         if(order.getSeller().getId().equals(cartItem.getStandard().getGoods().getSeller().getId())){
                             orderItem.setOrder(order);
                         }
@@ -717,7 +726,6 @@ public class BuyerController {
                     Goods goods = orderItem.getStandard().getGoods();
                     goods.setSaleCount(goods.getSaleCount() + 1);
                     goodsService.updateGoods(goods);
-                    orderItemIdStr.append(orderItem.getId()).append("_");
                     Standard standard = orderItem.getStandard();
                     standard.setCount(orderItem.getStandard().getCount() - cartItem.getBuyCount());
                     standardService.updateStandard(standard);
@@ -728,22 +736,21 @@ public class BuyerController {
                 CartItem cartItemStraight = (CartItem) session.getAttribute("cartItemStraight");
                 OrderItem orderItem = new OrderItem();
                 orderItem.setBuyCount(cartItemStraight.getBuyCount());
-                orderItem.setOrderStatus(orderStatusService.getOrderStatusById(1));
                 orderItem.setStandard(cartItemStraight.getStandard());
                 for (Order order : orders){
+                    orderIdStr.append(order.getId()).append("_");
                     orderItem.setOrder(order);
                 }
                 orderItemService.saveOrderItem(orderItem);
                 Goods goods = orderItem.getStandard().getGoods();
                 goods.setSaleCount(goods.getSaleCount() + 1);
                 goodsService.updateGoods(goods);
-                orderItemIdStr.append(orderItem.getId()).append("_");
                 Standard standard = orderItem.getStandard();
                 standard.setCount(orderItem.getStandard().getCount() - cartItemStraight.getBuyCount());
                 standardService.updateStandard(standard);
             }
-            session.setAttribute("orderItemIdStr",orderItemIdStr);
             session.setAttribute("orders",orders);
+            session.setAttribute("orderIdStr",orderIdStr);
             return "buyer_pay_order :: buyer_pay_order";
         }
         return "buyer_login";
@@ -794,50 +801,302 @@ public class BuyerController {
     /**
      * 付款
      * @param session 保存作用域
-     * @param orderItemIdStr 订单详情id
+     * @param orderIdStr 订单id
      * @return 付款的页面
      */
     @GetMapping(value = "buyer_pay_money")
-    public String buyerPayMoney(HttpSession session, String orderItemIdStr){
+    public String buyerPayMoney(HttpSession session, String orderIdStr){
         Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
         if(currBuyer != null){
-            String[] orderItemIdArr = orderItemIdStr.split("_");
-            for(String orderItemId : orderItemIdArr){
-                OrderItem orderItem = orderItemService.getOrderItemById(Integer.parseInt(orderItemId));
-                orderItem.setOrderStatus(orderStatusService.getOrderStatusById(2));
-                orderItemService.updateOrderItem(orderItem);
+            String[] orderIdArr = orderIdStr.split("_");
+            for(String orderId : orderIdArr){
+                Order order = orderService.getOrderById(Integer.parseInt(orderId));
+                order.setOrderStatus(orderStatusService.getOrderStatusById(2));
+                orderService.updateOrderStatus(order);
             }
             return "buyer_pay_success :: buyer_pay_success";
         }
         return "buyer_login";
     }
 
-    @GetMapping(value = "buyer_user_info")
-    public String buyerUserInfo(HttpSession session){
-
-        return "buyer_info";
-    }
-
-    @GetMapping(value = "buyer_order_show")
-    public String buyerOrderAll(Integer orderCurrPage, HttpSession session,Integer orderStatus){
+    /**
+     * 获取所有的订单
+     * @param orderCurrPage 当前页
+     * @param session 保存作用域
+     * @return 所有订单的页面
+     */
+    @GetMapping(value = "buyer_order_all")
+    public String buyerOrderAll(Integer orderCurrPage, HttpSession session,Integer small, Integer big){
         Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
         if(currBuyer != null){
             Integer pageSize = 5;
-            Integer goodsCount = orderService.countOrderByStatusAndBuyer(currBuyer.getId(),null);
+            Integer goodsCount= orderService.countOrderByMoreStatusAndBuyer(small,big,currBuyer.getId());
             Integer pageCount = (goodsCount + pageSize - 1) / pageSize;
+            if(pageCount == 0){
+                pageCount = 1;
+            }
             if(orderCurrPage == null || orderCurrPage <= 0){
                 orderCurrPage = 1;
             }
             if(orderCurrPage > pageCount){
                 orderCurrPage = pageCount;
             }
-            List<Order> orders = orderService.listOrderByStatusAndBuyer(currBuyer.getId(),pageSize * (orderCurrPage - 1), pageSize,null);
+            List<Order> orders = orderService.listOrderByMoreStatusAndBuyer(small,big,currBuyer.getId(),pageSize * (orderCurrPage - 1), pageSize);
+            for (Order order : orders){
+                Float orderMoney = 0.0f;
+                List<OrderItem> orderItems = order.getOrderItems();
+                for (OrderItem orderItem : orderItems){
+                    orderMoney += (orderItem.getStandard().getPrice() - orderItem.getStandard().getGoods().getDiscount()) * orderItem.getBuyCount();
+                }
+                order.setOrderMoney(orderMoney);
+            }
             session.setAttribute("orders",orders);
             session.setAttribute("orderCurrPage",orderCurrPage);
             session.setAttribute("orderPageCount",pageCount);
-            session.setAttribute("orderStatus",orderStatus);
-            session.setAttribute("order_type","buyer_order_show");
+            session.setAttribute("small",small);
+            session.setAttribute("big",big);
+            session.setAttribute("operate","buyer_order_all");
             return "buyer_info";
+        }
+        return "buyer_login";
+    }
+
+    /**
+     * 删除订单
+     * @param session 保存作用域
+     * @param orderId 订单id
+     * @return 是否删除成功
+     */
+    @ResponseBody
+    @GetMapping(value = "del_order")
+    public String delOrder(HttpSession session,Integer orderId){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if(currBuyer != null){
+            orderService.deleteOrder(orderId);
+            return "success";
+        }
+        return "buyer_login";
+    }
+
+    /**
+     * 查看物流
+     * @return 物流信息页面
+     */
+    @GetMapping(value = "buyer_post_condition")
+    public String buyerPostCondition(HttpSession session){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if(currBuyer != null){
+            return "buyer_post_condition";
+        }
+        return "buyer_login";
+    }
+
+    /**
+     * 获取订单信息
+     * @param session 保存作用域
+     * @param orderId 订单id
+     * @return 订单页面
+     */
+    @GetMapping(value = "buyer_order_info")
+    public String buyerOrderInfo(HttpSession session,Integer orderId){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if(currBuyer != null){
+            Order order = orderService.getOrderById(orderId);
+            Float orderMoney = 0.0f;
+            for (OrderItem orderItem : order.getOrderItems()) {
+                orderMoney += (orderItem.getStandard().getPrice() - orderItem.getStandard().getGoods().getDiscount()) * orderItem.getBuyCount();
+            }
+            order.setOrderMoney(orderMoney);
+            session.setAttribute("currOrder",order);
+            session.setAttribute("operate","buyer_order_info");
+            return "buyer_info";
+        }
+        return "buyer_login";
+    }
+
+    @GetMapping(value = "buyer_pay_now")
+    public String buyerPayNow(HttpSession session, Integer orderId){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if(currBuyer != null){
+            Order order = orderService.getOrderById(orderId);
+            Float totalMoney = 0.0f;
+            for (OrderItem orderItem : order.getOrderItems()){
+                totalMoney += (orderItem.getStandard().getPrice() - orderItem.getStandard().getGoods().getDiscount()) * orderItem.getBuyCount();
+            }
+            //构造方法的字符格式这里如果小数不足2位,会以0补足.
+            DecimalFormat decimalFormat = new DecimalFormat(".00");
+            String totalMoneyStr = decimalFormat.format(totalMoney);
+            session.setAttribute("totalMoney",totalMoneyStr);
+            session.setAttribute("orderIdStr",order.getId()+"_");
+            return "buyer_pay_order :: buyer_pay_order";
+        }
+        return "buyer_login";
+    }
+
+    /**
+     * 检验昵称是否合法
+     * @param session 保存作用域
+     * @param nickName 昵称
+     * @param buyerId 买家id
+     * @return 成功与否
+     */
+    @ResponseBody
+    @GetMapping(value = "getBuyerByNickName")
+    public String getBuyerByNickName(HttpSession session,String nickName, Integer buyerId){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if(currBuyer != null){
+            Buyer buyer = buyerService.getBuyerByNickName(nickName);
+            if (buyer != null && !buyer.getId().equals(buyerId)){
+                return "false";
+            }
+            return "true";
+        }
+        return "buyer_login";
+    }
+
+    /**
+     * 跳转到用户信息的页面
+     * @param session 保存作用域
+     * @return 用户个人信息的页面
+     */
+    @GetMapping(value = "buyer_user_info")
+    public String buyerUserInfo(HttpSession session){
+        session.setAttribute("operate","buyer_user_info");
+        return "buyer_info";
+    }
+
+    /**
+     * 更新个人信息
+     * @param session 保存作用域
+     * @param buyerDetail 用户详情的参数
+     * @param nickName 昵称
+     * @return 保存成功与否
+     */
+    @ResponseBody
+    @GetMapping(value = "buyer_update_info")
+    public String buyerUpdateInfo(HttpSession session,BuyerDetail buyerDetail,String nickName){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if(currBuyer != null){
+            currBuyer.setNickName(nickName);
+            BuyerDetail buyerDetail1 = currBuyer.getBuyerDetail();
+            if(!"".equals(buyerDetail.getRealName())){
+                buyerDetail1.setRealName(buyerDetail.getRealName());
+            }
+            if(!"".equals(buyerDetail.getGender())){
+                buyerDetail1.setGender(buyerDetail.getGender());
+            }
+            if(!"".equals(buyerDetail.getLocation())){
+                buyerDetail1.setLocation(buyerDetail.getLocation());
+            }
+            if(null != (buyerDetail.getBirthday()) && buyerDetail.getBirthday().toString().length() > 0){
+                buyerDetail1.setBirthday(buyerDetail.getBirthday());
+            }
+            if(!"".equals(buyerDetail.getRemark())){
+                buyerDetail1.setRemark(buyerDetail.getRemark());
+            }
+            buyerDetailService.updateBuyerDetail(buyerDetail1);
+            buyerService.updateBuyer(currBuyer);
+            session.setAttribute("currBuyer",currBuyer);
+            return "success";
+        }
+        return "buyer_login";
+    }
+
+
+    /**
+     *跳转到用户头像的页面
+     * @param session 保存作用域
+     * @return 用户头像的页面
+     */
+    @GetMapping(value = "buyer_user_head")
+    public String buyerUserHead(HttpSession session){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if(currBuyer != null){
+            session.setAttribute("operate","buyer_user_head");
+            return "buyer_info";
+        }
+        return "buyer_login";
+    }
+
+    /**
+     * 更新用户头像
+     * @return 成功与否
+     */
+    @ResponseBody
+    @GetMapping(value = "buyer_update_head_img")
+    public String buyerUpdateHeadImg(HttpSession session,String headImg){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if(currBuyer != null){
+            if(headImg != null){
+                currBuyer.setHeadImg(headImg);
+                buyerService.updateBuyer(currBuyer);
+                session.setAttribute("currBuyer",currBuyer);
+                return "success";
+            }
+            return "null";
+        }
+        return "fail";
+    }
+
+    /**
+     * 跳转更新密码的页面
+     * @return 更新密码的页面
+     */
+    @GetMapping(value = "buyer_user_pwd")
+    public String buyerUserPwd(HttpSession session){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if(currBuyer != null){
+            session.setAttribute("operate","buyer_user_pwd");
+            return "buyer_info";
+        }
+        return "buyer_login";
+    }
+
+    /**
+     * 确认密码是否正确
+     * @param pwd 输入的密码
+     * @return 正确与否
+     */
+    @ResponseBody
+    @GetMapping(value = "buyer_update_check_pwd")
+    public String buyerUpdateCheckPwd(HttpSession session, String pwd){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if(currBuyer != null){
+            if(pwd.equals(currBuyer.getPwd())){
+                return "true";
+            }
+            return "false";
+        }
+        return "buyer_login";
+    }
+
+    /**
+     * 更新密码
+     * @param pwd 新密码
+     * @return 成功与否
+     */
+    @ResponseBody
+    @GetMapping(value = "buyer_update_pwd")
+    public String buyerUpdatePwd(HttpSession session, String pwd) {
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if (currBuyer != null) {
+            currBuyer.setPwd(pwd);
+            buyerService.updateBuyer(currBuyer);
+            return "success";
+        }
+        return "buyer_login";
+    }
+
+    /**
+     * 买家收货地址
+     * @return 买家收货地址的页面
+     */
+    @GetMapping(value = "buyer_user_address")
+    public String buyerUserAddress(HttpSession session){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if (currBuyer != null) {
+            session.setAttribute("operate","buyer_user_address");
+            return "buyer_user_address";
         }
         return "buyer_login";
     }

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="buyer_order_info">
+        <link rel="stylesheet" type="text/css" th:href="@{css/buyer_order_info.css}" />
+        <div class="row first-title">
+            <h3>订单详情</h3>
+        </div>
+        <div class="row first-content">
+            <span>订单编号：<i th:text="${session.currOrder.orderNum}"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span>当前状态：<i th:text="${session.currOrder.orderStatus.status}"></i></span>
+        </div>
+        <div class="row">
+            <h5 class="second-title">详细信息</h5>
+            <span class="info">收&nbsp;货&nbsp;人：<i th:text="${session.currOrder.address.receiver}"></i></span>
+            <span class="info">收货地址：<i th:text="${session.currOrder.address.province} + ' ' + ${session.currOrder.address.city} + ' ' + ${session.currOrder.address.district}"></i></span>
+            <span class="info">联系电话：<i th:text="${session.currOrder.address.tel}"></i></span>
+        </div>
+        <h5 class="second-title">商品清单</h5>
+        <div class="row" id="order_info_table">
+            <div class="row" id="table-head">
+                <div class="col-xs-8">
+                    <div class="col-xs-6">商品</div>
+                    <div class="col-xs-2">单价</div>
+                    <div class="col-xs-2">数量</div>
+                    <div class="col-xs-2">店铺优惠</div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="col-xs-6">交易状态</div>
+                    <div class="col-xs-6">订单金额</div>
+                </div>
+            </div>
+
+            <div class="row table-body">
+                <div class="col-xs-8">
+                    <div th:each="orderItem : ${session.currOrder.orderItems}">
+                        <div class="row order_item_tr">
+                            <div class="col-xs-6">
+                                <div class="col-xs-3">
+                                    <img src="" th:src="${orderItem.standard.colorImg}" style="width: 40px;height: 40px" />
+                                </div>
+                                <div class="col-xs-9">
+                                    <a th:href="@{'buyer_goods_detail'(goodsId=${orderItem.standard.goods.id})}" th:text="${orderItem.standard.goods.title}"></a>
+                                    <span class="order-data order_item_standard" th:text="'颜色分类：' + ${orderItem.standard.color} + ' 尺码：' + ${orderItem.standard.size}"></span>
+                                </div>
+                            </div>
+                            <div class="col-xs-2">
+                                <span th:text="'￥' + ${#numbers.formatDecimal(orderItem.standard.price,0,2)}"></span>
+                            </div>
+                            <div class="col-xs-2">
+                                <span th:text="${orderItem.buyCount}"></span>
+                            </div>
+                            <div class="col-xs-2">
+                                <span th:if="${orderItem.standard.goods.discount != 0}" th:text="'￥' + ${#numbers.formatDecimal(orderItem.standard.goods.discount,0,2)}"></span>
+                                <span th:if="${orderItem.standard.goods.discount eq 0}">￥0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="row" style="padding-top: 10px">
+                        <div class="col-xs-6">
+                            <span th:text="${session.currOrder.orderStatus.status}"></span>
+                        </div>
+                        <div class="col-xs-6">
+                            <span class="all-money" th:text="'￥' + ${#numbers.formatDecimal(session.currOrder.orderMoney,0,2)}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="div_order_remark">
+            <span>买家备注：<i th:text="${session.currOrder.remark}"></i></span>
+        </div>
+    </div>
+</body>
+</html>

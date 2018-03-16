@@ -7,23 +7,53 @@
 <body>
     <div th:fragment="buyer_order_left">
         <link type="text/css" rel="stylesheet" th:href="@{/css/buyer_order_left.css}"/>
-        <link type="text/css" rel="stylesheet" th:href="@{/css/buyer_cart.css}"/>
         <div id="div_user_list">
             <ul id="ul_select">
-                <li class="li_big_title">我的订单</li>
-                <li class="li_small_title">全部订单</li>
-                <li class="li_small_title">待付款</li>
-                <li class="li_small_title">待收货</li>
-                <li class="li_small_title">待评价</li>
-                <li class="li_small_title">退货退款</li>
-                <li class="li_big_title">收货地址</li>
-                <li class="li_big_title">账号管理</li>
-                <li class="li_small_title">我的信息</li>
-                <li class="li_small_title">个人头像</li>
-                <li class="li_big_title">安全中心</li>
-                <li class="li_small_title">用户密码</li>
+                <li id="li_head_img">
+                    <a>
+                        <img id="img_user_head" src="" th:src="${session.currBuyer.headImg}"/>
+                    </a>
+                </li>
+                <li class="li_big_title">
+                    <a th:href="buyer_order_all" th:class="${session.operate eq 'buyer_order_all'?'title_active':''}">我的订单</a>
+                </li>
+                <li class="li_small_title">
+                    <a th:class="${session.operate eq 'buyer_order_all' && session.small eq null ?'title_active':''}" th:href="buyer_order_all">全部订单</a>
+                </li>
+                <li class="li_small_title">
+                    <a th:class="${session.operate eq 'buyer_order_all' && session.small eq 1 ?'title_active':''}" th:href="@{'buyer_order_all'(small=1,big=1)}">待付款</a>
+                </li>
+                <li class="li_small_title">
+                    <a th:class="${session.operate eq 'buyer_order_all' && session.small eq 2 ?'title_active':''}" th:href="@{'buyer_order_all'(small=2,big=3)}">待收货</a>
+                </li>
+                <li class="li_small_title">
+                    <a th:class="${session.operate eq 'buyer_order_all' && session.small eq 4 ?'title_active':''}" th:href="@{'buyer_order_all'(small=4,big=4)}">待评价</a>
+                </li>
+                <li class="li_small_title">
+                    <a th:class="${session.operate eq 'buyer_order_all' && session.small eq 5 ?'title_active':''}" th:href="@{'buyer_order_all'(small=5,big=5)}">已完成</a>
+                </li>
+                <li class="li_big_title">
+                    <a>退货退款</a>
+                </li>
+                <li class="li_big_title">
+                    <a href="/buyer_user_address" th:class="${session.operate eq 'buyer_user_address' ? 'title_active':''}">收货地址</a>
+                </li>
+                <li class="li_big_title" >
+                    <a href="/buyer_user_info" th:class="${session.operate eq 'buyer_user_info' || session.operate eq 'buyer_user_head' ? 'title_active':''}">账号管理</a>
+                </li>
+                <li class="li_small_title">
+                    <a href="buyer_user_info" th:class="${session.operate eq 'buyer_user_info' ? 'title_active':''}">我的信息</a>
+                </li>
+                <li class="li_small_title">
+                    <a href="buyer_user_head" th:class="${session.operate eq 'buyer_user_head' ? 'title_active':''}">个人头像</a>
+                </li>
+                <li class="li_big_title">
+                    <a th:class="${session.operate eq 'buyer_user_pwd' ?'title_active':''}" href="/buyer_user_pwd">安全中心</a>
+                </li>
+                <li class="li_small_title">
+                    <a th:class="${session.operate eq 'buyer_user_pwd' ?'title_active':''}" href="/buyer_user_pwd">用户密码</a>
+                </li>
             </ul>
-
         </div>
     </div>
 </body>

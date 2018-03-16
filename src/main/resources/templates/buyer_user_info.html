@@ -5,6 +5,81 @@
     <title>Title</title>
 </head>
 <body>
-    <div th:fragment="buyer_user_info"></div>
+    <div th:fragment="buyer_user_info">
+        <link rel="stylesheet" type="text/css" th:href="@{css/buyer_user_info.css}"/>
+        <script type="text/javascript" th:src="@{js/buyer_user_info.js}"></script>
+        <div>
+            <input type="hidden" id="hidden_buyer_id" th:value="${session.currBuyer.id}"/>
+            <div class="first-title">
+                <h3>我的信息</h3>
+            </div>
+            <div class="row user-info-tr">
+                <div class="col-xs-3 user-info-left">
+                    <span>真实姓名</span>
+                </div>
+                <div class="col-xs-9 user-info-right">
+                    <input id="user_real_name" type="text" class="user-info-input" th:value="${session.currBuyer.buyerDetail.realName}" />
+                    <span></span>
+                </div>
+            </div>
+            <div class="row user-info-tr">
+                <div class="col-xs-3 user-info-left">
+                    &nbsp;&nbsp;&nbsp;&nbsp;昵称
+                </div>
+                <div class="col-xs-9">
+                    <input id="user_nick_name" type="text" class="user-info-input" th:value="${session.currBuyer.nickName}" />
+                    <span></span>
+                </div>
+            </div>
+            <div class="row user-info-tr">
+                <div class="col-xs-3"></div>
+                <div class="col-xs-9">
+                    <div class="div_nick_name_tip">
+                        <span class="nick_tip">昵称只能由字母和数字或下划线组成，不能以数字为开头，并且不能超过15位</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row user-info-tr">
+                <div class="col-xs-3 user-info-left">
+                    &nbsp;&nbsp;&nbsp;&nbsp;性别
+                </div>
+                <div class="col-xs-9">
+                    <label class="label-gender"><input type="radio" name="gender" value="male" th:checked="${session.currBuyer.buyerDetail.gender eq 'male'}"/>男</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <label class="label-gender"><input type="radio" name="gender" value="female" th:checked="${session.currBuyer.buyerDetail.gender eq 'female'}"/>女</label>
+                </div>
+            </div>
+            <div class="row user-info-tr">
+                <div class="col-xs-3 user-info-left">
+                    &nbsp;&nbsp;&nbsp;&nbsp;生日
+                </div>
+                <div class="col-xs-9">
+                    <input id="user_birthday" type="date" class="user-info-input" th:value="${#dates.format(session.currBuyer.buyerDetail.birthday,'yyyy-MM-dd')}"/>
+                </div>
+            </div>
+            <div class="row user-info-tr">
+                <div class="col-xs-3 user-info-left">
+                    &nbsp;&nbsp;&nbsp;&nbsp;地区
+                </div>
+                <div class="col-xs-9">
+                    <input id="user_location" type="text" class="user-info-input" th:value="${session.currBuyer.buyerDetail.location}"/>
+                </div>
+            </div>
+            <div class="row user-info-tr">
+                <div class="col-xs-3 user-info-left">
+                    个人说明
+                </div>
+                <div class="col-xs-9">
+                    <textarea class="user-info-remark" cols="30" rows="5" th:text="${session.currBuyer.buyerDetail.remark}"></textarea>
+                </div>
+            </div>
+            <div class="row user-info-tr">
+                <div class="col-xs-3"></div>
+                <div class="col-xs-9">
+                    <input type="button" class="sub-btn" value="确定"/>
+                    <span class="save_tip"></span>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

@@ -11,7 +11,7 @@
         <script type="text/javascript" th:src="@{jquery/jquery_validate.js}"></script>
         <div class="contain">
             <div class="inner">
-                <input id="orderItemIdStr" type="hidden" th:value="${session.orderItemIdStr}"/>
+                <input id="orderIdStr" type="hidden" th:value="${session.orderIdStr}"/>
                 <div >
                     <span class="moneyTip">本次订单需要支付的金额为：<span id="money" th:text="${session.totalMoney}"></span>元</span>
                 </div>
