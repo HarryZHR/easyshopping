@@ -1,5 +1,7 @@
 #accordion .panel{
-    width: 250px;
+    /*width: 70%;*/
+    min-width: 140px;
+    max-width: 215px;
 }
 #accordion a{
     text-decoration: none;

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="buyer_post_condition">
+        <link rel="stylesheet" type="text/css" th:href="@{css/buyer_post_condition.css}"/>
+        <div class="first-title">
+            <h3>物流详情</h3>
+        </div>
+        <div id="div_info" class="font">
+            <div class="row">
+                <div class="col-xs-2 left">订单编号：</div>
+                <div class="col-xs-10 right">
+                    <span th:text="${session.currOrder.orderNum}"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-2 left">付款时间：</div>
+                <div class="col-xs-10 right">
+                    <span th:text="${#dates.format(session.currOrder.orderTime,'yyyy-MM-dd HH:mm:ss')}"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-2 left">收货地址：</div>
+                <div class="col-xs-10 right">
+                    <span th:text="${session.currOrder.address.receiver} + ' ' + ${session.currOrder.address.tel} + ' ' + ${session.currOrder.address.province} + ' ' + ${session.currOrder.address.city} + ' ' + ${session.currOrder.address.district} + ' ' + ${session.currOrder.address.street}"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-2 left">店铺名称：</div>
+                <div class="col-xs-10 right">
+                    <span th:text="${session.currOrder.seller.storeName}"></span>
+                </div>
+            </div>
+            <div class="div_order_item_info">
+                <span class="standard" th:each="orderItem : ${session.currOrder.orderItems}">
+                    <img src="" class="order_item_img" th:src="${orderItem.standard.colorImg}"/>
+                    <span class="price_num" th:text="'￥' + ${#numbers.formatDecimal(orderItem.standard.price - orderItem.standard.goods.discount,0,2)} +'×'+ ${orderItem.buyCount}"></span>
+                </span>
+            </div>
+        </div>
+        <div style="clear: both"></div>
+        <div id="post_info" class="font">
+            <div class="operate">2017-11-5&nbsp;&nbsp;&nbsp;&nbsp; 周日&nbsp;&nbsp; 17:12:25 您的订单开始处理</div>
+            <div class="operate">2017-11-6&nbsp;&nbsp;&nbsp;&nbsp; 周一&nbsp;&nbsp; 21:32:25 [广州市]圆通速递 广东省广州市荔湾区火车站收件员 已揽件</div>
+            <div class="operate">2017-11-7&nbsp;&nbsp;&nbsp;&nbsp; 周二&nbsp;&nbsp; 18:25:44 [广州市]快件已从广东省广州市荔湾区火车站发出，准备发往广州转运中心</div>
+        </div>
+    </div>
+</body>
+</html>

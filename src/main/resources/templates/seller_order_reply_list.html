@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="seller_order_reply_list">
+        <div class="row font reply_tr" th:each="reply : ${session.replies}">
+            <div class="col-xs-1">
+                <div th:switch="${reply.type}">
+                    <img class="img_reply_type" th:case="goodReply" th:src="@{img/goodReply.png}" src=""/>
+                    <img class="img_reply_type" th:case="multiReply" th:src="@{img/multiReply.png}" src=""/>
+                    <img class="img_reply_type" th:case="badReply" th:src="@{img/badReply.png}" src=""/>
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <div>
+                    <span th:text="${reply.content}"></span>
+                </div>
+                <div>
+                    <span th:text="'[' + ${#dates.format(reply.replyTime,'yyyy-MM-dd HH:mm:ss')} + ']'"></span>
+                </div>
+            </div>
+            <div class="col-xs-2">
+                <span>买家：</span>
+                <span th:text="${reply.buyer.nickName}"></span>
+            </div>
+            <div class="col-xs-4">
+                <a class="a_to_goods" th:href="@{'buyer_goods_detail'(goodsId=${reply.standard.goods.id})}" th:text="${reply.standard.goods.title}"></a>
+            </div>
+            <div class="col-xs-1">
+                <input type="hidden" th:value="${reply.id}"/>
+                <a class="a_host_reply" th:if="${reply.hostReply eq null}" data-toggle="modal" data-target="#host_reply">回复</a>
+            </div>
+        </div>
+        <div id="div_page" class="row">
+            <ul class="pagination">
+                <li th:class="${(session.currReplyPage le 1) ? 'disabled':''}">
+                    <a th:if="${session.currReplyPage eq 1}" href="javascript:void(0)">&laquo;</a>
+                    <a th:if="${session.currReplyPage > 1}" th:href="@{'seller_page_reply'(currReplyPage=1,replyType=${session.replyType},hostReply=${session.hostReply})}">&laquo;</a>
+                </li>
+                <li th:class="${(session.currReplyPage le 1) ? 'disabled':''}">
+                    <a th:if="${session.currReplyPage eq 1}" href="javascript:void(0)">&lt;</a>
+                    <a th:if="${session.currReplyPage > 1}" th:href="@{'seller_page_reply'(currReplyPage=${session.currReplyPage - 1},replyType=${session.replyType},hostReply=${session.hostReply})}">&lt;</a>
+                </li>
+                <li><a href="#" th:text="${session.currReplyPage}"></a></li>
+                <li th:class="${(session.currReplyPage eq session.pageCount) ? 'disabled':''}">
+                    <a th:if="${(session.currReplyPage eq session.pageCount)}" href="javascript:void(0)">&gt;</a>
+                    <a th:if="${(session.currReplyPage < session.pageCount)}" th:href="@{'seller_page_reply'(currReplyPage=${session.currReplyPage + 1},replyType=${session.replyType},hostReply=${session.hostReply})}">&gt;</a>
+                </li>
+                <li th:class="${(session.currReplyPage eq session.pageCount)? 'disabled':''}">
+                    <a th:if="${(session.currReplyPage eq session.pageCount)}" href="javascript:void(0)">&raquo;</a>
+                    <a th:if="${(session.currReplyPage < session.pageCount)}" th:href="@{'seller_page_reply'(currReplyPage=${session.pageCount},replyType=${session.replyType},hostReply=${session.hostReply})}">&raquo;</a>
+                </li>
+            </ul>
+        </div>
+        <div class="modal fade" id="host_reply" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <input type="hidden" id="replyId"/>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">回复评价</h4>
+                    </div>
+                    <div class="modal-body">
+                        <textarea id="host_reply_content" cols="75" rows="5"></textarea>
+                        <div id="host_reply_tip"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="sub_host_reply" class="btn btn-primary">确&nbsp;&nbsp;定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

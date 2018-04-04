@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:include="link :: index_header"></header>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" th:href="@{css/buyer_like.css}" />
+</head>
+<body>
+    <div th:include="buyer_top :: buyer_top"></div>
+    <div th:include="buyer_home_search :: buyer_home_search"></div>
+    <div th:if="${session.likeTip eq 'goods'}" class="container">
+        <div th:if="${session.goodsBuyerLike.size() eq 0}">
+            暂时还没有收藏商品哦！
+        </div>
+        <div th:if="${session.goodsBuyerLike.size() != 0}">
+            <div class="div_like_goods" th:each="goods : ${session.goodsBuyerLike}">
+                <div class="div_main_img">
+                    <img class="img_goods_main" th:src="${goods.goodsImg.img1}" src=""/>
+                    <input type="hidden" th:value="${goods.id}">
+                    <span class="delete">
+                        <img src="" th:src="@{img/delete(white).png}">
+                    </span>
+                </div>
+                <div class="div_goods_info">
+                    <span class="price" th:text="'￥' + ${#numbers.formatDecimal(goods.minPrice,0,2)}"></span>
+                    <span class="num" th:text="'喜欢'"></span>
+                </div>
+                <div class="div_goods_title" th:if="${#strings.length(goods.title) < 14}">
+                    <a th:href="@{'buyer_goods_detail'(goodsId=${goods.id})}" class="a_goods_title" th:text="${goods.title}"></a>
+                </div>
+                <div class="div_goods_title" th:if="${#strings.length(goods.title) >= 14}">
+                    <a th:href="@{'buyer_goods_detail'(goodsId=${goods.id})}" class="a_goods_title" th:text="${#strings.substring(goods.title,0,14)} + '...'"></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div th:if="${session.likeTip eq 'seller'}" class="container">
+        <div th:each="seller : ${session.sellersBuyerLike}">
+
+        </div>
+    </div>
+    <div th:include="footer :: footer"></div>
+</body>
+</html>

@@ -54,4 +54,12 @@ public class AddressService {
     public Address getAddressById(Integer addressId){
         return addressDao.getAddressById(addressId);
     }
+
+    /**
+     * 更新地址
+     * @param address 地址的参数
+     */
+    public void updateAddress(Address address){
+        addressDao.updateAddress(address);
+    }
 }

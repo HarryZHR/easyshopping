@@ -6,7 +6,6 @@ public class HostReply {
     private Integer id;
     private String content;
     private Date hostReplyTime;
-    private Reply reply;
 
     public HostReply() {
     }
@@ -35,11 +34,4 @@ public class HostReply {
         this.hostReplyTime = hostReplyTime;
     }
 
-    public Reply getReply() {
-        return reply;
-    }
-
-    public void setReply(Reply reply) {
-        this.reply = reply;
-    }
 }

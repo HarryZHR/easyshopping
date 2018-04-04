@@ -1,0 +1,25 @@
+.div_like_goods{
+    float: left;
+}
+.img_goods_main{
+    width: 224px;
+    height: 340px;
+}
+.div_goods_info{
+    width: 200px;
+}
+.num{
+    float: right;
+}
+.a_goods_title{
+    color: #333;
+    text-decoration: none;
+}
+.a_goods_title:hover{
+    color: #ff3366;
+    text-decoration: none;
+}
+.a_goods_title:focus{
+    color: #ff3366;
+    text-decoration: none;
+}

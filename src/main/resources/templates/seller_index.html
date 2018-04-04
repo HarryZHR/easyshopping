@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="'卖家中心-' + ${session.currSeller.storeName}"></title>
+    </head>
+    <header th:include="link :: index_header">
+    </header>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/seller_top_title.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/seller_index.css}" />
+    <body>
+        <div id="div_nav">
+            <div id="div_seller_top">
+                <a id="a_nickName" th:text="${session.currSeller.storeName}"></a>，
+                <a id="a_exit" href="/seller_exit">退出</a>
+                <a id="a_firstPage">嗨易购首页</a> |
+                <a id="a_info" href="/seller_home">个人中心</a>
+            </div>
+            <div id="div_seller_bottom" class="container-fluid">
+                <div id="div_logo" class="navbar-header">
+                    <img src="../static/img/LOGO(White).png" th:src="@{img/LOGO(White).png}">
+                </div>
+                <div>
+                    <ul id="ul_select" class="nav navbar-nav">
+                        <li><a href="/seller_home">首页</a></li>
+                        <li><a href="/seller_setting">基础设置</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="div_left" class="col-xs-4">
+            <div th:include="seller_left :: seller_left"></div>
+        </div>
+        <div id="div_main" th:switch="${seller_status}" class="col-xs-8">
+            <div th:case="home_page">
+                <div th:replace="seller_home_page :: seller_data"></div>
+            </div>
+            <div th:case="setting">
+                <div th:replace="seller_setting :: setting"></div>
+            </div>
+            <div th:case="goods_category">
+                <div th:replace="seller_goods_category :: goods_category"></div>
+            </div>
+            <div th:case="goods_publish">
+                <div th:replace="seller_goods_publish :: goods_publish"></div>
+            </div>
+            <div th:case="goods_list_edit">
+                <div th:replace="seller_goods_list_edit :: goods_list_edit"></div>
+            </div>
+            <div th:case="goods_edit">
+                <div th:replace="seller_goods_publish :: goods_publish"></div>
+            </div>
+            <div th:case="goods_discount">
+                <div th:replace="seller_goods_discount :: goods_discount"></div>
+            </div>
+            <div th:case="goods_activity">
+                <div th:replace="seller_goods_activity :: goods_activity"></div>
+            </div>
+            <div th:case="order_list">
+                <div th:replace="seller_order_list :: seller_order_list"></div>
+            </div>
+            <div th:case="order_reply">
+                <div th:replace="seller_order_reply :: seller_order_reply"></div>
+            </div>
+
+            <div th:case="send_goods">
+                <div th:replace="seller_send_goods :: seller_send_goods"></div>
+            </div>
+        </div>
+        <div id="div_footer" th:include="footer :: footer"></div>
+    </body>
+</html>

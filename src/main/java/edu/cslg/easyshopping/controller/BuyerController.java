@@ -4,6 +4,7 @@ import edu.cslg.easyshopping.pojo.*;
 import edu.cslg.easyshopping.service.*;
 import edu.cslg.easyshopping.util.GoodsCountUtil;
 import edu.cslg.easyshopping.util.NumberUtil;
+import edu.cslg.easyshopping.util.ReplyImgsUtil;
 import edu.cslg.easyshopping.util.ValidationCode;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -50,31 +51,44 @@ public class BuyerController {
     @Resource
     private OrderStatusService orderStatusService;
 
+    /**
+     * 时间格式化
+     */
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
+
     /**
      * 跳转买家的首页
      * @return 首页
      */
     @GetMapping(value = "/buyer_index")
-    public String buyerIndex(HttpSession session,Integer currPage){
+    public String buyerIndex(HttpSession session, String key,String type,Float low, Float high, String operate, Integer currPage){
         List<GoodsType> goodsTypes = goodsTypeService.listGoodsType();
         session.setAttribute("goodsTypeList",goodsTypes);
         Integer pageSize = 5;
-        Integer goodsCount = goodsService.countGoodsAll();
+        GoodsType goodsType = goodsTypeService.getGoodsTypeByType(type);
+        Integer goodsCount= goodsService.countGoodsByCategoryAndKey(goodsType, key, low, high);
         Integer pageCount = (goodsCount + pageSize - 1) / pageSize;
+        if(pageCount == 0){
+            pageCount = 1;
+        }
         if(currPage == null || currPage <= 0){
             currPage = 1;
         }
         if(currPage > pageCount){
             currPage = pageCount;
         }
-        List<Goods> goodsList = GoodsCountUtil.setGoodsListCount(goodsService.listGoodsAll(pageSize * (currPage - 1), pageSize));
+        List<Goods> goodsList = GoodsCountUtil.setGoodsListCount(goodsService.listGoodsByCategoryAndKey(goodsType, key, low, high,operate, pageSize * (currPage - 1),pageSize));
         session.setAttribute("buyerGoodsList",goodsList);
         session.setAttribute("buyerPageCount",pageCount);
+        session.setAttribute("type",type);
+        session.setAttribute("key",key);
+        session.setAttribute("low",low);
+        session.setAttribute("high",high);
+        session.setAttribute("operate",operate);
         return "buyer_index";
     }
 
@@ -86,18 +100,27 @@ public class BuyerController {
      */
     @GetMapping(value = "/buyer_load_goods")
     @ResponseBody
-    public String buyerLoadGoods(Integer currPage, HttpSession session){
-        Integer goodsCount = goodsService.countGoodsAll();
+    public String buyerLoadGoods(HttpSession session, String key,String type,Float low, Float high, String operate, Integer currPage){
+        GoodsType goodsType = goodsTypeService.getGoodsTypeByType(type);
+        Integer goodsCount= goodsService.countGoodsByCategoryAndKey(goodsType, key, low, high);
         Integer pageSize = 5;
         Integer pageCount = (goodsCount + pageSize - 1) / pageSize;
+        if(pageCount == 0){
+            pageCount = 1;
+        }
         if(currPage == null || currPage <= 0){
             currPage = 1;
         }
         if(currPage > pageCount){
             currPage = pageCount;
         }
-        List<Goods> goodsList = GoodsCountUtil.setGoodsListCount(goodsService.listGoodsAll(pageSize * (currPage - 1), pageSize));
+        List<Goods> goodsList = GoodsCountUtil.setGoodsListCount(goodsService.listGoodsByCategoryAndKey(goodsType, key, low, high,operate, pageSize * (currPage - 1),pageSize));
         session.setAttribute("buyerNewGoodsList",goodsList);
+        session.setAttribute("type",type);
+        session.setAttribute("key",key);
+        session.setAttribute("low",low);
+        session.setAttribute("high",high);
+        session.setAttribute("operate",operate);
         if(currPage < pageCount){
             return "true";
         }else if(currPage.equals(pageCount)){
@@ -116,6 +139,53 @@ public class BuyerController {
     }
 
     /**
+     * 搜索结果
+     * @param session 保存作用域
+     * @param key 关键字
+     * @param type 类型
+     * @param low 低价
+     * @param high 高价
+     * @param operate 操作 从高到低 还是从低到高
+     * @param currPage 当前页
+     * @return 成功与否
+     */
+    @ResponseBody
+    @GetMapping(value = "buyer_goods_category_key")
+    public String buyerGoodsCategoryKey(HttpSession session, String key,String type,Float low, Float high, String operate, Integer currPage){
+        Integer pageSize = 5;
+        GoodsType goodsType = goodsTypeService.getGoodsTypeByType(type);
+        Integer goodsCount= goodsService.countGoodsByCategoryAndKey(goodsType, key, low, high);
+        Integer pageCount = (goodsCount + pageSize - 1) / pageSize;
+        if(pageCount == 0){
+            pageCount = 1;
+        }
+        if(currPage == null || currPage <= 0){
+            currPage = 1;
+        }
+        if(currPage > pageCount){
+            currPage = pageCount;
+        }
+        List<Goods> goodsList = GoodsCountUtil.setGoodsListCount(goodsService.listGoodsByCategoryAndKey(goodsType, key, low, high,operate, pageSize * (currPage - 1),pageSize));
+        session.setAttribute("buyerGoodsList",goodsList);
+        session.setAttribute("buyerPageCount",pageCount);
+        session.setAttribute("type",type);
+        session.setAttribute("key",key);
+        session.setAttribute("low",low);
+        session.setAttribute("high",high);
+        session.setAttribute("operate",operate);
+        return "success";
+    }
+
+    /**
+     * 跳转到搜索结果页面
+     * @return 搜索结果页面
+     */
+    @GetMapping(value = "buyer_goods_type_key")
+    public String buyerGoodsTypeKey(){
+        return "buyer_goods_type_key";
+    }
+
+    /**
      * 跳转购买商品的页面
      * @return 商品详情的页面
      */
@@ -126,13 +196,16 @@ public class BuyerController {
         List<Standard> standards = goods.getStandards();
         List<String> sizes = new ArrayList<>();
         Map<String,String> colorMap = new HashMap<>();
-        List<Reply> allReplies = new ArrayList<>();
-        List<Reply> goodReplies = new ArrayList<>();
-        List<Reply> multiReplies = new ArrayList<>();
-        List<Reply> badReplies = new ArrayList<>();
-        List<Reply> imgReplies = new ArrayList<>();
+        // 商品评论数
+        Integer countImgReply = replyService.countImgReplyByStandardId(goods.getId());
+        Integer countGoodReply = replyService.countAllReplyByStandardId(goods.getId(),"goodReply");
+        Integer countMultiReply = replyService.countAllReplyByStandardId(goods.getId(),"multiReply");
+        Integer countBadReply = replyService.countAllReplyByStandardId(goods.getId(),"badReply");
+        List<Reply> listAllReplyFirst = ReplyImgsUtil.setReplyImgs(replyService.listAllReplyByStandardId(goodsId,null,0,5));
+        Integer replyAllCount = replyService.countAllReplyByStandardId(goodsId,null);
+        session.setAttribute("replyAllCount",replyAllCount);
         // 获取同类型的商品
-        List<Goods> listGoodsInCategory = goodsService.listGoodsByCategory(goods.getSeller().getId(),goods.getType().getId());
+        List<Goods> listGoodsInCategory = goodsService.listGoodsByCategoryInSeller(goods.getSeller().getId(),goods.getType().getId());
         for (Standard standard : standards){
             // 获取商品的颜色图片
             if(!colorMap.keySet().contains(standard.getColorImg())){
@@ -142,30 +215,7 @@ public class BuyerController {
             if(!sizes.contains(standard.getSize())){
                 sizes.add(standard.getSize());
             }
-            // 获取商品的评论
-            List<Reply> replyList = replyService.listReplyByStandardId(standard.getId());
-            for (Reply reply : replyList){
-                // 所有评论
-                if(!allReplies.contains(reply)){
-                    allReplies.add(reply);
-                }
-                // 好评
-                if("goodReply".equals(reply.getType()) && !goodReplies.contains(reply)){
-                    goodReplies.add(reply);
-                }
-                // 中评
-                if("multiReply".equals(reply.getType()) && !multiReplies.contains(reply)){
-                    multiReplies.add(reply);
-                }
-                // 差评
-                if("badReply".equals(reply.getType()) && !badReplies.contains(reply)){
-                    badReplies.add(reply);
-                }
-                // 晒图评论
-                if(reply.getImg() != null && !"".equals(reply.getImg()) && !imgReplies.contains(reply)){
-                    imgReplies.add(reply);
-                }
-            }
+
         }
         List<String> goodsImgDetails = new ArrayList<>();
         // 商品的细节图
@@ -192,12 +242,13 @@ public class BuyerController {
         session.setAttribute("goodsLikeCount",goodsLikeCount);
         session.setAttribute("goods_types_in_seller",goodsTypes);
         session.setAttribute("this_goods",goods);
-        session.setAttribute("all_replies",allReplies);
-        session.setAttribute("good_replies",goodReplies);
-        session.setAttribute("bad_replies",badReplies);
-        session.setAttribute("multi_replies",multiReplies);
-        session.setAttribute("img_replies",imgReplies);
+        session.setAttribute("countImgReply",countImgReply);
+        session.setAttribute("countGoodReply",countGoodReply);
+        session.setAttribute("countMultiReply",countMultiReply);
+        session.setAttribute("countBadReply",countBadReply);
+        session.setAttribute("countAllReply",countGoodReply + countMultiReply + countBadReply);
         session.setAttribute("list_goods_category",listGoodsInCategory);
+        session.setAttribute("listReply",listAllReplyFirst);
         Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
         if (currBuyer != null){
             // 当前买家是否收藏店铺
@@ -217,6 +268,61 @@ public class BuyerController {
 
         }
         return "buyer_goods_detail";
+    }
+
+    /**
+     * 加载更多评价
+      * @param currReplyPage 当前页
+     * @param replyType 评价类型
+     * @param goodsId 商品的id
+     * @return 返回ajax
+     */
+    @ResponseBody
+    @GetMapping(value = "buyer_list_reply")
+    public String buyerListReply(Integer currReplyPage, String replyType, HttpSession session, Integer goodsId){
+        if("".equals(replyType) || replyType == null){
+            replyType = null;
+        }
+        Integer pageSize = 5;
+        Integer replyCount = 0;
+        if("imgReply".equals(replyType)){
+            replyCount = replyService.countImgReplyByStandardId(goodsId);
+        }else {
+           replyCount = replyService.countAllReplyByStandardId(goodsId,replyType);
+        }
+        Integer pageCount = (replyCount + pageSize - 1) / pageSize;
+        if(pageCount == 0){
+            pageCount = 1;
+        }
+        if(currReplyPage == null || currReplyPage <= 0){
+            currReplyPage = 1;
+        }
+        if(currReplyPage > pageCount){
+            currReplyPage = pageCount;
+        }
+        List<Reply> replies;
+        if("imgReply".equals(replyType)){
+            replies = ReplyImgsUtil.setReplyImgs(replyService.listImgReplyByStandardId(goodsId,pageSize * (currReplyPage - 1),pageSize));
+        }else {
+            replies = ReplyImgsUtil.setReplyImgs(replyService.listAllReplyByStandardId(goodsId,replyType,pageSize * (currReplyPage - 1),pageSize));
+        }
+        session.setAttribute("listReply",replies);
+        session.setAttribute("replyAllCount",replyCount);
+        if(currReplyPage < pageCount){
+            return "true";
+        }else if(currReplyPage.equals(pageCount)){
+            return "false";
+        }
+        return null;
+    }
+
+    /**
+     * 访问商品的评论
+     * @return 评论的代码块
+     */
+    @GetMapping(value = "buyer_goods_reply")
+    public String buyerGoodsReply(){
+        return "buyer_goods_reply";
     }
 
     /**
@@ -661,15 +767,22 @@ public class BuyerController {
     public String buyerSaveAddress(Address address,HttpSession session){
         Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
         if(currBuyer != null){
-            List<Address> addresses = addressService.listAddressByBuyerId(currBuyer.getId());
-            address.setBuyer(currBuyer);
-            address.setDelFlag(true);
-            if(addresses.size() != 0){
-                address.setDefaultAddress(false);
+            if(address.getId() == null){
+                List<Address> addresses = addressService.listAddressByBuyerId(currBuyer.getId());
+                address.setBuyer(currBuyer);
+                address.setDelFlag(true);
+                if(addresses.size() != 0){
+                    address.setDefaultAddress(false);
+                }else {
+                    address.setDefaultAddress(true);
+                }
+                addressService.saveAddress(address);
             }else {
-                address.setDefaultAddress(true);
+                Address address1 = addressService.getAddressById(address.getId());
+                address.setDelFlag(address1.getDelFlag());
+                address.setDefaultAddress(address1.getDefaultAddress());
+                addressService.updateAddress(address);
             }
-            addressService.saveAddress(address);
             return "success";
         }
         return "fail";
@@ -883,10 +996,13 @@ public class BuyerController {
      * @return 物流信息页面
      */
     @GetMapping(value = "buyer_post_condition")
-    public String buyerPostCondition(HttpSession session){
+    public String buyerPostCondition(HttpSession session, Integer orderId){
         Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
         if(currBuyer != null){
-            return "buyer_post_condition";
+            Order order = orderService.getOrderById(orderId);
+            session.setAttribute("currOrder",order);
+            session.setAttribute("operate","buyer_post_condition");
+            return "buyer_info";
         }
         return "buyer_login";
     }
@@ -914,6 +1030,11 @@ public class BuyerController {
         return "buyer_login";
     }
 
+    /**
+     * 跳转到支付页面
+     * @param orderId 订单的id
+     * @return 支付页面
+     */
     @GetMapping(value = "buyer_pay_now")
     public String buyerPayNow(HttpSession session, Integer orderId){
         Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
@@ -929,6 +1050,24 @@ public class BuyerController {
             session.setAttribute("totalMoney",totalMoneyStr);
             session.setAttribute("orderIdStr",order.getId()+"_");
             return "buyer_pay_order :: buyer_pay_order";
+        }
+        return "buyer_login";
+    }
+
+    /**
+     * 确认收货
+     * @param orderId 订单的id
+     * @return 成功与否
+     */
+    @ResponseBody
+    @GetMapping(value = "buyer_submit_receive")
+    public String buyerSubmitReceive(HttpSession session,Integer orderId){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if (currBuyer != null) {
+            Order order = orderService.getOrderById(orderId);
+            order.setOrderStatus(orderStatusService.getOrderStatusById(4));
+            orderService.updateOrderStatus(order);
+            return "success";
         }
         return "buyer_login";
     }
@@ -1095,8 +1234,138 @@ public class BuyerController {
     public String buyerUserAddress(HttpSession session){
         Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
         if (currBuyer != null) {
+            Buyer buyer = buyerService.getBuyerById(currBuyer.getId());
+            session.setAttribute("currBuyer",buyer);
             session.setAttribute("operate","buyer_user_address");
-            return "buyer_user_address";
+            return "buyer_info";
+        }
+        return "buyer_login";
+    }
+
+    /**
+     * 设置默认地址
+     * @return 设置成功与否
+     */
+    @ResponseBody
+    @GetMapping(value = "buyer_set_address_default")
+    public String buyerSetAddressDefault(HttpSession session,Integer addressId){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if (currBuyer != null) {
+            List<Address> addresses = currBuyer.getAddresses();
+            for (Address address : addresses){
+                address.setDefaultAddress(false);
+                addressService.updateAddress(address);
+            }
+            Address address = addressService.getAddressById(addressId);
+            address.setDefaultAddress(true);
+            addressService.updateAddress(address);
+            Buyer buyer = buyerService.getBuyerById(currBuyer.getId());
+            session.setAttribute("currBuyer",buyer);
+            return "success";
+        }
+        return "buyer_login";
+    }
+
+    /**
+     * 删除地址
+     * @param session 保存作用域
+     * @param addressId 地址id
+     * @return 成功与否
+     */
+    @ResponseBody
+    @GetMapping(value = "buyer_delete_address")
+    public String buyerDeleteAddress(HttpSession session,Integer addressId){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if (currBuyer != null) {
+            Address address = addressService.getAddressById(addressId);
+            address.setDelFlag(false);
+            addressService.updateAddress(address);
+            return "success";
+        }
+        return "buyer_login";
+    }
+
+    @GetMapping(value = "buyer_order_reply")
+    public String buyerOrderReply(HttpSession session, Integer orderId){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if (currBuyer != null) {
+            session.setAttribute("operate","buyer_order_reply");
+            session.setAttribute("currOrder", orderService.getOrderById(orderId));
+            return "buyer_info";
+        }
+        return "buyer_login";
+    }
+
+    @PostMapping(value = "buyer_save_order_reply")
+    public String buyerSaveOrderReply(HttpSession session, Replies replies){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if (currBuyer != null) {
+            Order order = (Order) session.getAttribute("currOrder");
+            order.setOrderStatus(orderStatusService.getOrderStatusById(5));
+            for (Reply reply : replies.getReplies()){
+                reply.setReplyTime(new Date());
+                reply.setBuyer(currBuyer);
+                reply.setSeller(order.getSeller());
+                replyService.saveReply(reply);
+            }
+            orderService.updateOrderStatus(order);
+            session.setAttribute("operate","buyer_reply_success");
+            return "buyer_info";
+        }
+        return "buyer_login";
+    }
+
+    @ResponseBody
+    @GetMapping(value = "check_order_reply")
+    public String checkOrderRely(Integer orderId){
+        Order order = orderService.getOrderById(orderId);
+        if(order.getOrderStatus().getId() == 4){
+            return "true";
+        }
+        return "false";
+    }
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * 买家收藏的商品
+     * @param session 保存作用域
+     * @return 收藏商品的页面
+     */
+    @GetMapping(value = "buyer_like_goods_list")
+    public String buyerLikeGoodsList(HttpSession session){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if (currBuyer != null) {
+            List<Goods> goodsList = GoodsCountUtil.setGoodsListCount(goodsService.listGoodsBuyerLike(currBuyer.getId()));
+            session.setAttribute("goodsBuyerLike",goodsList);
+            session.setAttribute("likeTip","goods");
+            return "buyer_like";
+        }
+        return "buyer_login";
+
+    }
+
+    /**
+     * 获取买家收藏的店铺
+     * @param session 保存作用域
+     * @return 收藏的店铺
+     */
+    @GetMapping(value = "buyer_like_seller_list")
+    public String buyerLikeSellerList(HttpSession session){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if (currBuyer != null) {
+            List<Seller> sellers = sellerService.listSellerLikeByBuyerId(currBuyer.getId());
+            session.setAttribute("sellersBuyerLike",sellers);
+            session.setAttribute("likeTip","seller");
+            return "buyer_like";
         }
         return "buyer_login";
     }

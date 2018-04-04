@@ -1,0 +1,80 @@
+.a_reply{
+    height: 30px;
+    font-size: 14px;
+}
+.nav>li>a{
+    padding: 5px 10px;
+}
+#reply_type{
+    border-bottom: 1px solid #337ab7;
+    width: 80%;
+}
+#reply_title{
+    width: 80%;
+    height: 30px;
+    margin-top: 10px;
+}
+#reply_select{
+    margin-top: 10px;
+}
+#select_reply_type{
+    outline: none;
+}
+#tbl_reply_count{
+    width: 60%;
+    text-align: center;
+    margin-left: 10%;
+}
+#tbl_reply_count th{
+    text-align: center;
+}
+/* 下半部分分页的样式 */
+.font{
+    font-size: 12px;
+    color: #666;
+}
+.reply_tr{
+    width: 80%;
+    padding: 10px 0;
+    margin-bottom: 20px;
+}
+.img_reply_type{
+    width: 30px;
+    height: 30px;
+}
+#div_page{
+    width: 80%;
+    text-align: right;
+}
+.a_to_goods{
+    color: #666;
+    text-decoration: none;
+}
+.a_to_goods:hover{
+    color: #ff3366;
+    text-decoration: none;
+}
+.a_host_reply:hover{
+    cursor: pointer;
+    text-decoration: none;
+    color: #ff3366;
+}
+
+/* 弹窗的样式 */
+.modal-title{
+    font-size: 14px;
+}
+.host_reply_content{
+    border: 1px solid #999;
+    outline: none;
+}
+.btn-primary{
+    width: 80px;
+    height: 30px;
+}
+#host_reply_tip{
+    font-size: 12px;
+    color: #ff3366;
+    height: 20px;
+    padding-left: 10px;
+}

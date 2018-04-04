@@ -77,3 +77,49 @@
     margin-left: 0;
     margin-right: 0;
 }
+.submit_receive{
+    display: inline-block;
+    width: 70px;
+    height: 25px;
+    background-color: #fff;
+    border: 1px solid #333;
+    text-align: center;
+    border-radius: 5px;
+    padding-top: 3px;
+    font-size: 12px;
+}
+.submit_receive:hover{
+    border: 1px solid #71b247;
+    background-color: #71b247;
+    color: #fff;
+}
+.pay_now{
+    display: inline-block;
+    width: 70px;
+    height: 25px;
+    background-color: #ff3366;
+    border: 1px solid #ff3366;
+    text-align: center;
+    border-radius: 5px;
+    padding-top: 3px;
+    font-size: 12px;
+    color: #fff;
+}
+.pay_now:hover{
+    color: #fff;
+    background-color: #ef2f23;
+}
+.order_reply{
+    display: inline-block;
+    width: 70px;
+    height: 25px;
+    background-color: #fff;
+    border: 1px solid #333;
+    text-align: center;
+    border-radius: 5px;
+    padding-top: 3px;
+    font-size: 12px;
+}
+.order_reply:hover{
+    border: 1px solid #ff3366;
+}

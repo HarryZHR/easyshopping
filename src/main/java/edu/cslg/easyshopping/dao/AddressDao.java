@@ -38,4 +38,10 @@ public interface AddressDao {
      * @return 地址
      */
     Address getAddressById(Integer addressId);
+
+    /**
+     * 更新地址
+     * @param address 地址的参数
+     */
+    void updateAddress(Address address);
 }

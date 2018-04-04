@@ -52,4 +52,37 @@ public interface OrderDao {
      * @return 订单
      */
     Order getOrderById(Integer id);
+
+    /**
+     * 通过买家id获取店铺订单
+     * @param sellerId id
+     */
+    List<Order> listOrderBySellerId(@Param(value = "sellerId") Integer sellerId,@Param(value = "orderIndex") Integer orderIndex,@Param(value = "orderSize") Integer orderSize);
+
+    /**
+     * 获取店铺的订单数量
+     * @param sellerId id
+     * @return 订单
+     */
+    Integer countOrderBySellerId(Integer sellerId);
+
+    /**
+     * 在店铺获取不同状态的订单
+     * @param small 状态
+     * @param big 后状态
+     * @param sellerId 卖家id
+     * @param orderIndex 订单开始的索引
+     * @param orderSize 订单的数量
+     * @return 订单
+     */
+    List<Order> listOrderByMoreStatusAndSeller(@Param(value = "small") Integer small,@Param(value = "big") Integer big,@Param(value = "sellerId") Integer sellerId,@Param(value = "orderIndex") Integer orderIndex,@Param(value = "orderSize") Integer orderSize);
+
+    /**
+     * 在店铺的不同状态的数量
+     * @param small 状态
+     * @param big 状态
+     * @param sellerId 订单id
+     * @return 数量
+     */
+    Integer countOrderByMoreStatusAndSeller(@Param(value = "small")Integer small, @Param(value = "big") Integer big,@Param(value = "sellerId") Integer sellerId);
 }

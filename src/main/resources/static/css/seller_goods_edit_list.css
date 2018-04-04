@@ -14,9 +14,8 @@
     font-size: 12px;
 }
 #table_goods_edit{
-    width: 55%;
     position: absolute;
-
+    width: 90%;
 }
 #div_page{
     text-align: right;

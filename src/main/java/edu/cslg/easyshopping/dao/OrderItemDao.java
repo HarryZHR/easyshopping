@@ -20,4 +20,10 @@ public interface OrderItemDao {
      */
     OrderItem getOrderItemById(Integer id);
 
+    /**
+     * 更新订单详情
+     * @param orderItem 订单详情参数
+     */
+    void updateOrderItem(OrderItem orderItem);
+
 }

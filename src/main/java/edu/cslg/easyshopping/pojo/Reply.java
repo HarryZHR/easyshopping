@@ -1,6 +1,7 @@
 package edu.cslg.easyshopping.pojo;
 
 import java.util.Date;
+import java.util.List;
 
 public class Reply {
     private Integer id;
@@ -10,8 +11,9 @@ public class Reply {
     private Standard standard;
     private String img;
     private Buyer buyer;
+    private Seller seller;
     private HostReply hostReply;
-
+    private List<String> imgs;
     public Reply(){}
 
     public Integer getId() {
@@ -76,5 +78,21 @@ public class Reply {
 
     public void setHostReply(HostReply hostReply) {
         this.hostReply = hostReply;
+    }
+
+    public List<String> getImgs() {
+        return imgs;
+    }
+
+    public void setImgs(List<String> imgs) {
+        this.imgs = imgs;
+    }
+
+    public Seller getSeller() {
+        return seller;
+    }
+
+    public void setSeller(Seller seller) {
+        this.seller = seller;
     }
 }

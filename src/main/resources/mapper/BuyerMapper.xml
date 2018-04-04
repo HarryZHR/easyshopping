@@ -10,6 +10,7 @@
 		<result property="buyerStatus" column="buyerStatus"/>
 		<result property="registerDate" column="register_date"/>
 		<association property="buyerDetail" column="id" select="edu.cslg.easyshopping.dao.BuyerDetailDao.getBuyerDetailById"/>
+		<collection property="addresses" column="id" select="edu.cslg.easyshopping.dao.AddressDao.listAddressByBuyerId"/>
 	</resultMap>
 	<insert id="saveBuyer" useGeneratedKeys="true" keyProperty="id" parameterType="edu.cslg.easyshopping.pojo.Buyer">
 		INSERT INTO t_buyer VALUES (NULL ,#{nickName},#{pwd},#{tel},#{headImg},#{buyerStatus},#{registerDate});

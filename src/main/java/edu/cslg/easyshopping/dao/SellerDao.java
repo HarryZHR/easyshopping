@@ -50,4 +50,6 @@ public interface SellerDao {
      * @return 所有收藏的店铺
      */
     List<Seller> listSellerLikeByBuyerId(Integer buyerId);
+
+
 }

@@ -117,7 +117,6 @@ $(function () {
             var j = 0;
             $(".input_check_color").each(function () {
                 if($(this).is(":checked")){
-                    
                     var color = $(this).next().val();
                     var colorImg = $(this).next().next().next()[0].src;
                     var colorImgArr = colorImg.split("/");

@@ -10,6 +10,7 @@ $(function () {
         var street = $("#addressStreet").val();
         var receiver = $("#receiver").val();
         var tel = $("#tel").val();
+        var addressId  = $("#addressId").val();
         if(province === "" || city === "" || district === ""){
             $add_error.html('请选择正确的市区').css("display","inline");
         }else if(street.length < 5 || street.length > 100){
@@ -25,7 +26,7 @@ $(function () {
         }else {
             $.get("buyer_save_address",
                 {"province":province,"city":city,"district":district,
-                    "street":street,"receiver":receiver,"tel":tel},
+                    "street":street,"receiver":receiver,"tel":tel,"id":addressId},
                 function (data) {
                     if(data === "success"){
                         window.location.reload();

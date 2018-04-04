@@ -5,9 +5,12 @@
 <head>
     <title th:text="${session.this_goods.title}"></title>
     <script th:src="@{http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js}"></script>
+    <!-- lightbox的必须在imagezoom前面，不然会冲突 -->
+    <script type="text/javascript" th:src="@{lightbox/lightbox-plus-jquery.min.js}"></script>
     <script type="text/javascript" th:src="@{imagezoom/jquery.imagezoom.min.js}"></script>
     <script type="text/javascript" th:src="@{js/buyer_goods_detail.js}"></script>
     <link rel="stylesheet" type="text/css" th:href="@{css/buyer_goods_detail.css}">
+
 </head>
 <body>
 <div th:include="buyer_top ::buyer_top"></div>
@@ -69,10 +72,11 @@
                             </div>
                         </div>
                         <div class="div_right_inner" id="div_sell_num">
-                            <span class="span_goods_th">月销量</span>
-                            <span class="span_goods_td"></span>
+                            <span class="span_goods_th">累计销量</span>
+                            <span class="span_goods_td" th:text="${session.this_goods.saleCount}"></span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <span class="span_goods_th">累计评价</span>
-                            <span class="span_goods_td" th:text="${session.all_replies.size()}"></span>
+                            <span class="span_goods_td" th:text="${session.countAllReply}"></span>
                         </div>
                         <div id="div_close_buy_info" class="div_close">
                             <span class="span_close">×</span>
@@ -170,7 +174,7 @@
                                 </li>
                                 <li id="li_goods_reply">
                                     <a href="javascript:void(0)">累计评价</a>
-                                    <i class="reply_num" th:text="${session.all_replies.size()}"></i>
+                                    <i class="reply_num" th:text="${session.countAllReply}"></i>
                                 </li>
                                 <li id="li_goods_category">
                                     <a href="javascript:void(0)">本店同类商品</a>
@@ -204,16 +208,25 @@
                                     <h1 class="h1_module">买家评价</h1>
                                 </div>
                                 <div id="div_reply_num">
-                                    <div class="div_none_reply" th:if="${session.all_replies.size() eq 0}">
+                                    <div class="div_none_reply" th:if="${session.countAllReply eq 0}">
                                         还没有买家进行文字或晒图评价，等你来评价哦~
                                     </div>
-                                    <div th:if="${session.all_replies.size() != 0}">
-                                        <a class="reply_select reply_checked">全部评价（<i class="reply_num" th:text="${session.all_replies.size()}"></i>）</a>
-                                        <a class="reply_select">有图（<i class="reply_num" th:text="${session.img_replies.size()}"></i>）</a>
-                                        <a class="reply_select">好评（<i class="reply_num" th:text="${session.good_replies.size()}"></i>）</a>
-                                        <a class="reply_select">中评（<i class="reply_num" th:text="${session.multi_replies.size()}"></i>）</a>
-                                        <a class="reply_select">差评（<i class="reply_num" th:text="${session.bad_replies.size()}"></i>）</a>
+                                    <div th:if="${session.countAllReply != 0}">
+                                        <div>
+                                            <a id="all_reply" class="reply_select reply_checked">全部评价（<i class="reply_num" th:text="${session.countAllReply}"></i>）</a>
+                                            <a id="img_reply" class="reply_select">有图（<i class="reply_num" th:text="${session.countImgReply}"></i>）</a>
+                                            <a id="good_reply" class="reply_select">好评（<i class="reply_num" th:text="${session.countGoodReply}"></i>）</a>
+                                            <a id="multi_reply" class="reply_select">中评（<i class="reply_num" th:text="${session.countMultiReply}"></i>）</a>
+                                            <a id="bad_reply" class="reply_select">差评（<i class="reply_num" th:text="${session.countBadReply}"></i>）</a>
+                                        </div>
+                                        <div id="div_goods_reply" th:include="buyer_goods_reply :: buyer_goods_reply"></div>
+                                        <input id="replyType" type="hidden"/>
+                                        <div class="div_reply_load_more" th:if="${session.replyAllCount > 5}">
+                                            <input type="hidden" class="currReplyPage" value="1"/>
+                                            <span class="reply_load_more">加载更多</span>
+                                        </div>
                                     </div>
+                                    <div style="height: 40px"></div>
                                 </div>
                             </div>
                             <div class="div_goods_category">
@@ -244,6 +257,6 @@
         </div>
     </div>
     <div th:include="footer :: footer"></div>
-
 </body>
+
 </html>

@@ -305,8 +305,139 @@ $(function(){
     $("#toCart").on("click",function () {
         window.location.href = "buyer_cart";
     });
-});
 
+    // 加载更多的评价
+    var goodsId = $("#goodsId").val();
+    $(".reply_load_more").on("click",function () {
+        var $currReplyPage = $(this).prev();
+        var currReplyPage = parseInt($currReplyPage.val()) + 1;
+        var replyType = $("#replyType").val();
+        if($(this).text() === "加载更多"){
+            $.get("buyer_list_reply",
+                {"goodsId": goodsId,"currReplyPage":currReplyPage,"replyType":replyType},
+                function (data) {
+                    if(data === "true"){
+                        $.ajax({
+                            url: "buyer_goods_reply",
+                            type: "get",
+                            success: function (returnData) {
+                                $("#div_goods_reply").append(returnData);
+                                $(".reply_load_more").text('加载更多');
+                                $currReplyPage.val(currReplyPage);
+                            }
+                        });
+                    }else if(data === "false"){
+                        $.get("buyer_goods_reply",
+                            function (returnData) {
+                                $("#div_goods_reply").append(returnData);
+                                $(".reply_load_more").text('已经到底了');
+                            })
+                    }
+                });
+        }
+    });
+    $("#all_reply").on("click",function () {
+        removeChecked();
+        $(this).addClass("reply_checked");
+        $("#replyType").val("");
+        $.ajaxSetup({
+            async:false
+        });
+        $.get("buyer_list_reply",
+            {"goodsId": goodsId,"currReplyPage":1,"replyType":""},
+            function () {
+                $.get("buyer_goods_reply",
+                    function (returnData) {
+                        $("#div_goods_reply").html(returnData);
+                    })
+            });
+        checkAllCount();
+    });
+
+    $("#good_reply").on("click",function () {
+        removeChecked();
+        $(this).addClass("reply_checked");
+        $("#replyType").val("goodReply");
+        $.ajaxSetup({
+            async:false
+        });
+        $.get("buyer_list_reply",
+            {"goodsId": goodsId,"currReplyPage":1,"replyType":"goodReply"},
+            function () {
+                $.get("buyer_goods_reply",
+                    function (returnData) {
+                        $("#div_goods_reply").html(returnData);
+                    })
+            });
+        checkAllCount();
+    });
+    $("#multi_reply").on("click",function () {
+        removeChecked();
+        $(this).addClass("reply_checked");
+        $("#replyType").val("multiReply");
+        $.ajaxSetup({
+            async:false
+        });
+        $.get("buyer_list_reply",
+            {"goodsId": goodsId,"currReplyPage":1,"replyType":"multiReply"},
+            function () {
+                $.get("buyer_goods_reply",
+                    function (returnData) {
+                        $("#div_goods_reply").html(returnData);
+                    })
+            });
+        checkAllCount();
+    });
+    $("#bad_reply").on("click",function () {
+        removeChecked();
+        $(this).addClass("reply_checked");
+        $("#replyType").val("badReply");
+        $.ajaxSetup({
+            async:false
+        });
+        $.get("buyer_list_reply",
+            {"goodsId": goodsId,"currReplyPage":1,"replyType":"badReply"},
+            function () {
+                $.get("buyer_goods_reply",
+                    function (returnData) {
+                        $("#div_goods_reply").html(returnData);
+                    })
+            });
+        checkAllCount();
+    });
+    $("#img_reply").on("click",function () {
+        removeChecked();
+        $(this).addClass("reply_checked");
+        $("#replyType").val("imgReply");
+        $.ajaxSetup({
+            async:false
+        });
+        $.get("buyer_list_reply",
+            {"goodsId": goodsId,"currReplyPage":1,"replyType":"imgReply"},
+            function () {
+                $.get("buyer_goods_reply",
+                    function (returnData) {
+                        $("#div_goods_reply").html(returnData);
+                    })
+            });
+        checkAllCount();
+    })
+
+});
+// 比较当前显示的总记录数，决定要不要显示加载更多
+function checkAllCount() {
+    if(parseInt($("#replyAllCount").val()) <= 5){
+        $(".reply_load_more").css("display","none");
+    }else {
+        $(".reply_load_more").css("display","block").text("加载更多");
+    }
+}
+// 去掉当前所有的a标签的选中
+function removeChecked() {
+    $(".reply_select").each(function () {
+        $(this).removeClass("reply_checked");
+    });
+}
 // 判断颜色和尺寸是否都被选择
 function colorAndSizeCheck() {
     var colorFlag = false;

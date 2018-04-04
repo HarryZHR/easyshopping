@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="buyer_order_reply">
+        <link rel="stylesheet" type="text/css" th:href="@{css/buyer_order_reply.css}" />
+        <script>
+            $(function () {
+                 $(".input_upload_img").on("change",function () {
+                     var formData = new FormData();
+                     var files = $(this).get(0).files;
+                     var tip = $(this).parent().find(".span_reply_tip");
+                     var $url = $(this).parent().find(".img_src");
+                     for (var i = 0; i < files.length; i++){
+                         formData.append("files",files[i]);
+                     }
+                     $.ajax({
+                         url: "up_img_multi",
+                         type: "POST",
+                         data: formData,
+                         async: false,
+                         cache: false,
+                         contentType: false,
+                         processData: false,
+                         success: function (returndata) {
+                             var url = returndata.split("_");
+                             $url.val(url);
+                             for (var i = 0 ; i < url.length - 1; i++){
+                                tip.append("<img src=' " + url[i] + "' class='img_reply_up' />")
+                             }
+                         },
+                         error: function (data) {
+                             alert("fail");
+                         }
+                     });
+                 });
+
+                 $("#replyForm").submit(function () {
+                     var orderId = $(".orderId").val();
+                     var flag = false;
+                     $.ajaxSetup({
+                         async: false
+                     });
+                     $.get("check_order_reply",
+                         {"orderId":orderId},
+                     function (data) {
+                        if(data === "false"){
+                            $(".reply_tip").text("该订单已经被评价");
+                            flag = false;
+                        }else if(data === "true"){
+                            flag = true;
+                        }
+                     });
+                     return flag;
+                 });
+            });
+        </script>
+        <div class="first-title">
+            <h3>评价宝贝</h3>
+        </div>
+        <div class="font div_order_item_seller">
+            <span>卖家：</span>
+            <a th:text="${session.currOrder.seller.storeName}"></a>
+        </div>
+        <input type="hidden" class="orderId" th:value="${session.currOrder.id}"/>
+        <form method="post" action="buyer_save_order_reply" id="replyForm">
+            <div class="row font div_order_item" th:each="orderItem, orderItemStat : ${session.currOrder.orderItems}">
+                <input type="hidden" th:value="${orderItem.standard.id}" th:name="'replies['+${orderItemStat.index}+'].standard.id'"/>
+                <div class="col-xs-3">
+                    <img class="order_reply_img" src="" th:src="${orderItem.standard.colorImg}">
+                    <a class="order_title" th:href="@{'buyer_goods_detail'(goodsId=${orderItem.standard.goods.id})}" th:text="${orderItem.standard.goods.title}"></a>
+                    <span class="order_standard" th:text="'颜色分类：' + ${orderItem.standard.color} + ' ' + ${orderItem.standard.size}"></span>
+                </div>
+                <div class="col-xs-9">
+                    <div>
+                        <label>
+                            <input type="radio" th:name="'replies['+${orderItemStat.index}+'].type'" value="goodReply">
+                            <img src="" th:src="@{img/goodReply.png}"/>
+                        </label>
+                        <label>
+                            <input type="radio" th:name="'replies['+${orderItemStat.index}+'].type'" value="multiReply">
+                            <img src="" th:src="@{img/multiReply.png}"/>
+                        </label>
+                        <label>
+                            <input type="radio" th:name="'replies['+${orderItemStat.index}+'].type'" value="badReply">
+                            <img src="" th:src="@{img/badReply.png}"/>
+                        </label>
+                    </div>
+                    <div class="input_goods_reply">
+                        <textarea th:name="'replies['+${orderItemStat.index}+'].content'" class="goods_reply" cols="80" rows="8" placeholder="亲，写点评价吧，您的评价对其他买家有很大帮助。"></textarea>
+                        <div class="div_upload_img">
+                            <input class="input_upload_img" type="file" multiple accept="image/jpeg, image/png, image/jpg"/>
+                            <span class="span_upload_img">晒图片</span>
+                            <span class="span_reply_tip">限5张</span>
+                            <input type="hidden" class="img_src" th:name="'replies['+${orderItemStat.index}+'].img'"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-3"></div>
+                <div class="col-xs-9">
+                    <input class="reply_now" type="submit" value="立即评价"/>
+                    <span class="reply_tip"></span>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

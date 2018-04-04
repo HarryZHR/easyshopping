@@ -8,14 +8,53 @@
 		<result property="content" column="content"/>
 		<result property="replyTime" column="replyTime"/>
 		<result property="img" column="img"/>
-		<association property="standard" javaType="edu.cslg.easyshopping.pojo.Standard" column="standard_id" resultMap="edu.cslg.easyshopping.dao.StandardDao.standardMap">
-			<id property="id" column="id"/>
-		</association>
+		<association property="standard" column="standard_id" select="edu.cslg.easyshopping.dao.StandardDao.getStandardById" />
+		<association property="buyer" column="buyer_id" select="edu.cslg.easyshopping.dao.BuyerDao.getBuyerById" />
+		<association property="seller" column="seller_id" select="edu.cslg.easyshopping.dao.SellerDao.getSellerById" />
+		<association property="hostReply" column="hostReply_id" select="edu.cslg.easyshopping.dao.HostReplyDao.getHostReplyById" />
 	</resultMap>
+	<insert id="saveReply" parameterType="edu.cslg.easyshopping.pojo.Reply">
+		INSERT INTO t_reply VALUES (NULL ,#{type}, #{content},#{replyTime},#{standard.id},#{img},#{buyer.id},#{seller.id},NULL ) ;
+	</insert>
 	<select id="getReplyById" resultMap="replyMap">
-		SELECT * FROM t_reply WHERE id = #{0}
+		SELECT * FROM t_reply WHERE id = #{0};
 	</select>
-	<select id="listReplyByStandardId" resultMap="replyMap">
-		SELECT * FROM t_reply WHERE standard_id = #{0}
+	<select id="listAllReplyByStandardId" resultMap="replyMap">
+		SELECT t1.* FROM t_reply t1 LEFT JOIN t_standard t2 ON t1.standard_id = t2.id WHERE t2.goods_id = #{goodsId}
+			<if test="type != null">AND t1.type = #{type}</if>
+			ORDER BY t1.replyTime DESC
+			LIMIT #{replyIndex},#{replySize};
 	</select>
+	<select id="countAllReplyByStandardId" resultType="Integer">
+		SELECT count(*) FROM t_reply t1 LEFT JOIN t_standard t2 ON t1.standard_id = t2.id WHERE t2.goods_id = #{goodsId}
+			<if test="type != null">AND t1.type = #{type}</if> ;
+	</select>
+	<select id="listImgReplyByStandardId" resultMap="replyMap">
+		SELECT t1.* FROM t_reply t1 LEFT JOIN t_standard t2 ON t1.standard_id = t2.id WHERE t2.goods_id = #{goodsId}
+		AND t1.img != ''
+		ORDER BY t1.replyTime DESC
+		LIMIT #{replyIndex},#{replySize};
+	</select>
+	<select id="countImgReplyByStandardId" resultType="Integer">
+		SELECT count(*) FROM t_reply t1 LEFT JOIN t_standard t2 ON t1.standard_id = t2.id WHERE t2.goods_id = #{0} AND t1.img != '';
+	</select>
+
+	<!-- 卖家 -->
+	<select id="listReplyBySellerAndType" resultMap="replyMap">
+		SELECT * FROM t_reply WHERE seller_id = #{sellerId}
+			<if test="replyType != null"> AND type = #{replyType} </if>
+			<if test="hostReply == true"> AND hostReply_id IS NULL </if>
+			ORDER BY replyTime DESC
+			LIMIT #{replyIndex},#{replySize};
+	</select>
+	<select id="countReplyBySellerAndType" resultType="Integer">
+		SELECT count(*) FROM t_reply
+			WHERE seller_id = #{sellerId}
+				<if test="replyType != null"> AND type = #{replyType} </if>
+				<if test="interval != null"> AND replyTime - #{interval} &gt; 0 </if>
+				<if test="hostReply == true"> AND hostReply_id IS NULL </if>
+	</select>
+	<update id="updateReply" parameterType="edu.cslg.easyshopping.pojo.Reply">
+		UPDATE t_reply SET type = #{type},content = #{content}, hostReply_id = #{hostReply.id} WHERE id = #{id};
+	</update>
 </mapper>

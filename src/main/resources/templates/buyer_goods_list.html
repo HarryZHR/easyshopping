@@ -33,8 +33,13 @@
             <div style="clear: both;height: 50px"></div>
         </div>
         <div class="div_more"></div>
-        <div class="div_load_more">
-            <input type="hidden" value="1"/>
+        <div class="div_load_more" th:if="${session.buyerPageCount > 1}">
+            <input class="hidden_curr_page" type="hidden" value="1"/>
+            <input class="hidden_type" type="hidden" th:value="${session.type}"/>
+            <input class="hidden_key" type="hidden" th:value="${session.key}"/>
+            <input class="hidden_low" type="hidden" th:value="${session.low}"/>
+            <input class="hidden_high" type="hidden" th:value="${session.high}"/>
+            <input class="hidden_operate" type="hidden" th:value="${session.operate}"/>
             <span class="span_load_more">加载更多</span>
         </div>
     </div>

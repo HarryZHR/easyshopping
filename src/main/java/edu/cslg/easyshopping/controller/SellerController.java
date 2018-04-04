@@ -3,6 +3,7 @@ package edu.cslg.easyshopping.controller;
 import edu.cslg.easyshopping.pojo.*;
 import edu.cslg.easyshopping.service.*;
 import edu.cslg.easyshopping.util.GoodsCountUtil;
+import edu.cslg.easyshopping.util.OrderMoneyUtil;
 import edu.cslg.easyshopping.util.UploadUtil;
 import edu.cslg.easyshopping.util.ValidationCode;
 import org.springframework.stereotype.Controller;
@@ -34,15 +35,16 @@ public class SellerController {
     private GoodsImgService goodsImgService;
     @Resource
     private StandardService standardService;
-
-    /**
-     * 登录主页面
-     * @return 跳转到店铺登录页面
-     */
-    @GetMapping(value = "/")
-    public String seller_login(){
-        return "seller_login";
-    }
+    @Resource
+    private OrderService orderService;
+    @Resource
+    private OrderStatusService orderStatusService;
+    @Resource
+    private OrderItemService orderItemService;
+    @Resource
+    private ReplyService replyService;
+    @Resource
+    private HostReplyService hostReplyService;
 
     /**
      * 商家注册
@@ -168,9 +170,13 @@ public class SellerController {
      * @return 登录之后的首页
      */
     @GetMapping(value = "/seller_home")
-    public String seller_home(Model model) {
-        model.addAttribute("seller_status", "home_page");
-        return "index";
+    public String seller_home(Model model,HttpSession session) {
+        Seller currSeller = (Seller) session.getAttribute("currSeller");
+        if(currSeller != null){
+            model.addAttribute("seller_status", "home_page");
+            return "seller_index";
+        }
+        return "seller_login";
     }
 
     /**
@@ -186,7 +192,7 @@ public class SellerController {
             Seller sellerNow = sellerService.getSellerById(currSeller.getId());
             session.setAttribute("sellerNow",sellerNow);
             model.addAttribute("seller_status", "setting");
-            return "index";
+            return "seller_index";
         }
         return "seller_login";
     }
@@ -224,7 +230,7 @@ public class SellerController {
             session.setAttribute("goodsTypeList", goodsTypeList);
             model.addAttribute("seller_status", "goods_category");
             model.addAttribute("operate", "goods_operate");
-            return "index";
+            return "seller_index";
         }
         return "seller_login";
     }
@@ -262,7 +268,7 @@ public class SellerController {
             session.setAttribute("goods_type", goods_type);
             model.addAttribute("seller_status", "goods_publish");
             model.addAttribute("operate", "goods_operate");
-            return "index";
+            return "seller_index";
         }
         return "seller_login";
     }
@@ -309,7 +315,7 @@ public class SellerController {
             goods.setDiscount(0f);
             goodsService.updateGoods(goods);
             model.addAttribute("seller_status", "home_page");
-            return "index";
+            return "seller_index";
         }
         return "seller_login";
     }
@@ -359,7 +365,7 @@ public class SellerController {
             listGoodsInSeller(currPage,currSeller,session);
             model.addAttribute("seller_status", "goods_list_edit");
             model.addAttribute("operate", "goods_operate");
-            return "index";
+            return "seller_index";
         }
         return null;
     }
@@ -391,11 +397,11 @@ public class SellerController {
         Goods goods = goodsService.getGoodsById(goodsId);
         GoodsCountUtil.setGoodsCount(goods);
         GoodsType goods_type = goods.getType();
-        session.setAttribute("goods",goods);
         session.setAttribute("goods_type",goods_type);
+        model.addAttribute("goods",goods);
         model.addAttribute("seller_status", "goods_edit");
         model.addAttribute("operate", "goods_operate");
-        return "index";
+        return "seller_index";
     }
 
     /**
@@ -422,7 +428,7 @@ public class SellerController {
             listGoodsInSeller(currPage,currSeller,session);
             model.addAttribute("seller_status", "goods_discount");
             model.addAttribute("operate", "goods_operate");
-            return "index";
+            return "seller_index";
         }
         return null;
     }
@@ -439,7 +445,7 @@ public class SellerController {
             listGoodsInSeller(currPage,currSeller,session);
             model.addAttribute("seller_status", "goods_activity");
             model.addAttribute("operate", "goods_operate");
-            return "index";
+            return "seller_index";
         }
         return null;
     }
@@ -501,4 +507,242 @@ public class SellerController {
     public String sellerLogin(){
         return "seller_login";
     }
+
+    /**
+     * 查看卖家所有的订单
+     * @param currPage 当前页
+     * @return 卖家的订单
+     */
+    @GetMapping(value = "seller_order_list")
+    public String sellerOrderList(Model model,HttpSession session, Integer currPage){
+        Seller currSeller = (Seller)session.getAttribute("currSeller");
+        if(currSeller != null){
+            Integer pageSize = 5;
+            Integer goodsCount = orderService.countOrderBySellerId(currSeller.getId());
+            Integer pageCount = (goodsCount + pageSize - 1) / pageSize;
+            if(pageCount == 0){
+                pageCount = 1;
+            }
+            if(currPage == null || currPage <= 0){
+                currPage = 1;
+            }
+            if(currPage > pageCount){
+                currPage = pageCount;
+            }
+            List<Order> orders = OrderMoneyUtil.setOrderListMoney(orderService.listOrderBySellerId(currSeller.getId(),pageSize * (currPage - 1), pageSize));
+            session.setAttribute("orderInSeller",orders);
+            session.setAttribute("currPage",currPage);
+            session.setAttribute("pageCount",pageCount);
+            model.addAttribute("seller_status", "order_list");
+            model.addAttribute("operate", "order_operate");
+            return "seller_index";
+        }
+        return "seller_login";
+    }
+
+    /**
+     * 查看评价
+     * @return 店铺内的评价，第一页
+     */
+    @GetMapping(value = "seller_order_reply")
+    public String sellerOrderReply(HttpSession session, Model model,String replyType,Boolean hostReply){
+        Seller currSeller = (Seller)session.getAttribute("currSeller");
+        if(currSeller != null){
+            Long month = System.currentTimeMillis() - 2592000;
+            Long week = System.currentTimeMillis() - 604800;
+            Integer goodMonth = replyService.countReplyBySellerAndType("goodReply",currSeller.getId(), month,false);
+            Integer multiMonth = replyService.countReplyBySellerAndType("multiReply",currSeller.getId(), month,false);
+            Integer badMonth = replyService.countReplyBySellerAndType("badReply",currSeller.getId(), month,false);
+            Integer allMonth = goodMonth + multiMonth + badMonth;
+
+            Integer goodWeek = replyService.countReplyBySellerAndType("goodReply",currSeller.getId(),week,false);
+            Integer multiWeek = replyService.countReplyBySellerAndType("multiReply",currSeller.getId(),week,false);
+            Integer badWeek = replyService.countReplyBySellerAndType("badReply",currSeller.getId(),week,false);
+            Integer allWeek = goodWeek + multiWeek + badWeek;
+
+            Integer allGood = replyService.countReplyBySellerAndType("goodReply",currSeller.getId(),null,false);
+            Integer allMulti = replyService.countReplyBySellerAndType("multiReply",currSeller.getId(),null,false);
+            Integer allBad = replyService.countReplyBySellerAndType("badReply",currSeller.getId(),null,false);
+
+            Integer goodOutMonth = allGood - goodMonth;
+            Integer multiOutMonth = allMulti - multiMonth;
+            Integer badOutMonth = allBad - badMonth;
+            Integer allOutMonth = goodOutMonth + multiOutMonth + badOutMonth;
+
+            List<Integer> replyCounts = new ArrayList<>();
+            replyCounts.add(goodWeek);
+            replyCounts.add(goodMonth);
+            replyCounts.add(goodOutMonth);
+            replyCounts.add(allGood);
+
+            replyCounts.add(multiWeek);
+            replyCounts.add(multiMonth);
+            replyCounts.add(multiOutMonth);
+            replyCounts.add(allMulti);
+
+            replyCounts.add(badWeek);
+            replyCounts.add(badMonth);
+            replyCounts.add(badOutMonth);
+            replyCounts.add(allBad);
+
+            replyCounts.add(allWeek);
+            replyCounts.add(allMonth);
+            replyCounts.add(allOutMonth);
+
+            if("".equals(replyType)){
+                replyType = null;
+            }
+            Integer pageSize = 5;
+            Integer replyCount = replyService.countReplyBySellerAndType(replyType,currSeller.getId(),null,hostReply);
+            Integer pageCount = (replyCount + pageSize - 1) / pageSize;
+            replyCounts.add(replyCount);
+            if(pageCount == 0){
+                pageCount = 1;
+            }
+            List<Reply> replies = replyService.listReplyBySellerAndType(replyType,currSeller.getId(),0, pageSize,hostReply);
+            session.setAttribute("replies",replies);
+            session.setAttribute("currReplyPage",1);
+            session.setAttribute("pageCount",pageCount);
+            session.setAttribute("replyType",replyType);
+            session.setAttribute("hostReply",hostReply);
+            session.setAttribute("replyCounts",replyCounts);
+            model.addAttribute("seller_status", "order_reply");
+            model.addAttribute("operate", "order_operate");
+            return "seller_index";
+        }
+        return "seller_login";
+    }
+
+    /**
+     * 获得分页的评价
+     * @param currReplyPage 当前页码
+     * @param replyType 评价类型
+     * @return 每页的评价
+     */
+    @GetMapping(value = "seller_page_reply")
+    public String sellerPageReply(HttpSession session, Integer currReplyPage, Model model, String replyType,Boolean hostReply){
+        Seller currSeller = (Seller)session.getAttribute("currSeller");
+        if(currSeller != null){
+            if("".equals(replyType)){
+                replyType = null;
+            }
+            Integer pageSize = 5;
+            Integer replyCount = replyService.countReplyBySellerAndType(replyType,currSeller.getId(),null,hostReply);
+            Integer pageCount = (replyCount + pageSize - 1) / pageSize;
+            if(pageCount == 0){
+                pageCount = 1;
+            }
+            if(currReplyPage == null || currReplyPage <= 0){
+                currReplyPage = 1;
+            }
+            if(currReplyPage > pageCount){
+                currReplyPage = pageCount;
+            }
+            List<Reply> replies = replyService.listReplyBySellerAndType(replyType,currSeller.getId(),pageSize * (currReplyPage - 1), pageSize,hostReply);
+            session.setAttribute("replies",replies);
+            session.setAttribute("currReplyPage",currReplyPage);
+            session.setAttribute("hostReply",hostReply);
+            model.addAttribute("seller_status", "order_reply");
+            model.addAttribute("operate", "order_operate");
+            return "seller_index";
+        }
+        return "seller_login";
+    }
+
+    /**
+     * 添加店铺的回复
+     * @param replyId 评价的id
+     * @param hostReply 主人的评价
+     * @return 成功与否
+     */
+    @ResponseBody
+    @GetMapping(value = "seller_host_reply")
+    public String sellerHostReply(HttpSession session,Integer replyId, HostReply hostReply){
+        Seller currSeller = (Seller)session.getAttribute("currSeller");
+        if(currSeller != null){
+            Reply reply = replyService.getReplyById(replyId);
+            hostReply.setHostReplyTime(new Date());
+            hostReplyService.saveHostReply(hostReply);
+            reply.setHostReply(hostReply);
+            replyService.updateReply(reply);
+            return "success";
+        }
+        return "seller_login";
+    }
+
+    /**
+     * 发货页面
+     * @return 发货的页面
+     */
+    @GetMapping(value = "seller_send_goods")
+    public String sellerSendGoods(HttpSession session,Model model, Integer currPage){
+        Seller currSeller = (Seller)session.getAttribute("currSeller");
+        if(currSeller != null){
+            Integer pageSize = 5;
+            Integer goodsCount = goodsService.countGoodsBySeller(currSeller.getId());
+            Integer pageCount = (goodsCount + pageSize - 1) / pageSize;
+            if(pageCount == 0){
+                pageCount = 1;
+            }
+            if(currPage == null || currPage <= 0){
+                currPage = 1;
+            }
+            if(currPage > pageCount){
+                currPage = pageCount;
+            }
+            List<Order> orders = OrderMoneyUtil.setOrderListMoney(orderService.listOrderByMoreStatusAndSeller(2,2,currSeller.getId(), pageSize * (currPage - 1), pageSize));
+            session.setAttribute("orderWaitSend",orders);
+            model.addAttribute("seller_status", "send_goods");
+            model.addAttribute("operate", "send_operate");
+            session.setAttribute("currPage",currPage);
+            session.setAttribute("pageCount",pageCount);
+            return "seller_index";
+        }
+        return "seller_login";
+    }
+
+    /**
+     * 发货
+     * @return 成功与否
+     */
+    @ResponseBody
+    @GetMapping(value = "seller_update_send_goods")
+    public String sellerUpdateSendGoods(HttpSession session, Integer orderId, String sendNum){
+        Seller currSeller = (Seller)session.getAttribute("currSeller");
+        if(currSeller != null){
+            Order order = orderService.getOrderById(orderId);
+            for (OrderItem orderItem : order.getOrderItems()){
+                orderItem.setSendNum(sendNum);
+                orderItemService.updateOrderItem(orderItem);
+            }
+            order.setOrderStatus(orderStatusService.getOrderStatusById(3));
+            orderService.updateOrderStatus(order);
+            return "success";
+        }
+        return "seller_login";
+    }
+
+    /**
+     * 单个商品的发货页面
+     * @param orderId 订单的id
+     * @return 发货页面
+     */
+    @GetMapping(value = "seller_single_send_goods")
+    public String sellerSingleGoods(HttpSession session,Model model,Integer orderId){
+        Seller currSeller = (Seller)session.getAttribute("currSeller");
+        if(currSeller != null){
+            Order order = orderService.getOrderById(orderId);
+            List<Order> orders = new ArrayList<>();
+            orders.add(order);
+            OrderMoneyUtil.setOrderListMoney(orders);
+            session.setAttribute("orderWaitSend",orders);
+            model.addAttribute("seller_status", "send_goods");
+            model.addAttribute("operate", "send_operate");
+            model.addAttribute("single_send","true");
+            return "seller_index";
+        }
+        return "seller_login";
+    }
+
+
 }

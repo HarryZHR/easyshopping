@@ -21,11 +21,14 @@
             background-color: #f2f2f2;
             padding-left: 10px;
             border: 1px solid #ececec;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
         }
         .first-title h3{
             font-size: 20px;
             font-weight: 600;
+        }
+        .tr{
+            margin-top: 30px;
         }
     </style>
 </head>
@@ -38,6 +41,10 @@
     <div class="div-right" th:if="${session.operate eq 'buyer_user_info'}" th:include="buyer_user_info :: buyer_user_info"></div>
     <div class="div-right" th:if="${session.operate eq 'buyer_user_head'}" th:include="buyer_user_head :: buyer_user_head"></div>
     <div class="div-right" th:if="${session.operate eq 'buyer_user_pwd'}" th:include="buyer_user_pwd :: buyer_user_pwd"></div>
+    <div class="div-right" th:if="${session.operate eq 'buyer_user_address'}" th:include="buyer_user_address :: buyer_user_address"></div>
+    <div class="div-right" th:if="${session.operate eq 'buyer_post_condition'}" th:include="buyer_post_condition :: buyer_post_condition"></div>
+    <div class="div-right" th:if="${session.operate eq 'buyer_order_reply'}" th:include="buyer_order_reply :: buyer_order_reply"></div>
+    <div class="div-right" th:if="${session.operate eq 'buyer_reply_success'}" th:include="buyer_reply_success :: buyer_reply_success"></div>
     <div th:include="footer :: footer"></div>
 </body>
 <style>

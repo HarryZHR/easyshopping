@@ -1,0 +1,34 @@
+.address-content{
+    border: 1px solid #dedcba;
+    background-color: #fdfbea;
+    box-shadow: 1px 1px 5px rgba(0,0,0,.1);
+    height: 40px;
+    padding: 10px 15px;
+    margin-left: 20px;
+    margin-right: 20px;
+    font-size: 12px;
+}
+.add_address{
+    background-color: #FFA500;
+    color: #fff;
+    width: 80px;
+    height: 30px;
+    border: 0;
+}
+#div_btn_add_address{
+    padding-bottom: 20px;
+}
+.div_add_address{
+    display: none;
+}
+.div_receiver{
+    text-align: right;
+    padding-left: 0;
+    padding-right: 10px;
+}
+#all_address{
+    width: 85%;
+}
+.div-operate{
+    padding-right: 0;
+}

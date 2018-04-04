@@ -27,7 +27,9 @@
     width: 70%;
     border: 2px solid #ff1877;
     outline: none;
-    padding: 3px 5px;
+    padding: 3px 10px;
+    font-size: 12px;
+    color: #999;
 }
 .span_search{
     float: left;
@@ -66,8 +68,9 @@
 .a_type:hover{
     color: #ff1877;
     text-decoration: none;
+    cursor: pointer;
 }
-.a_type:after{
-    color: #333;
+.a_type:focus{
+    color: #ff1877;
     text-decoration: none;
 }

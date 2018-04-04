@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="buyer_user_address">
+        <link rel="stylesheet" type="text/css" th:href="@{css/buyer_user_address.css}" />
+        <script type="text/javascript" th:src="@{js/buyer_user_address.js}"></script>
+        <div class="first-title">
+            <h3>收货地址</h3>
+        </div>
+        <div class="row" id="div_btn_add_address">
+            <div class="col-xs-12">
+                <input class="add_address" type="button" value="新增地址" />
+            </div>
+        </div>
+        <div class="div_add_address" >
+            <div th:include="buyer_save_address :: buyer_save_address"></div>
+        </div>
+        <div class="row" id="all_address">
+            <div class="row tr address-content" th:each="address : ${session.currBuyer.addresses}">
+                <div class="col-xs-1 div_receiver">
+                    <span class="span_receiver" th:text="${address.receiver}"></span>
+                </div>
+                <div class="col-xs-6">
+                    <span class="span_province" th:text="${address.province}"></span>
+                    <span class="span_city" th:text="${address.city}"></span>
+                    <span class="span_district" th:text="${address.district}"></span>
+                    <span class="span_street" th:text="${address.street}"></span>
+                </div>
+                <div class="col-xs-2">
+                    <span class="span_tel" th:text="${address.tel}"></span>
+                </div>
+                <div class="col-xs-3 div-operate">
+                    <input type="hidden" class="address_id" th:value="${address.id}" />
+                    <a class="set_default" th:text="${address.defaultAddress eq false} ? '设为默认':'默认地址'"></a>
+                    <span>&nbsp;|&nbsp;</span>
+                    <a class="address_edit">编辑</a>
+                    <span>&nbsp;|&nbsp;</span>
+                    <a class="address_delete">删除</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

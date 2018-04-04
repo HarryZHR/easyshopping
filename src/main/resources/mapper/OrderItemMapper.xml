@@ -11,7 +11,7 @@
 		<association property="backGoodsInfo" column="backInfo_id" select="edu.cslg.easyshopping.dao.BackGoodsInfo.getBackGoodsInfoById"/>
 	</resultMap>
 	<insert id="saveOrderItem" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO t_order_item VALUES (NULL ,#{buyCount},#{standard.id},#{order.id},0,#{sendNum});
+		INSERT INTO t_order_item VALUES (NULL ,#{buyCount},#{standard.id},#{order.id},NULL ,#{sendNum});
 	</insert>
 	<select id="getOrderItemById" resultMap="orderItemMap">
 		SELECT * FROM t_order_item WHERE id = #{0};
@@ -19,4 +19,7 @@
 	<select id="listOrderItemByOrderId" resultMap="orderItemMap">
 		SELECT * FROM t_order_item WHERE order_id = #{0} ;
 	</select>
+	<update id="updateOrderItem" parameterType="edu.cslg.easyshopping.pojo.OrderItem">
+		UPDATE t_order_item SET sendNum = #{sendNum},backInfo_id = #{backGoodsInfo.id} WHERE id = #{id} ;
+	</update>
 </mapper>

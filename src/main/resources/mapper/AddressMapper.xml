@@ -15,10 +15,10 @@
 		<association property="buyer" select="edu.cslg.easyshopping.dao.BuyerDao.getBuyerById" column="buyer_id"/>
 	</resultMap>
 	<select id="listAddressByBuyerId" resultMap="addressMap">
-		SELECT * FROM t_address WHERE buyer_id = #{0};
+		SELECT * FROM t_address WHERE buyer_id = #{0} AND delFlag = TRUE ;
 	</select>
 	<select id="getAddressById" resultMap="addressMap">
-		SELECT * FROM t_address WHERE id = #{0};
+		SELECT * FROM t_address WHERE id = #{0} ;
 	</select>
 	<insert id="saveAddress">
 		INSERT INTO t_address VALUES (NULL ,#{receiver},#{tel},#{province},#{city},#{district},#{street},#{buyer.id},#{defaultAddress},#{delFlag});
@@ -29,4 +29,7 @@
 	<select id="listNonDefaultAddress" resultMap="addressMap">
 		SELECT * FROM t_address WHERE defaultAddress = FALSE AND delFlag = TRUE ;
 	</select>
+	<update id="updateAddress" parameterType="edu.cslg.easyshopping.pojo.Address">
+		UPDATE t_address SET receiver = #{receiver}, tel = #{tel}, province = #{province}, city = #{city}, district = #{district}, street = #{street}, defaultAddress = #{defaultAddress}, delFlag = #{delFlag} WHERE id = #{id};
+	</update>
 </mapper>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="seller_left">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/seller_left.css}" />
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                            商品管理
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseOne" th:class="(${operate} == 'goods_operate') ? 'panel-collapse collapse in' : 'panel-collapse collapse'">
+                    <div class="panel-body">
+                        <a href="goods_category">发布商品</a>
+                    </div>
+                    <div class="panel-body">
+                        <a href="goods_list_edit">编辑商品</a>
+                    </div>
+                    <div class="panel-body">
+                        <a href="goods_discount">优惠设置</a>
+                    </div>
+                    <div class="panel-body">
+                        <a href="goods_activity">参与活动</a>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-success wid">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                            订单管理
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseTwo" th:class="(${operate} == 'order_operate') ? 'panel-collapse collapse in' : 'panel-collapse collapse'">
+                    <div class="panel-body">
+                        <a href="seller_order_list">查看订单</a>
+                    </div>
+                    <div class="panel-body">
+                        <a href="seller_order_reply">评价管理</a>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-success wid">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                            售后管理
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseThree" th:class="(${operate} == 'back_operate') ? 'panel-collapse collapse in' : 'panel-collapse collapse'">
+                    <div class="panel-body">
+                        <a href="">退款申请</a>
+                    </div>
+                    <div class="panel-body">
+                        <a href="">退款记录</a>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-success wid">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
+                            物流管理
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseFour" th:class="(${operate} == 'send_operate') ? 'panel-collapse collapse in' : 'panel-collapse collapse'">
+                    <div class="panel-body">
+                        <a href="seller_send_goods">发货</a>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-success wid">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive">
+                            违规管理
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseFive" th:class="(${operate} == 'error_operate') ? 'panel-collapse collapse in' : 'panel-collapse collapse'">
+                    <div class="panel-body">
+                        <a href="">违规记录</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="buyer_goods_reply">
+        <link rel="stylesheet" type="text/css" th:href="@{css/buyer_goods_reply.css}"/>
+        <link rel="stylesheet" th:href="@{lightbox/lightbox.css}">
+        <input type="hidden" th:value="${session.replyAllCount}" id="replyAllCount"/>
+        <div th:each="reply : ${session.listReply}">
+            <div class="row font">
+                <div class="col-xs-6">
+                    <div>
+                        <span th:text="${reply.content}"></span>
+                    </div>
+                    <div class="div_reply_img" th:if="${reply.img != ''}">
+                        <a th:href="${img}" class="a_show_img" th:each="img : ${reply.imgs}" data-lightbox="example-1">
+                            <img src="" th:src="${img}" class="show_img" />
+                        </a>
+                    </div>
+                    <div class="reply_time">
+                        <span th:text="${#dates.format(reply.replyTime,'yyyy-MM-dd HH:mm')}"></span>
+                    </div>
+                </div>
+                <div class="col-xs-3 standard-font">
+                    <div>
+                        <span>颜色：</span>
+                        <span th:text="${reply.standard.color}"></span>
+                    </div>
+                    <div>
+                        <span>尺码：</span>
+                        <span th:text="${reply.standard.size}"></span>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <span class="reply_buyer_name" th:text="${#strings.substring(reply.buyer.nickName,0,2)} + '***'"></span>
+                </div>
+            </div>
+            <div class="row font host_reply_tr" th:if="${reply.hostReply != null}">
+                <div class="col-xs-9">
+                    <div>
+                        <span>主人回复：</span>
+                        <span th:text="${reply.hostReply.content}"></span>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <span th:text="${#dates.format(reply.hostReply.hostReplyTime,'yyyy-MM-dd HH:mm')}"></span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

@@ -7,9 +7,11 @@
 		<result property="content" column="content"/>
 		<result property="hostReplyTime" column="hostReplyTime"/>
 		<result property="handImg" column="handImg"/>
-		<association property="reply" javaType="edu.cslg.easyshopping.pojo.Reply" column="reply_id" resultMap="edu.cslg.easyshopping.dao.ReplyDao.replyMap">
-			<id property="id" column="id"/>
-		</association>
 	</resultMap>
-
+	<select id="getHostReplyById" resultMap="hostReplyMap">
+		SELECT * FROM t_host_reply WHERE id = #{0} ;
+	</select>
+	<insert id="saveHostReply" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO t_host_reply VALUES (NULL ,#{content}, #{hostReplyTime});
+	</insert>
 </mapper>

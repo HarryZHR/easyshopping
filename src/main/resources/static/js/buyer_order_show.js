@@ -1,7 +1,6 @@
 $(function () {
     $(".img_order_del").on("click",function () {
         if(confirm("是否确认删除该条订单？")){
-            var order = $(this).parent().parent().parent().parent();
             var orderId = $(this).next().val();
             window.location.href = "del_order?orderId="+orderId;
             $.get("del_order",
@@ -29,5 +28,19 @@ $(function () {
             function (data) {
                 $(".div-right").html(data);
         });
+    });
+    $(".submit_receive").on("click",function () {
+        var orderId = $(this).parent().parent().parent().parent().parent().find(".hiddenOrderId").val();
+        if(confirm('是否确认收到商品？')){
+            $.get("buyer_submit_receive",
+                {"orderId":orderId},
+                function (data) {
+                    if(data === "success"){
+                        window.location.reload();
+                    }else {
+                        window.location.href = "buyer_login";
+                    }
+                })
+        }
     });
 });

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="seller_order_reply">
+        <link rel="stylesheet" type="text/css" th:href="@{css/seller_order_reply.css}"/>
+        <script>
+            $(function () {
+                $("#select_reply_type").on("change",function () {
+                    var replyType = $(this).val();
+                    var hostReply = $("#hostReplyFlag").val();
+                    window.location.href = "seller_order_reply?replyType=" + replyType + "&hostReply=" + hostReply;
+                });
+                $("#a_all_reply").on("click",function () {
+                    $("#hostReplyFlag").val('');
+                });
+                $("#wait_process").on("click",function () {
+                    $("#hostReplyFlag").val(true);
+                });
+                $(".a_host_reply").on("click",function () {
+                    var replyId = $(this).prev().val();
+                    $("#replyId").val(replyId);
+                    $(this).attr("id","clickBtn");
+
+                });
+                $("#sub_host_reply").on("click",function () {
+                    var content = $("#host_reply_content").val();
+                    var replyId = $("#replyId").val();
+                    if(content === "" || content === null){
+                        $("#host_reply_tip").text('回复不能为空！');
+                    }else {
+                        $.get("seller_host_reply",
+                            {"replyId":replyId,"content":content},
+                            function (data) {
+                                if(data === "success"){
+                                    $("#host_reply_content").val('');
+                                    $('#host_reply').modal('hide');
+                                    $("#clickBtn").css("display","none");
+                                }else {
+                                    window.location.href = "seller_login";
+                                }
+                            });
+                    }
+                })
+            });
+        </script>
+        <div id="div_host_reply">
+            <div>
+                <table id="tbl_reply_count" class="table table-bordered">
+                    <tr>
+                        <th></th>
+                        <th>最近一周</th>
+                        <th>最近一个月</th>
+                        <th>一个月前</th>
+                        <th>总计</th>
+                    </tr>
+                    <tr>
+                        <td>好评</td>
+                        <td th:text="${session.replyCounts.get(0)}"></td>
+                        <td th:text="${session.replyCounts.get(1)}"></td>
+                        <td th:text="${session.replyCounts.get(2)}"></td>
+                        <td th:text="${session.replyCounts.get(3)}"></td>
+                    </tr>
+                    <tr>
+                        <td>中评</td>
+                        <td th:text="${session.replyCounts.get(4)}"></td>
+                        <td th:text="${session.replyCounts.get(5)}"></td>
+                        <td th:text="${session.replyCounts.get(6)}"></td>
+                        <td th:text="${session.replyCounts.get(7)}"></td>
+                    </tr>
+                    <tr>
+                        <td>差评</td>
+                        <td th:text="${session.replyCounts.get(8)}"></td>
+                        <td th:text="${session.replyCounts.get(9)}"></td>
+                        <td th:text="${session.replyCounts.get(10)}"></td>
+                        <td th:text="${session.replyCounts.get(11)}"></td>
+                    </tr>
+                    <tr>
+                        <td>总计</td>
+                        <td th:text="${session.replyCounts.get(12)}"></td>
+                        <td th:text="${session.replyCounts.get(13)}"></td>
+                        <td th:text="${session.replyCounts.get(14)}"></td>
+                        <td th:text="${session.replyCounts.get(15)}"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="row" id="reply_select">
+                <ul class="nav nav-pills" id="reply_type">
+                    <li th:class="${session.hostReply eq true} ? '' : 'active'">
+                        <a class="a_reply" id="a_all_reply" href="seller_order_reply">所有评价</a>
+                    </li>
+                    <li th:class="${session.hostReply eq true} ? 'active' : ''">
+                        <a class="a_reply" id="wait_process" href="seller_order_reply?hostReply=true">未处理的评价</a>
+                    </li>
+                </ul>
+                <input id="hostReplyFlag" type="hidden" th:value="${session.hostReply}"/>
+            </div>
+            <div class="row font" id="reply_title">
+                <div class="col-xs-1">
+                    <select id="select_reply_type">
+                        <option value="" th:selected="${session.replyType eq null}">全部</option>
+                        <option value="goodReply" th:selected="${session.replyType eq 'goodReply'}">好评</option>
+                        <option value="multiReply" th:selected="${session.replyType eq 'multiReply'}">中评</option>
+                        <option value="badReply" th:selected="${session.replyType eq 'badReply'}">差评</option>
+                    </select>
+                </div>
+                <div class="col-xs-4">
+                    <span>评论内容</span>
+                </div>
+                <div class="col-xs-2">
+                    <span>买家昵称</span>
+                </div>
+                <div class="col-xs-4">
+                    <span>商品信息</span>
+                </div>
+                <div class="col-xs-1">
+                    <span>操作</span>
+                </div>
+            </div>
+            <div id="seller_order_reply_list" th:include="seller_order_reply_list :: seller_order_reply_list"></div>
+        </div>
+    </div>
+</body>
+</html>

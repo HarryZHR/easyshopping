@@ -13,6 +13,10 @@ public class BackGoodsInfo {
 
     public BackGoodsInfo(){}
 
+    public BackGoodsInfo(Integer id) {
+        this.id = id;
+    }
+
     public Integer getId() {
         return id;
     }

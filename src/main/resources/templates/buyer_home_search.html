@@ -7,6 +7,34 @@
 <body>
     <div th:fragment="buyer_home_search">
         <link rel="stylesheet" type="text/css" th:href="@{/css/buyer_home_search.css}">
+        <script>
+            $(function () {
+                $(".span_search").on("click",function () {
+                    var key = $("#input_search").val();
+                    if(key !== null && key !== ""){
+                        $.get("buyer_goods_category_key",
+                            {"key":key},
+                            function (data) {
+                                if(data === "success"){
+                                    window.location.href = "buyer_goods_type_key";
+                                }
+                            });
+                    }
+                });
+                $(".a_type").on("click",function () {
+                    var type = $(this).text();
+                    if(type !== "首页"){
+                        $.get("buyer_goods_category_key",
+                            {"type":type},
+                            function (data) {
+                                if(data === "success"){
+                                    window.location.href = "buyer_goods_type_key";
+                                }
+                            });
+                    }
+                });
+            });
+        </script>
         <div id="div_logo_search">
             <a href="#" id="a_logo">
                 <img src="" th:src="@{/img/logo.png}"/>
@@ -29,7 +57,7 @@
                     <a href="/buyer_index" class="a_type">首页</a>
                 </li>
                 <li class="li_type" th:each="goodsType : ${session.goodsTypeList}">
-                    <a href="#" class="a_type" th:text="${goodsType.type}"></a>
+                    <a class="a_type" th:text="${goodsType.type}"></a>
                 </li>
             </ul>
         </div>

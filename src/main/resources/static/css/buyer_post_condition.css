@@ -1,0 +1,39 @@
+#post_info{
+    background-color: #f2f2f2;
+    width: 90%;
+    border-radius: 10px;
+}
+.order_item_img{
+    width: 59px;
+    height: 59px;
+}
+.price_num{
+    display: block;
+    font-size: 12px;
+    color: #333;
+}
+.font{
+    font-size: 12px;
+    color: #333;
+}
+#post_info{
+    height: 150px;
+    padding-left: 10%;
+    padding-top: 20px;
+    margin-top: 20px;
+}
+.operate{
+    margin-top: 10px;
+}
+.left{
+    padding-left: 9%;
+    padding-right: 0;
+}
+.div_order_item_info{
+    margin-left: 8%;
+    margin-top: 20px;
+}
+.standard{
+    float: left;
+    margin-right: 20px;
+}

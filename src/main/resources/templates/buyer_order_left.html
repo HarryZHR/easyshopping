@@ -24,7 +24,10 @@
                     <a th:class="${session.operate eq 'buyer_order_all' && session.small eq 1 ?'title_active':''}" th:href="@{'buyer_order_all'(small=1,big=1)}">待付款</a>
                 </li>
                 <li class="li_small_title">
-                    <a th:class="${session.operate eq 'buyer_order_all' && session.small eq 2 ?'title_active':''}" th:href="@{'buyer_order_all'(small=2,big=3)}">待收货</a>
+                    <a th:class="${session.operate eq 'buyer_order_all' && session.small eq 2 ?'title_active':''}" th:href="@{'buyer_order_all'(small=2,big=2)}">待发货</a>
+                </li>
+                <li class="li_small_title">
+                    <a th:class="${session.operate eq 'buyer_order_all' && session.small eq 3 ?'title_active':''}" th:href="@{'buyer_order_all'(small=3,big=3)}">待收货</a>
                 </li>
                 <li class="li_small_title">
                     <a th:class="${session.operate eq 'buyer_order_all' && session.small eq 4 ?'title_active':''}" th:href="@{'buyer_order_all'(small=4,big=4)}">待评价</a>

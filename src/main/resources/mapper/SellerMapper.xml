@@ -36,7 +36,7 @@
 		UPDATE t_seller SET storeName = #{storeName},icon = #{icon},introduce = #{introduce},seller_province=#{sellerProvince},pwd=#{pwd},
 			seller_city=#{sellerCity},seller_district=#{sellerDistrict},seller_street=#{sellerStreet},supply = #{supply},sellerStatus=#{sellerStatus},score=#{score} WHERE id=#{id}
 	</update>
-	<select id="listSellerLikeByBuyerId">
+	<select id="listSellerLikeByBuyerId" resultMap="sellerMap">
 		SELECT ts.* FROM t_buyer_seller tbs LEFT JOIN t_seller ts ON ts.id = tbs.seller_id WHERE ts.sellerStatus = TRUE ;
 	</select>
 </mapper>

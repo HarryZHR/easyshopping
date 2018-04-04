@@ -30,5 +30,11 @@ public class OrderItemService {
         return orderItemDao.getOrderItemById(id);
     }
 
-
+    /**
+     * 更新订单详情
+     * @param orderItem 订单详情参数
+     */
+    public void updateOrderItem(OrderItem orderItem){
+            orderItemDao.updateOrderItem(orderItem);
+    }
 }

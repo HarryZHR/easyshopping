@@ -14,6 +14,7 @@
 		<association property="orderStatus" column="status_id" select="edu.cslg.easyshopping.dao.OrderStatusDao.getOrderStatusById"/>
 		<collection property="orderItems" column="id" select="edu.cslg.easyshopping.dao.OrderItemDao.listOrderItemByOrderId"/>
 	</resultMap>
+	<!-- 买家 -->
 	<insert id="saveOrder" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO t_order VALUES (NULL ,#{orderTime},#{orderNum},#{buyer.id},#{seller.id},#{address.id},#{remark},#{orderStatus.id},#{delFlag});
 	</insert>
@@ -38,6 +39,31 @@
 		UPDATE t_order SET delFlag = FALSE WHERE id = #{0} ;
 	</update>
 	<update id="updateOrderStatus">
-		UPDATE t_order SET status_id = #{orderStatus.id} WHERE id = #{id};
+		UPDATE t_order SET status_id = #{orderStatus.id} WHERE id = #{id} ;
 	</update>
+
+	<!-- 卖家 -->
+	<select id="listOrderBySellerId" resultMap="orderMap">
+		SELECT * FROM t_order WHERE seller_id = #{sellerId} ORDER BY orderTime DESC LIMIT #{orderIndex},#{orderSize} ;
+	</select>
+	<select id="countOrderBySellerId" resultType="Integer">
+		SELECT count(*) FROM t_order WHERE seller_id = #{0};
+	</select>
+	<select id="listOrderByMoreStatusAndSeller" resultMap="orderMap">
+		SELECT * FROM t_order WHERE
+			<if test="small != null and big != null">
+				status_id &gt;= #{small} AND status_id &lt;= #{big} AND
+			</if>
+				seller_id = #{sellerId}
+				ORDER BY orderTime DESC
+				LIMIT #{orderIndex},#{orderSize};
+	</select>
+	<select id="countOrderByMoreStatusAndSeller" resultType="Integer">
+		SELECT count(*) FROM t_order WHERE
+			<if test="small != null and big != null">
+				status_id &gt;= #{small} AND status_id &lt;= #{big} AND
+			</if>
+				seller_id = #{sellerId};
+	</select>
+
 </mapper>

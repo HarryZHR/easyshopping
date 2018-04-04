@@ -70,4 +70,45 @@ public class OrderService {
     public Order getOrderById(Integer id){
         return orderDao.getOrderById(id);
     }
+
+    /**
+     * 通过买家id获取店铺订单
+     * @param sellerId id
+     */
+    public List<Order> listOrderBySellerId(Integer sellerId, Integer orderIndex, Integer orderSize){
+        return orderDao.listOrderBySellerId(sellerId, orderIndex, orderSize);
+    }
+
+    /**
+     * 获取店铺的订单数量
+     * @param sellerId id
+     * @return 订单
+     */
+    public Integer countOrderBySellerId(Integer sellerId){
+        return orderDao.countOrderBySellerId(sellerId);
+    }
+
+    /**
+     * 在店铺获取不同状态的订单
+     * @param small 状态
+     * @param big 后状态
+     * @param sellerId 卖家id
+     * @param orderIndex 订单开始的索引
+     * @param orderSize 订单的数量
+     * @return 订单
+     */
+    public List<Order> listOrderByMoreStatusAndSeller(Integer small, Integer big, Integer sellerId, Integer orderIndex, Integer orderSize){
+        return orderDao.listOrderByMoreStatusAndSeller(small, big, sellerId, orderIndex, orderSize);
+    }
+
+    /**
+     * 在店铺的不同状态的数量
+     * @param small 状态
+     * @param big 状态
+     * @param sellerId 订单id
+     * @return 数量
+     */
+    public Integer countOrderByMoreStatusAndSeller(Integer small, Integer big,Integer sellerId){
+        return orderDao.countOrderByMoreStatusAndSeller(small, big, sellerId);
+    }
 }
