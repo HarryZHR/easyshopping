@@ -8,87 +8,94 @@
     <div th:fragment="goods_activity">
         <link rel="stylesheet" type="text/css" th:href="@{/css/seller_goods_edit_list.css}"/>
         <script type="text/javascript" th:src="@{/js/seller_goods_activity.js}"></script>
-        <div id="div_goods_list">
-            <table id="table_goods_edit" class="table table-hover">
-                <tr>
-                    <th width="40%">商品名称</th>
-                    <th width="10%">商品分类</th>
-                    <th width="10%">价格（元）</th>
-                    <th width="10%">库存</th>
-                    <th width="13%">参与活动</th>
-                    <th>操作</th>
-                </tr>
-                <tr th:each="goods : ${session.goodsList}">
-                    <td class="td_title" style="padding-top: 10px">
-                        <div class="div_img">
-                            <a class="a_img">
-                                <img class="img_img1" src="" th:src="${goods.goodsImg.img1}">
-                            </a>
-                        </div>
-                        <div class="div_title">
-                            <a class="a_title" th:text="${goods.title}"></a>
-                        </div>
-                    </td>
-                    <td th:text="${goods.type.type}"></td>
-                    <td th:text="${#numbers.formatDecimal(goods.minPrice, 1, 2)}"></td>
-                    <td th:text="${goods.allCount}"></td>
-                    <td th:if="${goods.activity eq 0}" class="td_activity_name">
-                        暂无参与活动
-                    </td>
-                    <td th:if="${goods.activity eq 1}" class="td_activity_name">
-                        活动一
-                    </td>
-                    <td th:if="${goods.activity eq 2}" class="td_activity_name">
-                        活动二
-                    </td>
-                    <td th:if="${goods.activity eq 3}" class="td_activity_name">
-                        活动三
-                    </td>
-                    <td>
-                        <input class="goodsId" type="hidden" th:value="${goods.id}">
-                        <input class="goods_activity" type="hidden" th:value="${goods.activity}"/>
-                        <input type="button" value="参加活动" class="btn btn-success activity"/>
-                        <input type="button" value="取消" class="btn btn-danger cancel">
-                    </td>
-                </tr>
-            </table>
-            <div id="div_activity">
-                <span id="span_close">×</span>
-                <input type="hidden" class="input_goods_id">
-                <div class="div_in_activity" id="div_activity1">
-                    <img class="img_activity" src="" th:src="@{/img/activity1.jpg}">
-                    <span class="span_name">活动一</span>
-                </div>
-                <div class="div_in_activity" id="div_activity2">
-                    <img class="img_activity" src="" th:src="@{/img/activity2.jpg}">
-                    <span class="span_name">活动二</span>
-                </div>
-                <div class="div_in_activity" id="div_activity3">
-                    <img class="img_activity" src="" th:src="@{/img/activity3.jpg}">
-                    <span class="span_name">活动三</span>
-                </div>
+        <div th:if="${session.goodsList.size() eq 0}">
+            <div>
+                您的店铺还没有上架的商品！
             </div>
         </div>
-        <div id="div_page">
-            <ul class="pagination">
-                <li th:class="${(session.currPage le 1) ? 'disabled':''}">
-                    <a th:if="${session.currPage eq 1}" href="javascript:void(0)">&laquo;</a>
-                    <a th:if="${session.currPage > 1}" th:href="@{${'/goods_activity'}(currPage=1)}">&laquo;</a>
-                </li>
-                <li th:class="${(session.currPage le 1) ? 'disabled':''}">
-                    <a th:if="${session.currPage eq 1}" href="javascript:void(0)">&lt;</a>
-                    <a th:if="${session.currPage > 1}" th:href="@{${'/goods_activity'}(currPage=${session.currPage - 1})}">&lt;</a>
-                </li>
-                <li><a href="#" th:text="${session.currPage}"></a></li>
-                <li th:class="${(session.currPage eq session.pageCount) ? 'disabled':''}">
-                    <a th:if="${(session.currPage eq session.pageCount)}" href="javascript:void(0)">&gt;</a>
-                    <a th:if="${(session.currPage < session.pageCount)}" th:href="@{${'/goods_activity'}(currPage=${session.currPage + 1})}">&gt;</a>
-                </li>
-                <li th:class="${(session.currPage eq session.pageCount)? 'disabled':''}">
-                    <a th:if="${(session.currPage eq session.pageCount)}" href="javascript:void(0)">&raquo;</a>
-                    <a th:if="${(session.currPage < session.pageCount)}" th:href="@{${'/goods_activity'}(currPage=${session.pageCount})}">&raquo;</a>
-                </li>
-            </ul>
+        <div th:if="${session.goodsList.size() ne 0}">
+            <div id="div_goods_list">
+                <table id="table_goods_edit" class="table table-hover">
+                    <tr>
+                        <th width="40%">商品名称</th>
+                        <th width="10%">商品分类</th>
+                        <th width="10%">价格（元）</th>
+                        <th width="10%">库存</th>
+                        <th width="13%">参与活动</th>
+                        <th>操作</th>
+                    </tr>
+                    <tr th:each="goods : ${session.goodsList}">
+                        <td class="td_title" style="padding-top: 10px">
+                            <div class="div_img">
+                                <a class="a_img">
+                                    <img class="img_img1" src="" th:src="${goods.goodsImg.img1}">
+                                </a>
+                            </div>
+                            <div class="div_title">
+                                <a class="a_title" th:text="${goods.title}"></a>
+                            </div>
+                        </td>
+                        <td th:text="${goods.type.type}"></td>
+                        <td th:text="${#numbers.formatDecimal(goods.minPrice, 1, 2)}"></td>
+                        <td th:text="${goods.allCount}"></td>
+                        <td th:if="${goods.activity eq 0}" class="td_activity_name">
+                            暂无参与活动
+                        </td>
+                        <td th:if="${goods.activity eq 1}" class="td_activity_name">
+                            活动一
+                        </td>
+                        <td th:if="${goods.activity eq 2}" class="td_activity_name">
+                            活动二
+                        </td>
+                        <td th:if="${goods.activity eq 3}" class="td_activity_name">
+                            活动三
+                        </td>
+                        <td>
+                            <input class="goodsId" type="hidden" th:value="${goods.id}">
+                            <input class="goods_activity" type="hidden" th:value="${goods.activity}"/>
+                            <input type="button" value="参加活动" class="btn btn-success activity"/>
+                            <input type="button" value="取消" class="btn btn-danger cancel">
+                        </td>
+                    </tr>
+                </table>
+                <div id="div_activity">
+                    <span id="span_close">×</span>
+                    <input type="hidden" class="input_goods_id">
+                    <div class="div_in_activity" id="div_activity1">
+                        <img class="img_activity" src="" th:src="@{/img/activity1.jpg}">
+                        <span class="span_name">活动一</span>
+                    </div>
+                    <div class="div_in_activity" id="div_activity2">
+                        <img class="img_activity" src="" th:src="@{/img/activity2.jpg}">
+                        <span class="span_name">活动二</span>
+                    </div>
+                    <div class="div_in_activity" id="div_activity3">
+                        <img class="img_activity" src="" th:src="@{/img/activity3.jpg}">
+                        <span class="span_name">活动三</span>
+                    </div>
+                </div>
+            </div>
+            <div id="div_page">
+                <ul class="pagination">
+                    <li th:class="${(session.currPage le 1) ? 'disabled':''}">
+                        <a th:if="${session.currPage eq 1}" href="javascript:void(0)">&laquo;</a>
+                        <a th:if="${session.currPage > 1}" th:href="@{${'/goods_activity'}(currPage=1)}">&laquo;</a>
+                    </li>
+                    <li th:class="${(session.currPage le 1) ? 'disabled':''}">
+                        <a th:if="${session.currPage eq 1}" href="javascript:void(0)">&lt;</a>
+                        <a th:if="${session.currPage > 1}" th:href="@{${'/goods_activity'}(currPage=${session.currPage - 1})}">&lt;</a>
+                    </li>
+                    <li><a href="#" th:text="${session.currPage}"></a></li>
+                    <li th:class="${(session.currPage eq session.pageCount) ? 'disabled':''}">
+                        <a th:if="${(session.currPage eq session.pageCount)}" href="javascript:void(0)">&gt;</a>
+                        <a th:if="${(session.currPage < session.pageCount)}" th:href="@{${'/goods_activity'}(currPage=${session.currPage + 1})}">&gt;</a>
+                    </li>
+                    <li th:class="${(session.currPage eq session.pageCount)? 'disabled':''}">
+                        <a th:if="${(session.currPage eq session.pageCount)}" href="javascript:void(0)">&raquo;</a>
+                        <a th:if="${(session.currPage < session.pageCount)}" th:href="@{${'/goods_activity'}(currPage=${session.pageCount})}">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </body>

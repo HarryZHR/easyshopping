@@ -539,6 +539,6 @@ input.sy_num {
     color: #666;
     height: 30px;
 }
-.reply_load_more:hover{
+.reply_load_more:hover,.a_category_seller:hover{
     cursor: pointer;
 }

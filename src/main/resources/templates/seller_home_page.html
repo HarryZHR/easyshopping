@@ -4,9 +4,20 @@
     <meta charset="UTF-8">
 </head>
 <body>
+
     <div th:fragment="seller_data">
         <link rel="stylesheet" type="text/css" th:href="@{css/seller_home_page.css}" />
-        <div>
+        <div th:if="${session.currSeller.sellerStatus eq false && session.currSeller.stuff eq null}">
+            您还没有提交申请材料，<a href="seller_up_stuff">点此提交</a>。
+        </div>
+        <div th:if="${session.currSeller.sellerStatus eq false && session.currSeller.stuff ne null && session.currSeller.stuff.stuffStatus eq false}">
+            您的店铺还没有通过审核，请耐心等待！
+        </div>
+        <div th:if="${session.currSeller.sellerStatus eq false && session.currSeller.stuff ne null && session.currSeller.stuff.stuffStatus eq true}">
+            您的店铺申请被拒绝了，拒绝原因：<span th:text="${session.currSeller.stuff.reason}"></span><br>
+            <a href="seller_up_stuff">点此重新提交</a>
+        </div>
+        <div th:if="${session.currSeller.sellerStatus eq true && session.currSeller.stuff ne null && session.currSeller.stuff.stuffStatus eq true}">
             <table id="tbl_data">
                 <tr id="tr_title">
                     <td colspan="2">

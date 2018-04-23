@@ -35,4 +35,7 @@ function initView() {
     }).on("mouseout",function () {
         $("#ul_like").css("display","none");
     });
+    $("#a_like_icon").on("click",function () {
+        window.location.href = "buyer_like_goods_list";
+    });
 }

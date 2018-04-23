@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="admin_check_seller_list">
+        <link rel="stylesheet" type="text/css" th:href="@{css/admin_check_seller_list.css}"/>
+        <div th:if="${session.noCheckStuffs.size() eq 0}">
+            暂无申请
+        </div>
+        <div th:if="${session.noCheckStuffs.size() > 0}">
+            <div class="check_stuff_list">
+                <label>待审核的店铺</label>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>店铺名称</th>
+                        <th>店主姓名</th>
+                        <th>手机号码</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tr th:each="stuff : ${session.noCheckStuffs}">
+                        <td th:text="${stuff.seller.storeName}"></td>
+                        <td th:text="${stuff.seller.hostName}"></td>
+                        <td th:text="${stuff.seller.tel}"></td>
+                        <td>
+                            <a th:href="@{'admin_check_seller'(stuffId=${stuff.id})}" class="operate_check">处理</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="div_page">
+                <ul class="pagination">
+                    <li th:class="${(session.stuffCurrPage le 1) ? 'disabled':''}">
+                        <a th:if="${session.stuffCurrPage eq 1}" href="javascript:void(0)">&laquo;</a>
+                        <a th:if="${session.stuffCurrPage > 1}" th:href="@{'admin_check_seller_list'(stuffCurrPage=1)}">&laquo;</a>
+                    </li>
+                    <li th:class="${(session.stuffCurrPage le 1) ? 'disabled':''}">
+                        <a th:if="${session.stuffCurrPage eq 1}" href="javascript:void(0)">&lt;</a>
+                        <a th:if="${session.stuffCurrPage > 1}" th:href="@{'admin_check_seller_list'(stuffCurrPage=${session.stuffCurrPage - 1})}">&lt;</a>
+                    </li>
+                    <li><a href="#" th:text="${session.stuffCurrPage}"></a></li>
+                    <li th:class="${(session.stuffCurrPage eq session.stuffPageCount) ? 'disabled':''}">
+                        <a th:if="${(session.stuffCurrPage eq session.stuffPageCount)}" href="javascript:void(0)">&gt;</a>
+                        <a th:if="${(session.stuffCurrPage < session.stuffPageCount)}" th:href="@{'admin_check_seller_list'(stuffCurrPage=${session.stuffCurrPage + 1})}">&gt;</a>
+                    </li>
+                    <li th:class="${(session.stuffCurrPage eq session.stuffPageCount)? 'disabled':''}">
+                        <a th:if="${(session.stuffCurrPage eq session.stuffPageCount)}" href="javascript:void(0)">&raquo;</a>
+                        <a th:if="${(session.stuffCurrPage < session.stuffPageCount)}" th:href="@{'admin_check_seller_list'(stuffCurrPage=${session.stuffPageCount})}">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

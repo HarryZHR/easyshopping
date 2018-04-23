@@ -21,6 +21,14 @@ $(function () {
     });
     $("#span_seller_name").on("mouseover",function () {
         $("#div_seller_intro").css("display","block");
+    }).on("click",function () {
+        $.get("buyer_goods_category_key",
+            {"sellerId":$("#sellerId").val()},
+            function (data) {
+                if(data === "success"){
+                    window.location.href = "buyer_seller_goods_list";
+                }
+            });
     });
 
     $btn_like.on("mouseover",function () {
@@ -43,7 +51,52 @@ $(function () {
             buyer_dislike_seller()
         }
     });
-    
+    $(".li_category_seller").on("click",function () {
+        var type = $(this).text();
+        if(type !== '首页'){
+            $.get("buyer_goods_category_key",
+                {"sellerId":$("#sellerId").val(),"type":type},
+                function (data) {
+                    if(data === "success"){
+                        window.location.href = "buyer_seller_goods_list";
+                    }
+                });
+        }
+    });
+    $(".span_search_all").on("click",function () {
+        var key = $("#input_search").val();
+        if(!(key === "")){
+            $.get("buyer_goods_category_key",
+                {"key":key},
+                function (data) {
+                    if(data === "success"){
+                        window.location.href = "buyer_goods_type_key";
+                    }
+                });
+        }
+    });
+    $(".span_search_seller").on("click",function () {
+        var key = $("#input_search").val();
+        var sellerId = $("#sellerId").val();
+        if(!(key === "")){
+            $.get("buyer_goods_category_key",
+                {"key":key,"sellerId":sellerId},
+                function (data) {
+                    if(data === "success"){
+                        window.location.href = "buyer_seller_goods_list";
+                    }
+                });
+        }
+    });
+    $("#seller_home_page").on("click",function () {
+        $.get("buyer_goods_category_key",
+            {"sellerId":$("#sellerId").val()},
+            function (data) {
+                if(data === "success"){
+                    window.location.href = "buyer_seller_goods_list";
+                }
+            });
+    });
 });
 function buyer_like_sell() {
     $.get("buyer_like_seller",

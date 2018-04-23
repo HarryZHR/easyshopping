@@ -123,3 +123,42 @@
 .order_reply:hover{
     border: 1px solid #ff3366;
 }
+#complain_tip{
+    color: #ff3366;
+}
+
+
+.div_upload_img{
+    padding-left: 5px;
+    height: 30px;
+    padding-top: 5px;
+}
+.input_upload_img{
+    position: absolute;
+    z-index: 10;
+    width: 50px;
+    opacity: 0;
+}
+.span_upload_img{
+    position: absolute;
+    z-index: 1;
+    width: 50px;
+    text-align: center;
+    background-color: #93B4C6;
+    border: 1px solid #7CA0B8;
+    color: #fff;
+}
+.span_reply_tip{
+    position: absolute;
+    left: 80px;
+}
+.complain_img{
+    width: 70px;
+    height: 70px;
+}
+.img_delete_detail{
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    margin-left: -25px;
+}

@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class BuyerService {
@@ -119,5 +120,23 @@ public class BuyerService {
      */
     public void updateBuyer(Buyer buyer){
         buyerDao.updateBuyer(buyer);
+    }
+
+    /**
+     * 分页查询买家信息
+     * @param buyerIndex 买家开始索引
+     * @param buyerSize 一页显示的买家
+     * @return 当页的买家
+     */
+    public List<Buyer> listBuyer(Integer buyerIndex, Integer buyerSize){
+        return buyerDao.listBuyer(buyerIndex, buyerSize);
+    }
+
+    /**
+     * 获取买家的总数
+     * @return 买家总数
+     */
+    public Integer countBuyer(){
+        return buyerDao.countBuyer();
     }
 }

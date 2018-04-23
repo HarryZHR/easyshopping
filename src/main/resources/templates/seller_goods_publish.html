@@ -6,7 +6,7 @@
         <script type="text/javascript" src="../static/js/seller_goods_publish.js" th:src="@{/js/seller_goods_publish.js}"></script>
         <form id="form_goods_publish" action="/goods_save" method="post" enctype ="multipart/form-data">
             <input type="hidden" id="goodsId"/>
-            <label>宝贝标题：<input id="goods_title" type="text" name="title" size="60" th:value="${goods.title}"/></label><br/>
+            <label>宝贝标题：<input id="goods_title" type="text" name="title" size="60"/></label><br/>
             <label>颜色分类：</label>
             <div class="div_goods_color">
                 <table id="table_goods_color">

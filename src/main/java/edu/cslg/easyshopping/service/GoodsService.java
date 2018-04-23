@@ -64,8 +64,8 @@ public class GoodsService {
      * @param pageSize 每页的商品数量
      * @return 商品的集合
      */
-    public List<Goods> listGoodsByCategoryAndKey(GoodsType type, String key, Float low, Float high,String operate, Integer goodsIndex, Integer pageSize){
-        return goodsDao.listGoodsByCategoryAndKey(type, key, low, high,operate, goodsIndex, pageSize);
+    public List<Goods> listGoodsByCategoryAndKey(GoodsType type, String key, Float low, Float high,String operate, Integer goodsIndex, Integer pageSize,Integer carouselId,Integer bigType,Integer sellerId){
+        return goodsDao.listGoodsByCategoryAndKey(type, key, low, high,operate, goodsIndex, pageSize,carouselId,bigType,sellerId);
     }
 
     /**
@@ -76,8 +76,8 @@ public class GoodsService {
      * @param high 高价
      * @return 数量
      */
-    public Integer countGoodsByCategoryAndKey(GoodsType type, String key, Float low, Float high ){
-        return goodsDao.countGoodsByCategoryAndKey(type, key, low, high);
+    public Integer countGoodsByCategoryAndKey(GoodsType type, String key, Float low, Float high,Integer carouselId,Integer bigType,Integer sellerId ){
+        return goodsDao.countGoodsByCategoryAndKey(type, key, low, high,carouselId,bigType,sellerId);
     }
 
     /**

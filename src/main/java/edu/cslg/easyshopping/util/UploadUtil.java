@@ -9,7 +9,7 @@ import java.util.UUID;
 public class UploadUtil {
     public static String upImg(MultipartFile file){
         String root = "uploadDir/";
-        String fileName = UUID.randomUUID()+file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")-1);
+        String fileName = UUID.randomUUID()+file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
         String filePath = file.getClass().getResource("/").getPath()+"static/"+root;
         try {
             FileUtils.copyInputStreamToFile(file.getInputStream(),new File(filePath + fileName));

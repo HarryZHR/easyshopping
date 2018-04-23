@@ -16,9 +16,10 @@
 		<association property="seller" column="seller_id" select="edu.cslg.easyshopping.dao.SellerDao.getSellerById" />
 		<association property="goodsImg" column="id" select="edu.cslg.easyshopping.dao.GoodsImgDao.getGoodsImgById"/>
 		<collection property="standards" column="id" select="edu.cslg.easyshopping.dao.StandardDao.listStandardByGoodsId"/>
+		<collection property="buyerEnjoy" column="id" select="edu.cslg.easyshopping.dao.BuyerDao.listBuyerByGoodsId"/>
 	</resultMap>
 	<insert id="saveGoods" useGeneratedKeys="true" keyProperty="id" parameterType="edu.cslg.easyshopping.pojo.Goods">
-		INSERT INTO t_goods (goodsNum, title, introduce, minPrice, discount, saleCount, goodsTime, type_id, seller_id, status, activity) VALUES (NULL ,#{title},#{introduce},NULL ,0,0,#{goodsTime},#{type.id},#{seller.id},TRUE ,0);
+		INSERT INTO t_goods VALUES (NULL ,#{title},#{introduce},NULL ,0,0,#{goodsTime},#{type.id},#{seller.id},TRUE ,0,0);
 	</insert>
 	<update id="updateGoods" parameterType="edu.cslg.easyshopping.pojo.Goods">
 		UPDATE t_goods SET title = #{title}, introduce = #{introduce}, minPrice = #{minPrice}, discount = #{discount}, saleCount = #{saleCount}, status = #{status}, activity = #{activity} WHERE id = #{id};
@@ -54,10 +55,16 @@
 				<if test="key != null"> AND title LIKE concat(concat("%",#{key}),"%") </if>
 				<if test="low != null"> AND minPrice >= #{low} </if>
 				<if test="high != null"> AND minPrice  &lt;= #{high} </if>
-				<if test="operate eq null || operate eq ''"> ORDER BY goodsTime DESC </if>
+				<if test="carouselId != null"> AND activity = #{carouselId} </if>
+				<if test="sellerId != null"> AND seller_id = #{sellerId} </if>
+				<if test="bigType eq 1"> AND goodsTime - 86400 &lt; 0 ORDER BY goodsTime DESC </if>
+				<if test="bigType eq 2"> ORDER BY saleCount DESC </if>
+				<if test="bigType eq 3"> ORDER BY discount DESC </if>
+				<if test="bigType eq 4"> ORDER BY goodReplyCount DESC </if>
+				<if test="bigType eq null and (operate eq null || operate eq '')"> ORDER BY goodsTime DESC </if>
 				<if test="operate eq 'lowToHigh'"> ORDER BY minPrice ASC </if>
 				<if test="operate eq 'highToLow'"> ORDER BY minPrice DESC </if>
-				LIMIT #{goodsIndex},#{pageSize} ;
+				LIMIT #{goodsIndex},#{pageSize};
 	</select>
 	<select id="countGoodsByCategoryAndKey" resultType="Integer">
 		SELECT count(*) FROM t_goods
@@ -65,7 +72,10 @@
 				<if test="type != null"> AND type_id = #{type.id} </if>
 				<if test="key != null"> AND title LIKE concat(concat("%",#{key}),"%") </if>
 				<if test="low != null"> AND minPrice >= #{low} </if>
-				<if test="high != null"> AND minPrice  &lt;= #{high} </if> ;
+				<if test="high != null"> AND minPrice  &lt;= #{high} </if>
+				<if test="sellerId != null"> AND seller_id = #{sellerId} </if>
+				<if test="carouselId != null"> AND activity = #{carouselId} </if>
+				<if test="bigType eq 1"> AND goodsTime - 86400 &lt; 0 </if>;
 	</select>
 	<select id="listGoodsBuyerLike" resultMap="goodsMap">
 		SELECT t2.* FROM t_buyer_goods t1 LEFT JOIN t_goods t2 ON t1.goods_id = t2.id WHERE t1.buyer_id = #{0} AND t2.status = TRUE ;

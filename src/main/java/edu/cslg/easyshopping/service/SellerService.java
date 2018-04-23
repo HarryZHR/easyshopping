@@ -60,11 +60,28 @@ public class SellerService{
     }
 
     /**
+     * 通过id查找店铺，不考虑店铺状态
+     * @param id 店铺id
+     * @return 店铺对象
+     */
+    public Seller getSellerAllById(Integer id){
+        return sellerDao.getSellerAllById(id);
+    }
+
+    /**
      * 通过买家id获取收藏的店铺
      * @param buyerId 买家id
      * @return 所有收藏的店铺
      */
     public List<Seller> listSellerLikeByBuyerId(Integer buyerId){
         return sellerDao.listSellerLikeByBuyerId(buyerId);
+    }
+
+    public List<Seller> listSeller(Integer sellerIndex, Integer sellerSize){
+        return sellerDao.listSeller(sellerIndex, sellerSize);
+    }
+
+    public Integer countSeller(){
+        return sellerDao.countSeller();
     }
 }

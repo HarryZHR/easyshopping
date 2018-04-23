@@ -21,6 +21,8 @@ public class Buyer {
     private List<Order> orders;
     private List<Address> addresses;
     private List<Reply> replies;
+    private Integer orderNum;
+    private Float payMoney;
 
     public Buyer() {}
 
@@ -134,5 +136,21 @@ public class Buyer {
 
     public void setBuyerStatus(boolean buyerStatus) {
         this.buyerStatus = buyerStatus;
+    }
+
+    public Integer getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(Integer orderNum) {
+        this.orderNum = orderNum;
+    }
+
+    public Float getPayMoney() {
+        return payMoney;
+    }
+
+    public void setPayMoney(Float payMoney) {
+        this.payMoney = payMoney;
     }
 }

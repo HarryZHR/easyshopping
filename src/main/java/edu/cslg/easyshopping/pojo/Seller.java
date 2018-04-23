@@ -10,7 +10,6 @@ import java.util.Objects;
 @Component
 public class Seller {
     private Integer id;
-    private String email;
     private String tel;
     private String storeName;
     private String hostName;
@@ -34,14 +33,6 @@ public class Seller {
     private List<Order> orders;
 
     public Seller(){}
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public String getTel() {
         return tel;

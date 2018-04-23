@@ -9,6 +9,26 @@
 		<result property="cutScore" column="cutScore"/>
 		<result property="complainTime" column="complainTime"/>
 		<result property="checkFlag" column="checkFlag"/>
-		<association property="orderItem" column="orderItem_id"/>
+		<association property="orderItem" column="id" select="edu.cslg.easyshopping.dao.OrderItemDao.getOrderItemById"/>
 	</resultMap>
+	<insert id="saveComplain">
+		INSERT INTO t_complain VALUES (#{id},#{type},#{content},#{img},#{cutScore},#{complainTime},#{checkFlag});
+	</insert>
+	<select id="getComplainById" resultMap="complainMap">
+		SELECT * FROM t_complain WHERE id = #{0};
+	</select>
+	<select id="listComplainWaitCheck" resultMap="complainMap">
+		SELECT * FROM t_complain
+		<if test="type == 'wait'"> WHERE checkFlag = FALSE </if>
+		<if test="type == 'checked'"> WHERE checkFlag = TRUE </if>
+		LIMIT #{complainIndex},#{complainSize};
+	</select>
+	<select id="countComplainWaitCheck" resultType="Integer">
+		SELECT count(*) FROM t_complain
+		<if test="type == 'wait'">WHERE checkFlag = FALSE </if>
+		<if test="type == 'checked'">WHERE checkFlag = TRUE </if> ;
+	</select>
+	<update id="updateComplain">
+		UPDATE t_complain SET cutScore = #{cutScore}, checkFlag = #{checkFlag} WHERE id = #{id};
+	</update>
 </mapper>

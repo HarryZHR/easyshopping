@@ -4,59 +4,67 @@
     <div th:fragment="goods_list_edit">
     <link rel="stylesheet" type="text/css" href="../static/css/seller_goods_edit_list.css" th:href="@{/css/seller_goods_edit_list.css}"/>
     <script type="text/javascript" src="../static/js/seller_goods_list_edit.js" th:src="@{/js/seller_goods_list_edit.js}"></script>
-        <div id="div_goods_list">
-            <table id="table_goods_edit" class="table table-hover">
-                <tr>
-                    <th width="40%">商品名称</th>
-                    <th width="10%">价格</th>
-                    <th width="10%">库存</th>
-                    <th width="10%">总销量</th>
-                    <th width="13%" style="min-width: 90px">发布时间</th>
-                    <th>操作</th>
-                </tr>
-                <tr th:each="goods : ${session.goodsList}">
-                    <td class="td_title" style="padding-top: 10px">
-                        <div class="div_img">
-                            <a class="a_img">
-                                <img class="img_img1" src="" th:src="${goods.goodsImg.img1}">
-                            </a>
-                        </div>
-                        <div class="div_title">
-                            <a class="a_title" th:text="${goods.title}"></a>
-                        </div>
-                    </td>
-                    <td th:text="${goods.minPrice}"></td>
-                    <td th:text="${goods.allCount}"></td>
-                    <td th:text="${goods.saleCount}"></td>
-                    <td th:text="${#dates.format(goods.goodsTime, 'yyyy-MM-dd HH:mm')}" style="padding-top: 25px"></td>
-                    <td>
-                        <input class="goodsId" type="hidden" th:value="${goods.id}">
-                        <a class="btn btn-success edit" th:href="@{${'/goods_edit'}(goodsId=${goods.id})}">编辑</a>
-                        <input type="button" value="删除" class="btn btn-danger delete">
-                    </td>
-                </tr>
-            </table>
+        <div th:if="${session.goodsList.size() eq 0}">
+            <div>
+                您的店铺还没有上架的商品！
+            </div>
         </div>
-        <div id="div_page">
-            <ul class="pagination">
-                <li th:class="${(session.currPage le 1) ? 'disabled':''}">
-                    <a th:if="${session.currPage eq 1}" href="javascript:void(0)">&laquo;</a>
-                    <a th:if="${session.currPage > 1}" th:href="@{'goods_list_edit'(currPage=1)}">&laquo;</a>
-                </li>
-                <li th:class="${(session.currPage le 1) ? 'disabled':''}">
-                    <a th:if="${session.currPage eq 1}" href="javascript:void(0)">&lt;</a>
-                    <a th:if="${session.currPage > 1}" th:href="@{'goods_list_edit'(currPage=${session.currPage - 1})}">&lt;</a>
-                </li>
-                <li><a href="#" th:text="${session.currPage}"></a></li>
-                <li th:class="${(session.currPage eq session.pageCount) ? 'disabled':''}">
-                    <a th:if="${(session.currPage eq session.pageCount)}" href="javascript:void(0)">&gt;</a>
-                    <a th:if="${(session.currPage < session.pageCount)}" th:href="@{'goods_list_edit'(currPage=${session.currPage + 1})}">&gt;</a>
-                </li>
-                <li th:class="${(session.currPage eq session.pageCount)? 'disabled':''}">
-                    <a th:if="${(session.currPage eq session.pageCount)}" href="javascript:void(0)">&raquo;</a>
-                    <a th:if="${(session.currPage < session.pageCount)}" th:href="@{'goods_list_edit'(currPage=${session.pageCount})}">&raquo;</a>
-                </li>
-            </ul>
+        <div th:if="${session.goodsList.size() ne 0}">
+
+            <div id="div_goods_list">
+                <table id="table_goods_edit" class="table table-hover">
+                    <tr>
+                        <th width="40%">商品名称</th>
+                        <th width="10%">价格</th>
+                        <th width="10%">库存</th>
+                        <th width="10%">总销量</th>
+                        <th width="13%" style="min-width: 90px">发布时间</th>
+                        <th>操作</th>
+                    </tr>
+                    <tr th:each="goods : ${session.goodsList}">
+                        <td class="td_title" style="padding-top: 10px">
+                            <div class="div_img">
+                                <a class="a_img">
+                                    <img class="img_img1" src="" th:src="${goods.goodsImg.img1}">
+                                </a>
+                            </div>
+                            <div class="div_title">
+                                <a class="a_title" th:text="${goods.title}"></a>
+                            </div>
+                        </td>
+                        <td th:text="${goods.minPrice}"></td>
+                        <td th:text="${goods.allCount}"></td>
+                        <td th:text="${goods.saleCount}"></td>
+                        <td th:text="${#dates.format(goods.goodsTime, 'yyyy-MM-dd HH:mm')}" style="padding-top: 25px"></td>
+                        <td>
+                            <input class="goodsId" type="hidden" th:value="${goods.id}">
+                            <a class="btn btn-success edit" th:href="@{${'/to_goods_edit'}(goodsId=${goods.id})}">编辑</a>
+                            <input type="button" value="删除" class="btn btn-danger delete">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="div_page">
+                <ul class="pagination">
+                    <li th:class="${(session.currPage le 1) ? 'disabled':''}">
+                        <a th:if="${session.currPage eq 1}" href="javascript:void(0)">&laquo;</a>
+                        <a th:if="${session.currPage > 1}" th:href="@{'goods_list_edit'(currPage=1)}">&laquo;</a>
+                    </li>
+                    <li th:class="${(session.currPage le 1) ? 'disabled':''}">
+                        <a th:if="${session.currPage eq 1}" href="javascript:void(0)">&lt;</a>
+                        <a th:if="${session.currPage > 1}" th:href="@{'goods_list_edit'(currPage=${session.currPage - 1})}">&lt;</a>
+                    </li>
+                    <li><a href="#" th:text="${session.currPage}"></a></li>
+                    <li th:class="${(session.currPage eq session.pageCount) ? 'disabled':''}">
+                        <a th:if="${(session.currPage eq session.pageCount)}" href="javascript:void(0)">&gt;</a>
+                        <a th:if="${(session.currPage < session.pageCount)}" th:href="@{'goods_list_edit'(currPage=${session.currPage + 1})}">&gt;</a>
+                    </li>
+                    <li th:class="${(session.currPage eq session.pageCount)? 'disabled':''}">
+                        <a th:if="${(session.currPage eq session.pageCount)}" href="javascript:void(0)">&raquo;</a>
+                        <a th:if="${(session.currPage < session.pageCount)}" th:href="@{'goods_list_edit'(currPage=${session.pageCount})}">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </body>

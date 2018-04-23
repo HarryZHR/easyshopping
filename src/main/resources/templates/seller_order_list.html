@@ -18,99 +18,105 @@
                 });
             });
         </script>
-        <div class="div_seller_order_table">
-            <div class="row font" id="order_title">
-                <div class="col-xs-8 order_left">
-                    <div class="col-xs-6">商品</div>
-                    <div class="col-xs-2 center">单价</div>
-                    <div class="col-xs-2 center">数量</div>
-                    <div class="col-xs-2 center">售后</div>
-                </div>
-                <div class="col-xs-4 order_right">
-                    <div class="col-xs-3 center">买家</div>
-                    <div class="col-xs-3 center">状态</div>
-                    <div class="col-xs-3 center">实收款</div>
-                    <div class="col-xs-3 center">评价</div>
-                </div>
-            </div>
-            <div class="div_order_border" th:each="order : ${session.orderInSeller}">
-                <div class="row order_info font">
-                    <span th:text="'订单号：' + ${order.orderNum}"></span>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <span th:text="'下单时间：' + ${#dates.format(order.orderTime,'yyyy-MM-dd HH:mm:ss')}"></span>
-                </div>
-                <div class="row div_order_tr">
+        <div th:if="${session.orderInSeller.size() eq 0}">
+            店铺内暂时没有订单！
+        </div>
+        <div th:if="${session.orderInSeller.size() ne 0}">
+            <div class="div_seller_order_table">
+                <div class="row font" id="order_title">
                     <div class="col-xs-8 order_left">
-                        <div class="row" th:each="orderItem : ${order.orderItems}">
-                            <div class="col-xs-6">
-                                <div class="col-xs-4">
-                                    <img class="order_img" src="" th:src="${orderItem.standard.colorImg}">
-                                </div>
-                                <div class="col-xs-8">
-                                    <span class="order_goods_title font" th:text="${orderItem.standard.goods.title}"></span>
-                                    <div>
-                                        <span class="grey-font">颜色：</span>
-                                        <span class="grey-font" th:text="${orderItem.standard.color}"></span>
-                                        <span class="grey-font">尺码：</span>
-                                        <span class="grey-font" th:text="${orderItem.standard.size}"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-2 font center">
-                                <span th:text="'￥' + ${#numbers.formatDecimal(orderItem.standard.price,0,2)}"></span>
-                            </div>
-                            <div class="col-xs-2 font center">
-                                <span th:text="${orderItem.buyCount}"></span>
-                            </div>
-                            <div class="col-xs-2 blue_font">
-
-                            </div>
-                        </div>
+                        <div class="col-xs-6">商品</div>
+                        <div class="col-xs-2 center">单价</div>
+                        <div class="col-xs-2 center">数量</div>
+                        <div class="col-xs-2 center">售后</div>
                     </div>
                     <div class="col-xs-4 order_right">
-                        <div class="col-xs-3 font center">
-                            <span th:text="${order.buyer.nickName}"></span>
-                        </div>
-                        <div class="col-xs-3 font center">
-                            <div>
-                                <span th:text="${order.orderStatus.status}"></span>
-                            </div>
-                            <div>
-                                <a class="blue_font">详情</a>
-                            </div>
-                            <a th:href="@{'seller_single_send_goods'(orderId = ${order.id})}" th:if="${order.orderStatus.id eq 2}" class="btn-blue send_goods">发货</a>
-                            <input type="hidden" class="orderId" th:value="${order.id}"/>
-                        </div>
-                        <div class="col-xs-3 order-money">
-                            <span th:text="'￥' + ${#numbers.formatDecimal(order.orderMoney,0,2)}"></span>
-                        </div>
-                        <div class="col-xs-3 font">
+                        <div class="col-xs-3 center">买家</div>
+                        <div class="col-xs-3 center">状态</div>
+                        <div class="col-xs-3 center">实收款</div>
+                        <div class="col-xs-3 center">评价</div>
+                    </div>
+                </div>
+                <div class="div_order_border" th:each="order : ${session.orderInSeller}">
+                    <div class="row order_info font">
+                        <span th:text="'订单号：' + ${order.orderNum}"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span th:text="'下单时间：' + ${#dates.format(order.orderTime,'yyyy-MM-dd HH:mm:ss')}"></span>
+                    </div>
+                    <div class="row div_order_tr">
+                        <div class="col-xs-8 order_left">
+                            <div class="row" th:each="orderItem : ${order.orderItems}">
+                                <div class="col-xs-6">
+                                    <div class="col-xs-4">
+                                        <img class="order_img" src="" th:src="${orderItem.standard.colorImg}">
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <span class="order_goods_title font" th:text="${orderItem.standard.goods.title}"></span>
+                                        <div>
+                                            <span class="grey-font">颜色：</span>
+                                            <span class="grey-font" th:text="${orderItem.standard.color}"></span>
+                                            <span class="grey-font">尺码：</span>
+                                            <span class="grey-font" th:text="${orderItem.standard.size}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-2 font center">
+                                    <span th:text="'￥' + ${#numbers.formatDecimal(orderItem.standard.price,0,2)}"></span>
+                                </div>
+                                <div class="col-xs-2 font center">
+                                    <span th:text="${orderItem.buyCount}"></span>
+                                </div>
+                                <div class="col-xs-2 blue_font">
 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 order_right">
+                            <div class="col-xs-3 font center">
+                                <span th:text="${order.buyer.nickName}"></span>
+                            </div>
+                            <div class="col-xs-3 font center">
+                                <div>
+                                    <span th:text="${order.orderStatus.status}"></span>
+                                </div>
+                                <div>
+                                    <a class="blue_font">详情</a>
+                                </div>
+                                <a th:href="@{'seller_single_send_goods'(orderId = ${order.id})}" th:if="${order.orderStatus.id eq 2}" class="btn-blue send_goods">发货</a>
+                                <input type="hidden" class="orderId" th:value="${order.id}"/>
+                            </div>
+                            <div class="col-xs-3 order-money">
+                                <span th:text="'￥' + ${#numbers.formatDecimal(order.orderMoney,0,2)}"></span>
+                            </div>
+                            <div class="col-xs-3 font">
+
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div id="div_page">
+                <ul class="pagination">
+                    <li th:class="${(session.currPage le 1) ? 'disabled':''}">
+                        <a th:if="${session.currPage eq 1}" href="javascript:void(0)">&laquo;</a>
+                        <a th:if="${session.currPage > 1}" th:href="@{'seller_order_list'(currPage=1)}">&laquo;</a>
+                    </li>
+                    <li th:class="${(session.currPage le 1) ? 'disabled':''}">
+                        <a th:if="${session.currPage eq 1}" href="javascript:void(0)">&lt;</a>
+                        <a th:if="${session.currPage > 1}" th:href="@{'seller_order_list'(currPage=${session.currPage - 1})}">&lt;</a>
+                    </li>
+                    <li><a href="#" th:text="${session.currPage}"></a></li>
+                    <li th:class="${(session.currPage eq session.pageCount) ? 'disabled':''}">
+                        <a th:if="${(session.currPage eq session.pageCount)}" href="javascript:void(0)">&gt;</a>
+                        <a th:if="${(session.currPage < session.pageCount)}" th:href="@{'seller_order_list'(currPage=${session.currPage + 1})}">&gt;</a>
+                    </li>
+                    <li th:class="${(session.currPage eq session.pageCount)? 'disabled':''}">
+                        <a th:if="${(session.currPage eq session.pageCount)}" href="javascript:void(0)">&raquo;</a>
+                        <a th:if="${(session.currPage < session.pageCount)}" th:href="@{'seller_order_list'(currPage=${session.pageCount})}">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div id="div_page">
-            <ul class="pagination">
-                <li th:class="${(session.currPage le 1) ? 'disabled':''}">
-                    <a th:if="${session.currPage eq 1}" href="javascript:void(0)">&laquo;</a>
-                    <a th:if="${session.currPage > 1}" th:href="@{'seller_order_list'(currPage=1)}">&laquo;</a>
-                </li>
-                <li th:class="${(session.currPage le 1) ? 'disabled':''}">
-                    <a th:if="${session.currPage eq 1}" href="javascript:void(0)">&lt;</a>
-                    <a th:if="${session.currPage > 1}" th:href="@{'seller_order_list'(currPage=${session.currPage - 1})}">&lt;</a>
-                </li>
-                <li><a href="#" th:text="${session.currPage}"></a></li>
-                <li th:class="${(session.currPage eq session.pageCount) ? 'disabled':''}">
-                    <a th:if="${(session.currPage eq session.pageCount)}" href="javascript:void(0)">&gt;</a>
-                    <a th:if="${(session.currPage < session.pageCount)}" th:href="@{'seller_order_list'(currPage=${session.currPage + 1})}">&gt;</a>
-                </li>
-                <li th:class="${(session.currPage eq session.pageCount)? 'disabled':''}">
-                    <a th:if="${(session.currPage eq session.pageCount)}" href="javascript:void(0)">&raquo;</a>
-                    <a th:if="${(session.currPage < session.pageCount)}" th:href="@{'seller_order_list'(currPage=${session.pageCount})}">&raquo;</a>
-                </li>
-            </ul>
-        </div>
+
     </div>
 </body>
 </html>

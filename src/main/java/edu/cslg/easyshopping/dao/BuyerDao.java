@@ -4,6 +4,8 @@ import edu.cslg.easyshopping.pojo.Buyer;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 @Mapper
 public interface BuyerDao {
     /**
@@ -88,4 +90,18 @@ public interface BuyerDao {
      * @param buyer 参数
      */
     void updateBuyer(Buyer buyer);
+
+    /**
+     * 分页查询买家信息
+     * @param buyerIndex 买家开始索引
+     * @param buyerSize 一页显示的买家
+     * @return 当页的买家
+     */
+    List<Buyer> listBuyer(@Param(value = "buyerIndex") Integer buyerIndex, @Param(value = "buyerSize") Integer buyerSize);
+
+    /**
+     * 获取买家的总数
+     * @return 买家总数
+     */
+    Integer countBuyer();
 }

@@ -5,6 +5,7 @@
 	<resultMap id="backGoodsInfoMap" type="edu.cslg.easyshopping.pojo.BackGoodsInfo">
 		<id property="id" column="id"/>
 		<result property="content" column="content"/>
+		<result property="img" column="img"/>
 		<result property="backTime" column="backTime"/>
 		<result property="backStatus" column="backStatus"/>
 	</resultMap>

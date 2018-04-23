@@ -8,9 +8,9 @@ import java.util.Date;
 public class BackGoodsInfo {
     private Integer id;
     private String content;
+    private String img;
     private Date backTime;
     private String backStatus;
-
     public BackGoodsInfo(){}
 
     public BackGoodsInfo(Integer id) {
@@ -47,5 +47,13 @@ public class BackGoodsInfo {
 
     public void setBackStatus(String backStatus) {
         this.backStatus = backStatus;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 }

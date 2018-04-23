@@ -10,7 +10,6 @@
     <script type="text/javascript" th:src="@{imagezoom/jquery.imagezoom.min.js}"></script>
     <script type="text/javascript" th:src="@{js/buyer_goods_detail.js}"></script>
     <link rel="stylesheet" type="text/css" th:href="@{css/buyer_goods_detail.css}">
-
 </head>
 <body>
 <div th:include="buyer_top ::buyer_top"></div>
@@ -147,7 +146,7 @@
                         <div id="div_seller_name_down" th:text="${session.this_goods.seller.storeName}"></div>
                         <div id="div_seller_like_down">
                             <span id="span_like_seller" class="button">收藏店铺</span>
-                            <a class="button">进入店铺</a>
+                            <a id="into_seller" class="button">进入店铺</a>
                         </div>
                         <div id="div_search_in_seller">
                             <input type="text" id="input_search_in"/>
@@ -160,7 +159,7 @@
                         </div>
                         <ul id="ul_category_in_seller">
                             <li th:each="goods_types_in_seller : ${session.goods_types_in_seller}">
-                                <a th:text="${goods_types_in_seller}"></a>
+                                <a class="a_category_seller" th:text="${goods_types_in_seller}"></a>
                             </li>
                         </ul>
                     </div>

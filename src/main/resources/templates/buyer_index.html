@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<header th:include="link :: index_header">
-</header>
+<header th:include="link :: index_header"></header>
 <head>
     <meta charset="UTF-8">
     <title>嗨易购</title>
+    <style>
+        #border_operate{
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <div th:include="buyer_top :: buyer_top"></div>

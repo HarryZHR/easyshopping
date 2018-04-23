@@ -4,41 +4,111 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" type="text/css" th:href="@{css/buyer_like.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{css/buyer_like.css}"/>
 </head>
 <body>
+    <script>
+        $(function () {
+            $(".div_main_img").on("mouseover",function () {
+                $(this).parent().find(".delete").css("display","block");
+            }).on("mouseout",function () {
+                $(this).parent().find(".delete").css("display","none");
+            });
+            $(".delete").on("mouseover",function () {
+                $(this).css("display","block");
+            }).on("mouseout",function () {
+                $(this).css("display","none");
+            }).on("click",function () {
+                var type = $(this).find(".type").val();
+                var id = $(this).find(".id").val();
+                var parent = $(this).parent();
+                var num = $("#allNum").text();
+                if(type === "goods"){
+                    $.get("buyer_dislike_goods",
+                        {"goodsId":id},
+                        function (data) {
+                            if(data === "success"){
+                                parent.remove();
+                                num--;
+                                $("#allNum").text(num);
+                            }
+                        });
+                }else {
+                    $.get("buyer_dislike_seller",
+                        {"sellerId":id},
+                        function (data) {
+                            if(data === "success"){
+                                parent.remove();
+                                num--;
+                                $("#allNum").text(num);
+                            }
+                        });
+                }
+            });
+        });
+    </script>
     <div th:include="buyer_top :: buyer_top"></div>
     <div th:include="buyer_home_search :: buyer_home_search"></div>
+    <div id="div_select">
+        <a href="buyer_like_goods_list" th:class="${session.likeTip eq 'goods' ? 'like-btn like-select':'like-btn'}">收藏的宝贝</a>
+        <a href="buyer_like_seller_list" th:class="${session.likeTip eq 'seller' ? 'like-btn like-select':'like-btn'}">收藏的店铺</a>
+        <div class="div_all_num">
+            <div class="inner_all_num">全部 <span id="allNum" th:text="${session.likeTip eq 'goods' ? session.goodsBuyerLike.size() : session.sellersBuyerLike.size()}"></span></div>
+        </div>
+    </div>
     <div th:if="${session.likeTip eq 'goods'}" class="container">
         <div th:if="${session.goodsBuyerLike.size() eq 0}">
             暂时还没有收藏商品哦！
         </div>
         <div th:if="${session.goodsBuyerLike.size() != 0}">
             <div class="div_like_goods" th:each="goods : ${session.goodsBuyerLike}">
+                <span class="delete">
+                    <img src="" th:src="@{img/delete(white).png}">
+                    <input class="id" type="hidden" th:value="${goods.id}"/>
+                    <input class="type" type="hidden" value="goods"/>
+                </span>
                 <div class="div_main_img">
                     <img class="img_goods_main" th:src="${goods.goodsImg.img1}" src=""/>
-                    <input type="hidden" th:value="${goods.id}">
-                    <span class="delete">
-                        <img src="" th:src="@{img/delete(white).png}">
-                    </span>
                 </div>
-                <div class="div_goods_info">
+                <div class="div_goods_info red-font">
                     <span class="price" th:text="'￥' + ${#numbers.formatDecimal(goods.minPrice,0,2)}"></span>
-                    <span class="num" th:text="'喜欢'"></span>
+                    <span class="num" th:text="'喜欢' + ${goods.buyerEnjoy.size()}"></span>
                 </div>
-                <div class="div_goods_title" th:if="${#strings.length(goods.title) < 14}">
+                <div class="div_goods_title font" th:if="${#strings.length(goods.title) < 16}">
                     <a th:href="@{'buyer_goods_detail'(goodsId=${goods.id})}" class="a_goods_title" th:text="${goods.title}"></a>
                 </div>
-                <div class="div_goods_title" th:if="${#strings.length(goods.title) >= 14}">
-                    <a th:href="@{'buyer_goods_detail'(goodsId=${goods.id})}" class="a_goods_title" th:text="${#strings.substring(goods.title,0,14)} + '...'"></a>
+                <div class="div_goods_title font" th:if="${#strings.length(goods.title) >= 16}">
+                    <a th:href="@{'buyer_goods_detail'(goodsId=${goods.id})}" class="a_goods_title" th:text="${#strings.substring(goods.title,0,16)} + '...'"></a>
                 </div>
             </div>
-
         </div>
+
     </div>
     <div th:if="${session.likeTip eq 'seller'}" class="container">
-        <div th:each="seller : ${session.sellersBuyerLike}">
-
+        <div th:if="${session.sellersBuyerLike.size() eq 0}">
+            暂时还没有收藏商品哦！
+        </div>
+        <div class="div_like_seller" th:each="seller : ${session.sellersBuyerLike}">
+            <span class="delete">
+                <img src="" th:src="@{img/delete(white).png}">
+                <input class="id" type="hidden" th:value="${seller.id}"/>
+                <input class="type" type="hidden" value="seller"/>
+            </span>
+            <div class="div_main_img">
+                <div class="seller_top">
+                    <div>
+                        <img class="img_seller_icon img-circle img-thumbnail" src="" th:src="${seller.icon}" />
+                    </div>
+                    <div class="div_seller_name font">
+                        <span th:text="${seller.storeName}"></span>
+                    </div>
+                </div>
+                <div class="seller_info font">
+                    <div>店铺类型：<span th:text="${seller.supply}"></span></div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;销量： <span th:text="${seller.sale}"></span></div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;喜欢： <span th:text="${seller.buyerEnjoy.size()}"></span></div>
+                </div>
+            </div>
         </div>
     </div>
     <div th:include="footer :: footer"></div>

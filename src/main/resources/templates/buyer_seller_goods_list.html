@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:include="link :: index_header"></header>
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${session.this_goods.seller.storeName}"></title>
+    <style>
+        #border_operate{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div th:include="buyer_top ::buyer_top"></div>
+    <div th:include="buyer_seller_top :: buyer_seller_top"></div>
+    <div th:include="buyer_goods_list :: buyer_goods_list"></div>
+    <div th:include="footer :: footer"></div>
+</body>
+</html>

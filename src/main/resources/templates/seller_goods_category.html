@@ -6,8 +6,11 @@
 </head>
 <body>
     <div th:fragment="goods_category">
-        <link rel="stylesheet" type="text/css" href="../static/css/seller_goods_category.css" th:href="@{/css/seller_goods_category.css}"/>
-        <div>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/seller_goods_category.css}"/>
+        <div th:if="${session.currSeller.sellerStatus eq false}">
+            对不起，您还没有通过审核，没有上架权限！
+        </div>
+        <div th:if="${session.currSeller.sellerStatus eq true}">
             <form action="/goods_publish" method="post">
                 <label>
                     请选择发布商品的所属分类：<br/>

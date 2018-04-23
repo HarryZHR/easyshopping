@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="admin_check_complain_list">
+        <link rel="stylesheet" type="text/css" th:href="@{css/admin_check_seller_list.css}"/>
+        <script>
+            $(function () {
+                $(".check_complain_title").on("click",function () {
+                    $(".check_complain_title").each(function () {
+                        $(this).removeClass('active');
+                    });
+                    $(this).addClass('active');
+                });
+            });
+        </script>
+        <div>
+            <a href="admin_complain_check_list?type=wait" th:class="${session.type eq 'wait' ? 'check_complain_title active' : 'check_complain_title'}" id="wait_operate">待处理</a>
+            <a href="admin_complain_check_list?type=checked" th:class="${session.type eq 'checked' ? 'check_complain_title active' : 'check_complain_title'}" id="operated">已处理</a>
+        </div>
+        <label>待审核的投诉</label>
+        <div th:if="${session.complains.size() eq 0}">
+            <div class="check_stuff_list">
+                暂无申请
+            </div>
+        </div>
+        <div th:if="${session.complains.size() > 0}">
+            <div class="check_stuff_list">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>投诉人</th>
+                            <th>投诉店铺</th>
+                            <th>投诉商品</th>
+                            <th>投诉时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tr th:each="complain : ${session.complains}">
+                        <td th:text="${complain.orderItem.order.buyer.nickName}"></td>
+                        <td th:text="${complain.orderItem.order.seller.storeName}"></td>
+                        <td th:text="${complain.orderItem.standard.goods.title}"></td>
+                        <td th:text="${#dates.format(complain.complainTime,'yyyy-MM-dd HH:mm')}"></td>
+                        <td>
+                            <a th:if="${session.type eq 'wait'}" th:href="@{'admin_check_complain'(complainId=${complain.id},type='operate')}" class="operate_check">处理</a>
+                            <a th:if="${session.type eq 'checked'}" th:href="@{'admin_check_complain'(complainId=${complain.id},type='look')}" class="operate_check">查看</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div id="div_page">
+            <ul class="pagination">
+                <li th:class="${(session.complainCurrPage le 1) ? 'disabled':''}">
+                    <a th:if="${session.complainCurrPage eq 1}" href="javascript:void(0)">&laquo;</a>
+                    <a th:if="${session.complainCurrPage > 1}" th:href="@{'admin_complain_check_list'(complainCurrPage=1,type=${session.type})}">&laquo;</a>
+                </li>
+                <li th:class="${(session.complainCurrPage le 1) ? 'disabled':''}">
+                    <a th:if="${session.complainCurrPage eq 1}" href="javascript:void(0)">&lt;</a>
+                    <a th:if="${session.complainCurrPage > 1}" th:href="@{'admin_complain_check_list'(complainCurrPage=${session.complainCurrPage - 1},type=${session.type})}">&lt;</a>
+                </li>
+                <li><a href="#" th:text="${session.complainCurrPage}"></a></li>
+                <li th:class="${(session.complainCurrPage eq session.complainCount) ? 'disabled':''}">
+                    <a th:if="${(session.complainCurrPage eq session.complainCount)}" href="javascript:void(0)">&gt;</a>
+                    <a th:if="${(session.complainCurrPage < session.complainCount)}" th:href="@{'admin_complain_check_list'(complainCurrPage=${session.complainCurrPage + 1},type=${session.type})}">&gt;</a>
+                </li>
+                <li th:class="${(session.complainCurrPage eq session.complainCount)? 'disabled':''}">
+                    <a th:if="${(session.complainCurrPage eq session.complainCount)}" href="javascript:void(0)">&raquo;</a>
+                    <a th:if="${(session.complainCurrPage < session.complainCount)}" th:href="@{'admin_complain_check_list'(complainCurrPage=${session.complainCount},type=${session.type})}">&raquo;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

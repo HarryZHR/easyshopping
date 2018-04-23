@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="admin_check_complain">
+        <style>
+            .complain_img{
+                width: 200px;
+                height: 200px;
+                margin-left: 20px;
+                margin-top: 20px;
+            }
+            .tr{
+                margin-top: 20px;
+            }
+            .btn{
+                outline: none;
+            }
+        </style>
+        <script>
+            $(function () {
+                $("#ignore").on("click",function () {
+                    var complainId = $("#complainId").val();
+                    $.get("admin_check_complain_operate",
+                        {"complainId":complainId,"cutScore":null},
+                    function (data) {
+                        if(data === "success"){
+                            window.location.href = "admin_complain_check_list?type=wait";
+                        }else {
+                            window.location.href = "admin_login";
+                        }
+                    });
+                });
+                $("#sub_agree").on("click",function () {
+                    var complainId = $("#complainId").val();
+                    var cutScore = $("#cutScore").val();
+                    $.get("admin_check_complain_operate",
+                        {"complainId":complainId,"cutScore":cutScore},
+                    function (data) {
+                        if(data === "success"){
+                            window.location.href = "admin_complain_check_list?type=wait";
+                        }else {
+                            window.location.href = "admin_login";
+                        }
+                    })
+                });
+            });
+        </script>
+        <div>
+            <label>审核投诉</label>
+            <div class="tr">
+                投诉时间：<span th:text="${#dates.format(session.complain.complainTime,'yyyy-MM-dd HH:mm')}"></span>
+            </div>
+            <div class="tr">
+                投诉类型：<span th:text="${session.complain.type}"></span>
+            </div>
+            <div class="tr">
+                投诉店铺：<span th:text="${session.complain.orderItem.order.seller.storeName}"></span>
+            </div>
+            <div class="tr">
+                问题描述：<span th:text="${session.complain.content}"></span>
+                <div th:if="${session.complain.imgs.size() ne 0}">
+                    <img class="complain_img" src="" th:each="img : ${session.complain.imgs}" th:src="${img}" />
+                </div>
+            </div>
+            <div class="tr" th:if="${session.type eq 'operate'}">
+                <input type="hidden" id="complainId" th:value="${session.complain.id}"/>
+                <input class="btn" id="ignore" type="button" value="忽略"/>&nbsp;&nbsp;&nbsp;&nbsp;
+                <input class="btn" id="agree" type="button" value="同意" data-toggle="modal" data-target="#cut_score"/>
+            </div>
+            <div class="tr" th:if="${session.type eq 'look'}">
+                处理结果：<span th:if="${session.complain.cutScore eq 0}" th:text="未扣分"></span>
+                <span th:if="${session.complain.cutScore ne 0}" th:text="'扣' + ${session.complain.cutScore} + '分'"></span>
+            </div>
+        </div>
+        <div class="modal fade" id="cut_score" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">店铺惩罚</h4>
+                    </div>
+                    <div class="modal-body">
+                        <label>
+                            扣除&nbsp;<input type="text" id="cutScore" size="5">&nbsp;分
+                        </label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="sub_agree">确定</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>

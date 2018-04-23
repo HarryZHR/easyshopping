@@ -12,7 +12,7 @@
             <div id="div_seller_top">
                 <a id="a_nickName" th:text="${session.currSeller.storeName}"></a>，
                 <a id="a_exit" href="/seller_exit">退出</a>
-                <a id="a_firstPage">嗨易购首页</a> |
+                <a id="a_firstPage" href="/buyer_index">嗨易购首页</a> |
                 <a id="a_info" href="/seller_home">个人中心</a>
             </div>
             <div id="div_seller_bottom" class="container-fluid">
@@ -47,7 +47,7 @@
                 <div th:replace="seller_goods_list_edit :: goods_list_edit"></div>
             </div>
             <div th:case="goods_edit">
-                <div th:replace="seller_goods_publish :: goods_publish"></div>
+                <div th:replace="seller_goods_edit :: goods_edit"></div>
             </div>
             <div th:case="goods_discount">
                 <div th:replace="seller_goods_discount :: goods_discount"></div>

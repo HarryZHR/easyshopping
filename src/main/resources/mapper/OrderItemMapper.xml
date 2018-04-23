@@ -9,6 +9,7 @@
 		<association property="standard" column="standard_id" select="edu.cslg.easyshopping.dao.StandardDao.getStandardById"/>
 		<association property="order" column="order_id" select="edu.cslg.easyshopping.dao.OrderDao.getOrderById"/>
 		<association property="backGoodsInfo" column="backInfo_id" select="edu.cslg.easyshopping.dao.BackGoodsInfo.getBackGoodsInfoById"/>
+		<association property="complain" column="id" select="edu.cslg.easyshopping.dao.ComplainDao.getComplainById"/>
 	</resultMap>
 	<insert id="saveOrderItem" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO t_order_item VALUES (NULL ,#{buyCount},#{standard.id},#{order.id},NULL ,#{sendNum});

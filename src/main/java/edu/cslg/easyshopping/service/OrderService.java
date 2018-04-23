@@ -111,4 +111,13 @@ public class OrderService {
     public Integer countOrderByMoreStatusAndSeller(Integer small, Integer big,Integer sellerId){
         return orderDao.countOrderByMoreStatusAndSeller(small, big, sellerId);
     }
+
+    /**
+     * 查看每个买家的订单
+     * @param buyerId 买家id
+     * @return 订单
+     */
+    public List<Order> listOrderByBuyer(Integer buyerId){
+        return orderDao.listOrderByBuyer(buyerId);
+    }
 }

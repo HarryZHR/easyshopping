@@ -47,14 +47,6 @@ public class Stuff {
         this.handImg = handImg;
     }
 
-    public Seller getSeller() {
-        return seller;
-    }
-
-    public void setSeller(Seller seller) {
-        this.seller = seller;
-    }
-
     public boolean isStuffStatus() {
         return stuffStatus;
     }
@@ -69,5 +61,13 @@ public class Stuff {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public Seller getSeller() {
+        return seller;
+    }
+
+    public void setSeller(Seller seller) {
+        this.seller = seller;
     }
 }

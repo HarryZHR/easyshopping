@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="admin_check_seller">
+        <style>
+            .img_card{
+                width: 300px;
+                height: 150px;
+            }
+            .div_stuff_img {
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+            .div_operate{
+                padding-bottom: 30px;
+            }
+            .btn{
+                color: #fff;
+            }
+            .btn:hover{
+                color: #fff;
+            }
+            .btn:focus{
+                color: #fff;
+            }
+            #agree{
+                background-color: #1ebfae;
+            }
+            #disagree{
+                background-color: #c9302c;
+            }
+
+        </style>
+        <div class="row">
+            <label>店铺申请材料</label>
+            <div class="div_stuff_img">
+                <label>身份证正面照片</label>
+                <div>
+                    <img class="img_card" src="" th:src="${session.stuff.faceImg}" />
+                </div>
+            </div>
+            <div class="div_stuff_img">
+                <label>身份证背面照片</label>
+                <div>
+                    <img class="img_card" src="" th:src="${session.stuff.oppositeImg}" />
+                </div>
+            </div>
+            <div class="div_stuff_img">
+                <label>手持身份证照片</label>
+                <div>
+                    <img class="img_card" src="" th:src="${session.stuff.handImg}" />
+                </div>
+            </div>
+            <div class="div_operate">
+                <input type="hidden" id="stuffId" th:value="${session.stuff.id}"/>
+                <input class="btn" id="agree" type="button" value="通过"/>&nbsp;&nbsp;&nbsp;&nbsp;
+                <input class="btn" id="disagree" type="button" value="不通过" data-toggle="modal" data-target="#reason"/>
+            </div>
+        </div>
+        <div class="modal fade" id="reason" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">请阐述不通过的理由</h4>
+                    </div>
+                    <div class="modal-body">
+                        <textarea id="reason_content" cols="75" rows="5"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="sub_disagree">确定</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </div>
+        <script>
+            $(function () {
+                $("#agree").on("click",function () {
+                    var stuffId = $("#stuffId").val();
+                    $.get("admin_agree_seller_check",
+                        {"stuffId":stuffId},
+                    function (data) {
+                        if(data === "success"){
+                            window.location.href = "admin_check_seller_list";
+                        }else {
+                            window.location.href = "admin_login";
+                        }
+                    });
+                });
+                $("#sub_disagree").on("click",function () {
+                    var stuffId = $("#stuffId").val();
+                    var reason = $("#reason_content").val();
+                    $.get("admin_disagree_seller_check",
+                        {"stuffId":stuffId,"reason":reason},
+                    function (data) {
+                        if(data === "success"){
+                            window.location.href = "admin_check_seller_list";
+                        }else {
+                            window.location.href = "admin_login";
+                        }
+                    })
+                });
+            });
+        </script>
+    </div>
+</body>
+</html>

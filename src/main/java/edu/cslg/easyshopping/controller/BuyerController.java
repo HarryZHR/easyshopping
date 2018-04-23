@@ -26,6 +26,7 @@ import java.util.*;
 @Controller
 public class BuyerController {
 
+    private final static Integer PAGE_SIZE = 5;
     @Resource
     private GoodsTypeService goodsTypeService;
     @Resource
@@ -50,7 +51,8 @@ public class BuyerController {
     private OrderItemService orderItemService;
     @Resource
     private OrderStatusService orderStatusService;
-
+    @Resource
+    private ComplainService complainService;
     /**
      * 时间格式化
      */
@@ -65,13 +67,12 @@ public class BuyerController {
      * @return 首页
      */
     @GetMapping(value = "/buyer_index")
-    public String buyerIndex(HttpSession session, String key,String type,Float low, Float high, String operate, Integer currPage){
+    public String buyerIndex(HttpSession session, String key,String type,Float low, Float high, String operate, Integer currPage,Integer sellerId){
         List<GoodsType> goodsTypes = goodsTypeService.listGoodsType();
         session.setAttribute("goodsTypeList",goodsTypes);
-        Integer pageSize = 5;
         GoodsType goodsType = goodsTypeService.getGoodsTypeByType(type);
-        Integer goodsCount= goodsService.countGoodsByCategoryAndKey(goodsType, key, low, high);
-        Integer pageCount = (goodsCount + pageSize - 1) / pageSize;
+        Integer goodsCount= goodsService.countGoodsByCategoryAndKey(goodsType, key, low, high,null,null,sellerId);
+        Integer pageCount = (goodsCount + PAGE_SIZE - 1) / PAGE_SIZE;
         if(pageCount == 0){
             pageCount = 1;
         }
@@ -81,7 +82,7 @@ public class BuyerController {
         if(currPage > pageCount){
             currPage = pageCount;
         }
-        List<Goods> goodsList = GoodsCountUtil.setGoodsListCount(goodsService.listGoodsByCategoryAndKey(goodsType, key, low, high,operate, pageSize * (currPage - 1),pageSize));
+        List<Goods> goodsList = GoodsCountUtil.setGoodsListCount(goodsService.listGoodsByCategoryAndKey(goodsType, key, low, high,operate, PAGE_SIZE * (currPage - 1),PAGE_SIZE,null,null,sellerId));
         session.setAttribute("buyerGoodsList",goodsList);
         session.setAttribute("buyerPageCount",pageCount);
         session.setAttribute("type",type);
@@ -93,18 +94,22 @@ public class BuyerController {
     }
 
     /**
-     * 加载更多商品
+     * 按照不同的要求加载商品
+     * @param key 搜索关键字
+     * @param type 类型
+     * @param low 最低价
+     * @param high 最高价
+     * @param operate 操作 从高到低 还是从低到高
      * @param currPage 当前页
-     * @param session 保存作用域
-     * @return 返回ajax
+     * @param carouselId 活动的id
+     * @return ajax结果
      */
     @GetMapping(value = "/buyer_load_goods")
     @ResponseBody
-    public String buyerLoadGoods(HttpSession session, String key,String type,Float low, Float high, String operate, Integer currPage){
+    public String buyerLoadGoods(HttpSession session, String key,String type,Float low, Float high, String operate, Integer currPage,Integer carouselId,Integer bigType,Integer sellerId){
         GoodsType goodsType = goodsTypeService.getGoodsTypeByType(type);
-        Integer goodsCount= goodsService.countGoodsByCategoryAndKey(goodsType, key, low, high);
-        Integer pageSize = 5;
-        Integer pageCount = (goodsCount + pageSize - 1) / pageSize;
+        Integer goodsCount= goodsService.countGoodsByCategoryAndKey(goodsType, key, low, high, carouselId,bigType,sellerId);
+        Integer pageCount = (goodsCount + PAGE_SIZE - 1) / PAGE_SIZE;
         if(pageCount == 0){
             pageCount = 1;
         }
@@ -114,7 +119,7 @@ public class BuyerController {
         if(currPage > pageCount){
             currPage = pageCount;
         }
-        List<Goods> goodsList = GoodsCountUtil.setGoodsListCount(goodsService.listGoodsByCategoryAndKey(goodsType, key, low, high,operate, pageSize * (currPage - 1),pageSize));
+        List<Goods> goodsList = GoodsCountUtil.setGoodsListCount(goodsService.listGoodsByCategoryAndKey(goodsType, key, low, high,operate, PAGE_SIZE * (currPage - 1),PAGE_SIZE, carouselId,bigType,sellerId));
         session.setAttribute("buyerNewGoodsList",goodsList);
         session.setAttribute("type",type);
         session.setAttribute("key",key);
@@ -151,11 +156,10 @@ public class BuyerController {
      */
     @ResponseBody
     @GetMapping(value = "buyer_goods_category_key")
-    public String buyerGoodsCategoryKey(HttpSession session, String key,String type,Float low, Float high, String operate, Integer currPage){
-        Integer pageSize = 5;
+    public String buyerGoodsCategoryKey(HttpSession session, String key,String type,Float low, Float high, String operate, Integer currPage, Integer carouselId,Integer bigType,Integer sellerId){
         GoodsType goodsType = goodsTypeService.getGoodsTypeByType(type);
-        Integer goodsCount= goodsService.countGoodsByCategoryAndKey(goodsType, key, low, high);
-        Integer pageCount = (goodsCount + pageSize - 1) / pageSize;
+        Integer goodsCount= goodsService.countGoodsByCategoryAndKey(goodsType, key, low, high,carouselId,bigType,sellerId);
+        Integer pageCount = (goodsCount + PAGE_SIZE - 1) / PAGE_SIZE;
         if(pageCount == 0){
             pageCount = 1;
         }
@@ -165,7 +169,7 @@ public class BuyerController {
         if(currPage > pageCount){
             currPage = pageCount;
         }
-        List<Goods> goodsList = GoodsCountUtil.setGoodsListCount(goodsService.listGoodsByCategoryAndKey(goodsType, key, low, high,operate, pageSize * (currPage - 1),pageSize));
+        List<Goods> goodsList = GoodsCountUtil.setGoodsListCount(goodsService.listGoodsByCategoryAndKey(goodsType, key, low, high,operate, PAGE_SIZE * (currPage - 1),PAGE_SIZE,carouselId,bigType,sellerId));
         session.setAttribute("buyerGoodsList",goodsList);
         session.setAttribute("buyerPageCount",pageCount);
         session.setAttribute("type",type);
@@ -192,10 +196,7 @@ public class BuyerController {
     @GetMapping(value = "buyer_goods_detail")
     public String buyerGoodsDetail(Integer goodsId,HttpSession session){
         session.setAttribute("lastViewGoods",goodsId);
-        Goods goods = GoodsCountUtil.setGoodsCount(goodsService.getGoodsById(goodsId));
-        List<Standard> standards = goods.getStandards();
-        List<String> sizes = new ArrayList<>();
-        Map<String,String> colorMap = new HashMap<>();
+        Goods goods = GoodsCountUtil.setGoodsCount(goodsService.getGoodsById(goodsId),"");
         // 商品评论数
         Integer countImgReply = replyService.countImgReplyByStandardId(goods.getId());
         Integer countGoodReply = replyService.countAllReplyByStandardId(goods.getId(),"goodReply");
@@ -206,30 +207,8 @@ public class BuyerController {
         session.setAttribute("replyAllCount",replyAllCount);
         // 获取同类型的商品
         List<Goods> listGoodsInCategory = goodsService.listGoodsByCategoryInSeller(goods.getSeller().getId(),goods.getType().getId());
-        for (Standard standard : standards){
-            // 获取商品的颜色图片
-            if(!colorMap.keySet().contains(standard.getColorImg())){
-                colorMap.put(standard.getColorImg(),standard.getColor());
-            }
-            // 获取商品的尺寸
-            if(!sizes.contains(standard.getSize())){
-                sizes.add(standard.getSize());
-            }
-
-        }
-        List<String> goodsImgDetails = new ArrayList<>();
-        // 商品的细节图
-        String[] goodsImgDetailArr = goods.getGoodsImg().getDetailImg().split("_");
-        for (String goodsImgDetail : goodsImgDetailArr) {
-            if(!goodsImgDetails.contains(goodsImgDetail)){
-                goodsImgDetails.add(goodsImgDetail);
-            }
-        }
-        goods.setGoodsImgDetail(goodsImgDetails);
-        goods.setColorMap(colorMap);
-        goods.setSizes(sizes);
-        List<Goods> goodsList = goodsService.listGoodsBySellerAll(goods.getSeller().getId());
         // 进入商品的所在店铺所有的商品类型
+        List<Goods> goodsList = goodsService.listGoodsBySellerAll(goods.getSeller().getId());
         List<String> goodsTypes = new ArrayList<>();
         for (Goods goodsInSeller: goodsList) {
             GoodsType goodsType = goodsInSeller.getType();
@@ -283,14 +262,13 @@ public class BuyerController {
         if("".equals(replyType) || replyType == null){
             replyType = null;
         }
-        Integer pageSize = 5;
-        Integer replyCount = 0;
+        Integer replyCount;
         if("imgReply".equals(replyType)){
             replyCount = replyService.countImgReplyByStandardId(goodsId);
         }else {
            replyCount = replyService.countAllReplyByStandardId(goodsId,replyType);
         }
-        Integer pageCount = (replyCount + pageSize - 1) / pageSize;
+        Integer pageCount = (replyCount + PAGE_SIZE - 1) / PAGE_SIZE;
         if(pageCount == 0){
             pageCount = 1;
         }
@@ -302,9 +280,9 @@ public class BuyerController {
         }
         List<Reply> replies;
         if("imgReply".equals(replyType)){
-            replies = ReplyImgsUtil.setReplyImgs(replyService.listImgReplyByStandardId(goodsId,pageSize * (currReplyPage - 1),pageSize));
+            replies = ReplyImgsUtil.setReplyImgs(replyService.listImgReplyByStandardId(goodsId,PAGE_SIZE * (currReplyPage - 1),PAGE_SIZE));
         }else {
-            replies = ReplyImgsUtil.setReplyImgs(replyService.listAllReplyByStandardId(goodsId,replyType,pageSize * (currReplyPage - 1),pageSize));
+            replies = ReplyImgsUtil.setReplyImgs(replyService.listAllReplyByStandardId(goodsId,replyType,PAGE_SIZE * (currReplyPage - 1),PAGE_SIZE));
         }
         session.setAttribute("listReply",replies);
         session.setAttribute("replyAllCount",replyCount);
@@ -388,6 +366,16 @@ public class BuyerController {
         }
         return color.toString();
     }
+
+    /**
+     * 跳转到店铺
+     * @return 店铺
+     */
+    @GetMapping(value = "buyer_seller_goods_list")
+    public String buyerSellerGoodsList(){
+        return "buyer_seller_goods_list";
+    }
+
     /* 下面是需要用户登录的模块 */
 
     /**
@@ -839,6 +827,9 @@ public class BuyerController {
                     Goods goods = orderItem.getStandard().getGoods();
                     goods.setSaleCount(goods.getSaleCount() + 1);
                     goodsService.updateGoods(goods);
+                    Seller seller = goods.getSeller();
+                    seller.setSale(seller.getSale() + orderItem.getBuyCount());
+                    sellerService.updateSeller(seller);
                     Standard standard = orderItem.getStandard();
                     standard.setCount(orderItem.getStandard().getCount() - cartItem.getBuyCount());
                     standardService.updateStandard(standard);
@@ -851,13 +842,16 @@ public class BuyerController {
                 orderItem.setBuyCount(cartItemStraight.getBuyCount());
                 orderItem.setStandard(cartItemStraight.getStandard());
                 for (Order order : orders){
-                    orderIdStr.append(order.getId()).append("_");
                     orderItem.setOrder(order);
+                    orderIdStr.append(order.getId()).append("_");
                 }
                 orderItemService.saveOrderItem(orderItem);
                 Goods goods = orderItem.getStandard().getGoods();
                 goods.setSaleCount(goods.getSaleCount() + 1);
                 goodsService.updateGoods(goods);
+                Seller seller = goods.getSeller();
+                seller.setSale(seller.getSale() + orderItem.getBuyCount());
+                sellerService.updateSeller(seller);
                 Standard standard = orderItem.getStandard();
                 standard.setCount(orderItem.getStandard().getCount() - cartItemStraight.getBuyCount());
                 standardService.updateStandard(standard);
@@ -942,9 +936,8 @@ public class BuyerController {
     public String buyerOrderAll(Integer orderCurrPage, HttpSession session,Integer small, Integer big){
         Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
         if(currBuyer != null){
-            Integer pageSize = 5;
             Integer goodsCount= orderService.countOrderByMoreStatusAndBuyer(small,big,currBuyer.getId());
-            Integer pageCount = (goodsCount + pageSize - 1) / pageSize;
+            Integer pageCount = (goodsCount + PAGE_SIZE - 1) / PAGE_SIZE;
             if(pageCount == 0){
                 pageCount = 1;
             }
@@ -954,7 +947,7 @@ public class BuyerController {
             if(orderCurrPage > pageCount){
                 orderCurrPage = pageCount;
             }
-            List<Order> orders = orderService.listOrderByMoreStatusAndBuyer(small,big,currBuyer.getId(),pageSize * (orderCurrPage - 1), pageSize);
+            List<Order> orders = orderService.listOrderByMoreStatusAndBuyer(small,big,currBuyer.getId(),PAGE_SIZE * (orderCurrPage - 1), PAGE_SIZE);
             for (Order order : orders){
                 Float orderMoney = 0.0f;
                 List<OrderItem> orderItems = order.getOrderItems();
@@ -1296,6 +1289,11 @@ public class BuyerController {
         return "buyer_login";
     }
 
+    /**
+     * 保存订单的评价
+     * @param replies 评价的集合
+     * @return 跳转成功的页面
+     */
     @PostMapping(value = "buyer_save_order_reply")
     public String buyerSaveOrderReply(HttpSession session, Replies replies){
         Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
@@ -1307,6 +1305,11 @@ public class BuyerController {
                 reply.setBuyer(currBuyer);
                 reply.setSeller(order.getSeller());
                 replyService.saveReply(reply);
+                if("goodReply".equals(reply.getType())){
+                    Goods goods = reply.getStandard().getGoods();
+                    goods.setGoodRelyCount(goods.getGoodRelyCount() + 1);
+                    goodsService.updateGoods(goods);
+                }
             }
             orderService.updateOrderStatus(order);
             session.setAttribute("operate","buyer_reply_success");
@@ -1315,6 +1318,11 @@ public class BuyerController {
         return "buyer_login";
     }
 
+    /**
+     * 判断订单是否评价过
+     * @param orderId 订单的id
+     * @return 成功与否
+     */
     @ResponseBody
     @GetMapping(value = "check_order_reply")
     public String checkOrderRely(Integer orderId){
@@ -1324,16 +1332,6 @@ public class BuyerController {
         }
         return "false";
     }
-
-
-
-
-
-
-
-
-
-
 
     /**
      * 买家收藏的商品
@@ -1366,6 +1364,26 @@ public class BuyerController {
             session.setAttribute("sellersBuyerLike",sellers);
             session.setAttribute("likeTip","seller");
             return "buyer_like";
+        }
+        return "buyer_login";
+    }
+
+    /**
+     * 买家投诉
+     * @param orderItemId 订单详情id
+     * @param complain 投诉参数
+     * @return 成功与否
+     */
+    @ResponseBody
+    @GetMapping(value = "buyer_complain")
+    public String buyerComplain(HttpSession session, Integer orderItemId,Complain complain){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if (currBuyer != null) {
+            complain.setId(orderItemId);
+            complain.setCheckFlag(false);
+            complain.setComplainTime(new Date());
+            complainService.saveComplain(complain);
+            return "success";
         }
         return "buyer_login";
     }

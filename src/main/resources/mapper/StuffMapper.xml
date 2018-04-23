@@ -9,13 +9,23 @@
 		<result property="handImg" column="handImg"/>
 		<result property="stuffStatus" column="stuffStatus"/>
 		<result property="reason" column="reason"/>
-		<association property="seller" column="seller_id" select="edu.cslg.easyshopping.dao.SellerDao.getSellerById"/>
+		<association property="seller" column="id" select="edu.cslg.easyshopping.dao.SellerDao.getSellerAllById"/>
 	</resultMap>
 
 	<insert id="saveStuff" parameterType="edu.cslg.easyshopping.pojo.Stuff">
-		INSERT INTO t_stuff VALUES (NULL ,#{faceImg},#{oppositeImg},#{handImg},#{stuffStatus},#{reason},#{seller.id})
+		INSERT INTO t_stuff VALUES (#{id} ,#{faceImg},#{oppositeImg},#{handImg},#{stuffStatus},#{reason})
 	</insert>
 	<select id="listStuffByStatus" resultMap="stuffMap">
-		SELECT * FROM t_stuff WHERE stuffStatus = FALSE ;
+		SELECT * FROM t_stuff WHERE stuffStatus = FALSE
+			LIMIT #{stuffIndex},#{stuffSize};
 	</select>
+	<select id="countStuffByStatus" resultType="Integer">
+		SELECT count(*) FROM t_stuff WHERE stuffStatus = FALSE ;
+	</select>
+	<select id="getStuffById" resultMap="stuffMap">
+		SELECT * FROM t_stuff WHERE id = #{0};
+	</select>
+	<update id="updateStuff">
+		UPDATE t_stuff SET faceImg = #{faceImg}, oppositeImg = #{oppositeImg}, handImg = #{handImg}, stuffStatus = #{stuffStatus}, reason = #{reason} WHERE id = #{id};
+	</update>
 </mapper>

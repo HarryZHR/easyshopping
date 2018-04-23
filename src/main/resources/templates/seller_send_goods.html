@@ -29,77 +29,84 @@
                 });
             });
         </script>
-        <div th:each="order : ${session.orderWaitSend}">
-            <div class="row font order_send_top">
-                <span>订单编号：</span>
-                <span th:text="${order.orderNum}"></span>&nbsp;&nbsp;&nbsp;&nbsp;
-                <span>创建时间：</span>
-                <span th:text="${#dates.format(order.orderTime,'yyyy-MM-dd HH:mm:ss')}"></span>
-            </div>
-            <div class="row order_item_send">
-                <div class="col-xs-8 font" th:each="orderItem : ${order.orderItems}">
-                    <div class="col-xs-2">
-                        <img class="img_order_send" src="" th:src="${orderItem.standard.colorImg}">
-                    </div>
-                    <div class="col-xs-7">
-                        <div>
-                            <span th:text="${orderItem.standard.goods.title}"></span>
-                        </div>
-                        <div>
-                            <span>颜色：</span>
-                            <span th:text="${orderItem.standard.color}"></span>
-                            <span>尺码：</span>
-                            <span th:text="${orderItem.standard.size}"></span>
-                        </div>
-                    </div>
-                    <div class="col-xs-3 order_money">
-                        <span th:text="'￥' + ${#numbers.formatDecimal(orderItem.standard.price - orderItem.standard.goods.discount,0,2)} +' × '+ ${orderItem.buyCount}"></span>
-                    </div>
-                </div>
-                <div class="font col-xs-4 order_send_right">
-                    <div>
-                        <span>买家备注：</span>
-                        <span th:text="${order.remark}"></span>
-                    </div>
-                    <div>
-                        <span>总计：</span>
-                        <span th:text="'￥' + ${#numbers.formatDecimal(order.orderMoney,0,2)}"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="row font order_address">
-                <label>买家收货信息：</label>
-                <span th:text="${order.address.province} + ${order.address.city} + ${order.address.district} + ${order.address.street} + '，' + ${order.address.receiver} + '，' + ${order.address.tel}"></span>
-            </div>
-            <div class="div_input_send">
-                <input type="hidden" class="orderId" th:value="${order.id}" />
-                <label class="font">快递单号：
-                    <input class="input_send_num" type="number" />
-                </label>&nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="button" value="确定" class="btn-send"/>
-                <input type="hidden" th:value="${single_send}" class="single" />
+        <div th:if="${session.orderWaitSend.size() eq 0}">
+            <div>
+                暂时没有待发货的订单！
             </div>
         </div>
-        <div id="div_page" th:if="${single_send != 'true'}">
-            <ul class="pagination">
-                <li th:class="${(session.currPage le 1) ? 'disabled':''}">
-                    <a th:if="${session.currPage eq 1}" href="javascript:void(0)">&laquo;</a>
-                    <a th:if="${session.currPage > 1}" th:href="@{'seller_send_goods'(currPage=1)}">&laquo;</a>
-                </li>
-                <li th:class="${(session.currPage le 1) ? 'disabled':''}">
-                    <a th:if="${session.currPage eq 1}" href="javascript:void(0)">&lt;</a>
-                    <a th:if="${session.currPage > 1}" th:href="@{'seller_send_goods'(currPage=${session.currPage - 1})}">&lt;</a>
-                </li>
-                <li><a href="#" th:text="${session.currPage}"></a></li>
-                <li th:class="${(session.currPage eq session.pageCount) ? 'disabled':''}">
-                    <a th:if="${(session.currPage eq session.pageCount)}" href="javascript:void(0)">&gt;</a>
-                    <a th:if="${(session.currPage < session.pageCount)}" th:href="@{'seller_send_goods'(currPage=${session.currPage + 1})}">&gt;</a>
-                </li>
-                <li th:class="${(session.currPage eq session.pageCount)? 'disabled':''}">
-                    <a th:if="${(session.currPage eq session.pageCount)}" href="javascript:void(0)">&raquo;</a>
-                    <a th:if="${(session.currPage < session.pageCount)}" th:href="@{'seller_send_goods'(currPage=${session.pageCount})}">&raquo;</a>
-                </li>
-            </ul>
+        <div th:if="${session.orderWaitSend.size() ne 0}">
+            <div th:each="order : ${session.orderWaitSend}">
+                <div class="row font order_send_top">
+                    <span>订单编号：</span>
+                    <span th:text="${order.orderNum}"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span>创建时间：</span>
+                    <span th:text="${#dates.format(order.orderTime,'yyyy-MM-dd HH:mm:ss')}"></span>
+                </div>
+                <div class="row order_item_send">
+                    <div class="col-xs-8 font" th:each="orderItem : ${order.orderItems}">
+                        <div class="col-xs-2">
+                            <img class="img_order_send" src="" th:src="${orderItem.standard.colorImg}">
+                        </div>
+                        <div class="col-xs-7">
+                            <div>
+                                <span th:text="${orderItem.standard.goods.title}"></span>
+                            </div>
+                            <div>
+                                <span>颜色：</span>
+                                <span th:text="${orderItem.standard.color}"></span>
+                                <span>尺码：</span>
+                                <span th:text="${orderItem.standard.size}"></span>
+                            </div>
+                        </div>
+                        <div class="col-xs-3 order_money">
+                            <span th:text="'￥' + ${#numbers.formatDecimal(orderItem.standard.price - orderItem.standard.goods.discount,0,2)} +' × '+ ${orderItem.buyCount}"></span>
+                        </div>
+                    </div>
+                    <div class="font col-xs-4 order_send_right">
+                        <div>
+                            <span>买家备注：</span>
+                            <span th:text="${order.remark}"></span>
+                        </div>
+                        <div>
+                            <span>总计：</span>
+                            <span th:text="'￥' + ${#numbers.formatDecimal(order.orderMoney,0,2)}"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row font order_address">
+                    <label>买家收货信息：</label>
+                    <span th:text="${order.address.province} + ${order.address.city} + ${order.address.district} + ${order.address.street} + '，' + ${order.address.receiver} + '，' + ${order.address.tel}"></span>
+                </div>
+                <div class="div_input_send">
+                    <input type="hidden" class="orderId" th:value="${order.id}" />
+                    <label class="font">快递单号：
+                        <input class="input_send_num" type="number" />
+                    </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="button" value="确定" class="btn-send"/>
+                    <input type="hidden" th:value="${single_send}" class="single" />
+                </div>
+            </div>
+            <div id="div_page" th:if="${single_send != 'true'}">
+                <ul class="pagination">
+                    <li th:class="${(session.currPage le 1) ? 'disabled':''}">
+                        <a th:if="${session.currPage eq 1}" href="javascript:void(0)">&laquo;</a>
+                        <a th:if="${session.currPage > 1}" th:href="@{'seller_send_goods'(currPage=1)}">&laquo;</a>
+                    </li>
+                    <li th:class="${(session.currPage le 1) ? 'disabled':''}">
+                        <a th:if="${session.currPage eq 1}" href="javascript:void(0)">&lt;</a>
+                        <a th:if="${session.currPage > 1}" th:href="@{'seller_send_goods'(currPage=${session.currPage - 1})}">&lt;</a>
+                    </li>
+                    <li><a href="#" th:text="${session.currPage}"></a></li>
+                    <li th:class="${(session.currPage eq session.pageCount) ? 'disabled':''}">
+                        <a th:if="${(session.currPage eq session.pageCount)}" href="javascript:void(0)">&gt;</a>
+                        <a th:if="${(session.currPage < session.pageCount)}" th:href="@{'seller_send_goods'(currPage=${session.currPage + 1})}">&gt;</a>
+                    </li>
+                    <li th:class="${(session.currPage eq session.pageCount)? 'disabled':''}">
+                        <a th:if="${(session.currPage eq session.pageCount)}" href="javascript:void(0)">&raquo;</a>
+                        <a th:if="${(session.currPage < session.pageCount)}" th:href="@{'seller_send_goods'(currPage=${session.pageCount})}">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </body>

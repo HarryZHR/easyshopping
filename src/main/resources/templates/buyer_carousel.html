@@ -7,6 +7,33 @@
 <body>
     <div th:fragment="buyer_carousel">
         <link rel="stylesheet" type="text/css" th:href="@{/css/buyer_carousel.css}">
+        <script>
+            $(function () {
+                 $(".img_carousel").on("click",function () {
+                     var carouselId = $(this).attr("id");
+                     var carouselType = carouselId.substr(carouselId.length - 1,1);
+                     $.get("buyer_goods_category_key",
+                         {"carouselId":carouselType},
+                         function (data) {
+                             if(data === "success"){
+                                 window.location.href = "buyer_goods_type_key";
+                             }
+                         });
+                     });
+                 $(".img_category").on("click",function () {
+                     var id = $(this).attr("id");
+                     var bigType = id.substr(id.length - 1, 1);
+                     $.get("buyer_goods_category_key",
+                         {"bigType":bigType},
+                         function (data) {
+                             if(data === "success"){
+                                 window.location.href = "buyer_goods_type_key";
+                             }
+                         }
+                     );
+                 });
+            });
+        </script>
         <div id="div_carousel" class="carousel slide" data-interval="3000" data-ride="carousel">
             <!-- 轮播（Carousel）指标 -->
             <ol class="carousel-indicators">
@@ -17,13 +44,13 @@
             <!-- 轮播（Carousel）项目 -->
             <div class="carousel-inner">
                 <div class="item active">
-                    <img src="" th:src="@{img/carousel1.png}" />
+                    <img src="" th:src="@{img/carousel1.png}" class="img_carousel" id="carousel1"/>
                 </div>
                 <div class="item">
-                    <img src="" th:src="@{img/carousel2.png}" />
+                    <img src="" th:src="@{img/carousel2.png}" class="img_carousel" id="carousel2" />
                 </div>
                 <div class="item">
-                    <img src="" th:src="@{img/carousel3.png}" />
+                    <img src="" th:src="@{img/carousel3.png}" class="img_carousel" id="carousel3" />
                 </div>
             </div>
             <!-- 轮播（Carousel）导航 -->
@@ -36,16 +63,16 @@
         </div>
         <div id="div_category">
             <a class="a_category1">
-                <img class="img_carousel" src="" th:src="@{img/category1.png}" />
+                <img id="category1" class="img_category" src="" th:src="@{img/category1.png}" />
             </a>
             <a class="a_category">
-                <img class="img_carousel" src="" th:src="@{img/category2.png}" />
+                <img id="category2" class="img_category" src="" th:src="@{img/category2.png}" />
             </a>
             <a class="a_category">
-                <img class="img_carousel" src="" th:src="@{img/category3.png}" />
+                <img id="category3" class="img_category" src="" th:src="@{img/category3.png}" />
             </a>
             <a class="a_category">
-                <img class="img_carousel" src="" th:src="@{img/category4.png}" />
+                <img id="category4" class="img_category" src="" th:src="@{img/category4.png}" />
             </a>
         </div>
     </div>

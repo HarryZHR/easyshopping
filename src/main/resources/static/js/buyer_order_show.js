@@ -43,4 +43,89 @@ $(function () {
                 })
         }
     });
+    $(".complain_seller").on("click",function () {
+        var orderItemId = $(this).parent().find(".orderItemId").val();
+        $("#orderItemId").val(orderItemId);
+        $(this).attr("id","clickBtn");
+    });
+    $("#sub_complain").on("click",function () {
+        var content = $("#complain_content").val();
+        var orderItemId = $("#orderItemId").val();
+        var select = $("input[name='type']:checked").val();
+        if(select === undefined){
+            $("#complain_tip").text("请选择投诉类型");
+        }else if(content === "" || content === null){
+            $("#complain_tip").text("请描述问题");
+        }else {
+            var img = '';
+            $(".hidden_complain_img").each(function () {
+                console.log($(this).val());
+                img += $(this).val() + "_";
+            });
+            $.get("buyer_complain",
+                {"orderItemId":orderItemId,"content":content,"type":select,"img":img},
+                function (data) {
+                    if(data === "success"){
+                        $("input[type='radio']").each(function () {
+                            $(this).attr("checked",false);
+                        });
+                        $("#complain_content").val('');
+                        $(".up_img").html('');
+                        $('#complain').modal('hide');
+                        $("#clickBtn").remove();
+                    }else {
+                        window.location.href = "buyer_login";
+                    }
+                });
+        }
+    });
+    $("input[name='type']").on("focus",function () {
+        $("#complain_tip").text('');
+    });
+    $("#complain_content").on("focus",function () {
+        $("#complain_tip").text('');
+    });
+    $(".input_upload_img").on("change",function () {
+        var formData = new FormData();
+        var files = $(".input_upload_img").get(0).files;
+        for (var i = 0; i < files.length; i++){
+            formData.append("files",files[i]);
+        }
+        var num = 0;
+        $(".complain_img").each(function () {
+            num ++;
+        });
+        if(files.length + num > 5){
+            $("#complain_tip").text('图片超过上限');
+        }else {
+            $.ajax({
+                url: "up_img_multi",
+                type: "POST",
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (returndata) {
+                    var url = returndata.split("_");
+                    for (var i = 0 ; i < url.length - 1; i++){
+                        $(".up_img").append("<img src=\'"+ url[i] +"\' class=\'complain_img\' /> <input type=\'hidden\' class='hidden_complain_img' value=\'"+ url[i] +"\'/><img src='/img/delete.png' class='img_delete_detail' onclick='deleteImg($(this))'/>");
+                    }
+                    $(".img_delete_detail").css("display","inline");
+                },
+                error: function (data) {
+                    alert("fail");
+                }
+            });
+        }
+    }).on("focus",function () {
+        $("#complain_tip").text('');
+    });
 });
+
+// 删除上传的细节图片
+function deleteImg(deleteBtn) {
+    deleteBtn.prev().remove();
+    deleteBtn.prev().remove();
+    deleteBtn.remove();
+}

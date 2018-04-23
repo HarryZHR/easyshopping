@@ -1,16 +1,19 @@
 package edu.cslg.easyshopping.pojo;
 
 import java.util.Date;
+import java.util.List;
 
 public class Complain {
     private Integer id;
     private String type;
     private String content;
+    private String img;
+    private List<String> imgs;
     private Integer cutScore;
     private OrderItem orderItem;
     private Date complainTime;
-    private boolean checkFlag;
 
+    private boolean checkFlag;
     public Complain(){}
 
     public Integer getId() {
@@ -67,5 +70,21 @@ public class Complain {
 
     public void setCheckFlag(boolean checkFlag) {
         this.checkFlag = checkFlag;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public List<String> getImgs() {
+        return imgs;
+    }
+
+    public void setImgs(List<String> imgs) {
+        this.imgs = imgs;
     }
 }

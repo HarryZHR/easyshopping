@@ -8,68 +8,75 @@
     <div th:fragment="goods_discount">
         <link rel="stylesheet" type="text/css" href="../static/css/seller_goods_edit_list.css" th:href="@{/css/seller_goods_edit_list.css}"/>
         <script type="text/javascript" th:src="@{/js/seller_goods_discount.js}"></script>
-        <div id="div_goods_list">
-            <table id="table_goods_edit" class="table table-hover">
-                <tr>
-                    <th width="40%">商品名称</th>
-                    <th width="10%">商品分类</th>
-                    <th width="10%">价格（元）</th>
-                    <th width="13%">优惠金额（元）</th>
-                    <th width="13%">库存</th>
-                    <th>操作</th>
-                </tr>
-                <tr th:each="goods : ${session.goodsList}">
-                    <td class="td_title" style="padding-top: 10px">
-                        <div class="div_img">
-                            <a class="a_img">
-                                <img class="img_img1" src="" th:src="${goods.goodsImg.img1}">
-                            </a>
-                        </div>
-                        <div class="div_title">
-                            <a class="a_title" th:text="${goods.title}"></a>
-                        </div>
-                    </td>
-                    <td th:text="${goods.type.type}"></td>
-                    <td th:text="${#numbers.formatDecimal(goods.minPrice,1,2)}"></td>
-                    <td th:text="${#numbers.formatDecimal(goods.discount,1,2)}" class="td_discount"></td>
-                    <td th:text="${goods.allCount}"></td>
-                    <td>
-                        <input class="goodsId" type="hidden" th:value="${goods.id}">
-                        <input type="button" value="修改优惠" class="btn btn-success discount"/>
-                    </td>
-                </tr>
-            </table>
-            <div id="div_discount">
-                <span id="span_close">×</span>
-                <input type="hidden" class="input_goods_id">
-                <label class="label_discount">请输入优惠金额： <input type="text" size="5" id="input_discount"/> &nbsp;&nbsp;元</label>
-                <br/>
-                <br/>
-                <input type="button" class="btn btn-danger discount_cancel" value="取消"/>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="button" class="btn btn-success discount_submit" value="确定"/>
+        <div th:if="${session.goodsList.size() eq 0}">
+            <div>
+                您的店铺还没有上架的商品！
             </div>
         </div>
-        <div id="div_page">
-            <ul class="pagination">
-                <li th:class="${(session.currPage le 1) ? 'disabled':''}">
-                    <a th:if="${session.currPage eq 1}" href="javascript:void(0)">&laquo;</a>
-                    <a th:if="${session.currPage > 1}" th:href="@{${'/goods_discount'}(currPage=1)}">&laquo;</a>
-                </li>
-                <li th:class="${(session.currPage le 1) ? 'disabled':''}">
-                    <a th:if="${session.currPage eq 1}" href="javascript:void(0)">&lt;</a>
-                    <a th:if="${session.currPage > 1}" th:href="@{${'/goods_discount'}(currPage=${session.currPage - 1})}">&lt;</a>
-                </li>
-                <li><a href="#" th:text="${session.currPage}"></a></li>
-                <li th:class="${(session.currPage eq session.pageCount) ? 'disabled':''}">
-                    <a th:if="${(session.currPage eq session.pageCount)}" href="javascript:void(0)">&gt;</a>
-                    <a th:if="${(session.currPage < session.pageCount)}" th:href="@{${'/goods_discount'}(currPage=${session.currPage + 1})}">&gt;</a>
-                </li>
-                <li th:class="${(session.currPage eq session.pageCount)? 'disabled':''}">
-                    <a th:if="${(session.currPage eq session.pageCount)}" href="javascript:void(0)">&raquo;</a>
-                    <a th:if="${(session.currPage < session.pageCount)}" th:href="@{${'/goods_discount'}(currPage=${session.pageCount})}">&raquo;</a>
-                </li>
-            </ul>
+        <div th:if="${session.goodsList.size() ne 0}">
+            <div id="div_goods_list">
+                <table id="table_goods_edit" class="table table-hover">
+                    <tr>
+                        <th width="40%">商品名称</th>
+                        <th width="10%">商品分类</th>
+                        <th width="10%">价格（元）</th>
+                        <th width="13%">优惠金额（元）</th>
+                        <th width="13%">库存</th>
+                        <th>操作</th>
+                    </tr>
+                    <tr th:each="goods : ${session.goodsList}">
+                        <td class="td_title" style="padding-top: 10px">
+                            <div class="div_img">
+                                <a class="a_img">
+                                    <img class="img_img1" src="" th:src="${goods.goodsImg.img1}">
+                                </a>
+                            </div>
+                            <div class="div_title">
+                                <a class="a_title" th:text="${goods.title}"></a>
+                            </div>
+                        </td>
+                        <td th:text="${goods.type.type}"></td>
+                        <td th:text="${#numbers.formatDecimal(goods.minPrice,1,2)}"></td>
+                        <td th:text="${#numbers.formatDecimal(goods.discount,1,2)}" class="td_discount"></td>
+                        <td th:text="${goods.allCount}"></td>
+                        <td>
+                            <input class="goodsId" type="hidden" th:value="${goods.id}">
+                            <input type="button" value="修改优惠" class="btn btn-success discount"/>
+                        </td>
+                    </tr>
+                </table>
+                <div id="div_discount">
+                    <span id="span_close">×</span>
+                    <input type="hidden" class="input_goods_id">
+                    <label class="label_discount">请输入优惠金额： <input type="text" size="5" id="input_discount"/> &nbsp;&nbsp;元</label>
+                    <br/>
+                    <br/>
+                    <input type="button" class="btn btn-danger discount_cancel" value="取消"/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="button" class="btn btn-success discount_submit" value="确定"/>
+                </div>
+            </div>
+            <div id="div_page">
+                <ul class="pagination">
+                    <li th:class="${(session.currPage le 1) ? 'disabled':''}">
+                        <a th:if="${session.currPage eq 1}" href="javascript:void(0)">&laquo;</a>
+                        <a th:if="${session.currPage > 1}" th:href="@{${'/goods_discount'}(currPage=1)}">&laquo;</a>
+                    </li>
+                    <li th:class="${(session.currPage le 1) ? 'disabled':''}">
+                        <a th:if="${session.currPage eq 1}" href="javascript:void(0)">&lt;</a>
+                        <a th:if="${session.currPage > 1}" th:href="@{${'/goods_discount'}(currPage=${session.currPage - 1})}">&lt;</a>
+                    </li>
+                    <li><a href="#" th:text="${session.currPage}"></a></li>
+                    <li th:class="${(session.currPage eq session.pageCount) ? 'disabled':''}">
+                        <a th:if="${(session.currPage eq session.pageCount)}" href="javascript:void(0)">&gt;</a>
+                        <a th:if="${(session.currPage < session.pageCount)}" th:href="@{${'/goods_discount'}(currPage=${session.currPage + 1})}">&gt;</a>
+                    </li>
+                    <li th:class="${(session.currPage eq session.pageCount)? 'disabled':''}">
+                        <a th:if="${(session.currPage eq session.pageCount)}" href="javascript:void(0)">&raquo;</a>
+                        <a th:if="${(session.currPage < session.pageCount)}" th:href="@{${'/goods_discount'}(currPage=${session.pageCount})}">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </body>

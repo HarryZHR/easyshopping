@@ -13,16 +13,12 @@
             <input id="buyerLikeSeller" th:value="${session.buyerLikeSeller}" type="hidden">
             <div id="div_top_inner">
                 <div id="div_top_left">
-                    <a>
-                        <img id="img_seller_icon" th:src="${session.this_goods.seller.icon}" src=""/>
-                    </a>
-                    <a>
-                        <span id="span_seller_name" th:text="${session.this_goods.seller.storeName}"></span>
-                    </a>
+                    <img id="img_seller_icon" th:src="${session.this_goods.seller.icon}" src=""/>
+                    <span id="span_seller_name" th:text="${session.this_goods.seller.storeName}"></span>
                     <input class="btn_like" type="button" value="+收藏"/>
                 </div>
                 <div id="div_top_right">
-                    <input id="input_search" type="text"/>
+                    <input id="input_search" type="text" th:value="${session.key}"/>
                     <span class="span_search_all">搜全站</span>
                     <span class="span_search_seller">搜本店</span>
                 </div>
@@ -37,7 +33,7 @@
                         <span class="span_th">商品数量：</span>
                         <span class="span_num">999+</span>
                         <span class="span_th">收藏数：</span>
-                        <span class="span_num span_right">999+</span>
+                        <span class="span_num span_right" th:text="${session.this_goods.seller.buyerEnjoy.size()}"></span>
                     </div>
                 </div>
             </div>
@@ -48,7 +44,7 @@
         </div>
         <div id="div_category_seller_border">
             <ul id="ul_category_seller">
-                <li class="li_category_seller">首页</li>
+                <li class="li_category_seller" id="seller_home_page">首页</li>
                 <li class="li_category_seller" th:each="goods_types_in_seller : ${session.goods_types_in_seller}" th:text="${goods_types_in_seller}"></li>
             </ul>
         </div>

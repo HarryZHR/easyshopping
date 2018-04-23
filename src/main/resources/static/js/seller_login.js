@@ -41,10 +41,10 @@ $(function() {
                     if(data === "false"){
                         $("#errorContent").html('用户名或者密码错误');
                         $("#errorDisDiv").removeClass();
-                    }else if(data === "true"){
-                        window.location.href="/seller_home";
+                    }else if(data === "true") {
+                        window.location.href = "/seller_home";
                     }
-                });
+            });
         }
     });
     $("#phoneLogin").on("click",function(){

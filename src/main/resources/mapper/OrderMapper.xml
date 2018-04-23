@@ -65,5 +65,8 @@
 			</if>
 				seller_id = #{sellerId};
 	</select>
-
+	<!-- 管理员 -->
+	<select id="listOrderByBuyer" resultMap="orderMap">
+		SELECT * FROM t_order WHERE buyer_id = #{0};
+	</select>
 </mapper>

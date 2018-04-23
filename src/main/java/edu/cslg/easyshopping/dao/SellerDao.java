@@ -2,6 +2,7 @@ package edu.cslg.easyshopping.dao;
 
 import edu.cslg.easyshopping.pojo.Seller;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -39,6 +40,12 @@ public interface SellerDao {
     Seller getSellerById(Integer id);
 
     /**
+     * 通过id查找店铺，不考虑店铺状态
+     * @param id 店铺id
+     * @return 店铺对象
+     */
+    Seller getSellerAllById(Integer id);
+    /**
      * 更新卖家信息
      * @param seller 卖家信息
      */
@@ -51,5 +58,17 @@ public interface SellerDao {
      */
     List<Seller> listSellerLikeByBuyerId(Integer buyerId);
 
+    /**
+     * 分页获取卖家
+     * @param sellerIndex 开始的索引
+     * @param sellerSize 一页的数量
+     * @return 卖家对象
+     */
+    List<Seller> listSeller(@Param(value = "sellerIndex") Integer sellerIndex,@Param(value = "sellerSize") Integer sellerSize);
 
+    /**
+     * 获取卖家的数量
+     * @return 数量
+     */
+    Integer countSeller();
 }

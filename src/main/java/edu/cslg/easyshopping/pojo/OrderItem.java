@@ -7,6 +7,7 @@ public class OrderItem {
     private Order order;
     private Standard standard;
     private BackGoodsInfo backGoodsInfo;
+    private Complain complain;
 
     public OrderItem(){}
 
@@ -56,5 +57,13 @@ public class OrderItem {
 
     public void setBackGoodsInfo(BackGoodsInfo backGoodsInfo) {
         this.backGoodsInfo = backGoodsInfo;
+    }
+
+    public Complain getComplain() {
+        return complain;
+    }
+
+    public void setComplain(Complain complain) {
+        this.complain = complain;
     }
 }

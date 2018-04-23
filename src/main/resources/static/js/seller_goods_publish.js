@@ -191,7 +191,7 @@ $(function () {
 
                 var url = returndata.split("_");
                 for (var i = 0 ; i < url.length - 1; i++){
-                    $("#div_goods_detail_img").append("<div class=\'div_goods_detail_img_img\'><img src=\'"+ url[i] +"\' class=\'img_goods_detail\' /><img src=\'/img/delete.png\' class=\'img_delete_detail\' th:src=\'@{/img/delete.png}\' onclick='deleteImg($(this))'/> <input type=\'hidden\' name=\'input_img_detail\' value=\'"+ url[i] +"\'/></div>");
+                    $("#div_goods_detail_img").append("<div class=\'div_goods_detail_img_img\'><img src=\'"+ url[i] +"\' class=\'img_goods_detail\' /><img src=\'/img/delete.png\' class=\'img_delete_detail\' onclick='deleteImg($(this))'/> <input type=\'hidden\' name=\'input_img_detail\' value=\'"+ url[i] +"\'/></div>");
                 }
                 $(".img_delete_detail").css("display","inline");
             },
@@ -200,8 +200,6 @@ $(function () {
             }
         });
     });
-    $("")
-
 
 
 });

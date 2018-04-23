@@ -421,8 +421,26 @@ $(function(){
                     })
             });
         checkAllCount();
-    })
-
+    });
+    $("#into_seller").on("click",function () {
+        $.get("buyer_goods_category_key",
+            {"sellerId":$("#sellerId").val()},
+            function (data) {
+                if(data === "success"){
+                    window.location.href = "buyer_seller_goods_list";
+                }
+            });
+    });
+    $(".a_category_seller").on("click",function () {
+        var type = $(this).text();
+        $.get("buyer_goods_category_key",
+            {"sellerId":$("#sellerId").val(),"type":type},
+            function (data) {
+                if(data === "success"){
+                    window.location.href = "buyer_seller_goods_list";
+                }
+            });
+    });
 });
 // 比较当前显示的总记录数，决定要不要显示加载更多
 function checkAllCount() {

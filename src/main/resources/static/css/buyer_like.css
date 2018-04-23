@@ -1,9 +1,14 @@
+.container{
+    min-height: 255px;
+}
 .div_like_goods{
     float: left;
+    margin-left: 2%;
+    margin-top: 20px;
 }
 .img_goods_main{
-    width: 224px;
-    height: 340px;
+    width: 200px;
+    height: 320px;
 }
 .div_goods_info{
     width: 200px;
@@ -22,4 +27,78 @@
 .a_goods_title:focus{
     color: #ff3366;
     text-decoration: none;
+}
+.delete{
+    position: absolute;
+    z-index: 15;
+    background-color: #CFCFCF;
+    display: none;
+}
+.delete:hover{
+    cursor: pointer;
+}
+.font{
+    font-size: 12px;
+    color: #666;
+}
+.red-font{
+    font-size: 12px;
+    color: #ff3366;
+}
+.div_main_img{
+    width: 200px;
+}
+.img_seller_icon{
+    width: 80px;
+    height: 80px;
+}
+.div_like_seller{
+    float: left;
+    margin-left: 2%;
+    background-color: #f2f2f2;
+    margin-top: 20px;
+}
+.seller_top{
+    text-align: center;
+    border-bottom: 1px solid #999;
+    padding: 10px;
+}
+.seller_info{
+    padding: 10px;
+}
+.div_seller_name{
+    padding-top: 10px;
+}
+#div_select{
+    width: 80%;
+    margin-left: 10%;
+    height: 80px;
+    padding-top: 10px;
+}
+.like-btn{
+    color: #333;
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    display: inline-block;
+}
+.like-btn:hover{
+    color:#f36;
+    text-decoration:none;
+}
+.like-select{
+    color:#f36;
+}
+.div_all_num{
+    height: 40px;
+    padding: 10px 20px;
+    width: 100px;
+}
+.inner_all_num{
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding-top: 3px;
 }

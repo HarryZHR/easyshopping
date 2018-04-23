@@ -151,3 +151,6 @@
     float: left;
     margin-left: 2%;
 }
+.li_category_seller:hover,.span_search_all:hover, .span_search_seller:hover{
+    cursor: pointer;
+}

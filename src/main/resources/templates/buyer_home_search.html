@@ -36,7 +36,7 @@
             });
         </script>
         <div id="div_logo_search">
-            <a href="#" id="a_logo">
+            <a href="/buyer_index" id="a_logo">
                 <img src="" th:src="@{/img/logo.png}"/>
             </a>
             <div class="input-group" id="div_search">
@@ -44,7 +44,7 @@
                     <span id="span_title">宝贝</span>
                 </div>
                 <div>
-                    <input id="input_search" type="text"/>
+                    <input id="input_search" type="text" th:value="${session.key}"/>
                     <span class="span_search"></span>
                 </div>
             </div>

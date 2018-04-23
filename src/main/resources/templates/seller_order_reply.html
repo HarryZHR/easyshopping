@@ -24,7 +24,9 @@
                     var replyId = $(this).prev().val();
                     $("#replyId").val(replyId);
                     $(this).attr("id","clickBtn");
-
+                });
+                $("#host_reply_content").on("focus",function () {
+                    $("#host_reply_tip").text('');
                 });
                 $("#sub_host_reply").on("click",function () {
                     var content = $("#host_reply_content").val();
@@ -44,7 +46,7 @@
                                 }
                             });
                     }
-                })
+                });
             });
         </script>
         <div id="div_host_reply">

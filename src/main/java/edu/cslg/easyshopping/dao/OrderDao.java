@@ -85,4 +85,11 @@ public interface OrderDao {
      * @return 数量
      */
     Integer countOrderByMoreStatusAndSeller(@Param(value = "small")Integer small, @Param(value = "big") Integer big,@Param(value = "sellerId") Integer sellerId);
+
+    /**
+     * 查看每个买家的订单
+     * @param buyerId 买家id
+     * @return 订单
+     */
+    List<Order> listOrderByBuyer(Integer buyerId);
 }

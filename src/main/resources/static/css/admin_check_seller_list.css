@@ -1,0 +1,49 @@
+#div_page{
+    text-align: right;
+    width: 90%;
+}
+.row{
+    margin: 0;
+}
+td,th{
+    text-align: center;
+}
+.table-hover>tbody>tr:hover {
+    background-color: #D1EEEE;
+}
+.check_stuff_list{
+    min-height: 500px;
+}
+.operate_check{
+    display: inline-block;
+    width: 50px;
+    height: 20px;
+    border: 0;
+    background-color: #1C86EE;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 12px;
+    padding-top: 2px;
+}
+.operate_check:hover{
+    cursor: pointer;
+    color: #fff;
+    text-decoration: none;
+}
+.check_complain_title{
+    display: inline-block;
+    width: 300px;
+    height: 30px;
+    background-color: #e3e3e3;
+    text-align: center;
+    padding-top: 5px;
+    border-radius: 5px;
+}
+.check_complain_title:hover{
+    cursor: pointer;
+    text-decoration: none;
+}
+.active{
+    background-color: #1C86EE;
+    color: #fff;
+}

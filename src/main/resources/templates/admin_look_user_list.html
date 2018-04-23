@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="admin_look_user_list">
+        <style>
+            .look_user_title{
+                display: inline-block;
+                width: 300px;
+                height: 30px;
+                background-color: #e3e3e3;
+                text-align: center;
+                padding-top: 5px;
+                border-radius: 5px;
+            }
+            .look_user_title:hover{
+                cursor: pointer;
+                text-decoration: none;
+            }
+            .user_list{
+                min-height: 500px;
+            }
+            .active{
+                background-color: #1C86EE;
+                color: #fff;
+            }
+            #div_page{
+                text-align: right;
+                width: 90%;
+            }
+        </style>
+        <script>
+            $(function () {
+                $(".look_user_title").on("click",function () {
+                    $(".look_user_title").each(function () {
+                        $(this).removeClass('active');
+                    });
+                    $(this).addClass('active');
+                });
+            });
+        </script>
+        <div>
+            <a href="admin_look_user_list?select=seller" th:class="${session.select eq 'seller' ? 'look_user_title active' : 'look_user_title'}" id="look_seller">卖家</a>
+            <a href="admin_look_user_list?select=buyer" th:class="${session.select eq 'buyer' ? 'look_user_title active' : 'look_user_title'}" id="look_buyer">买家</a>
+        </div>
+        <div th:if="${session.select eq 'seller'}">
+            <label>查看卖家</label>
+            <div class="user_list" th:if="${session.sellers.size() eq 0}">
+                暂无店铺！
+            </div>
+            <div class="user_list" th:if="${session.sellers.size() > 0}">
+                <div class="row">
+                    <div class="col-xs-2">店铺名</div>
+                    <div class="col-xs-2">店主名</div>
+                    <div class="col-xs-2">店铺状态</div>
+                    <div class="col-xs-2">店铺积分</div>
+                    <div class="col-xs-2">注册时间</div>
+                    <div class="col-xs-1">订单量</div>
+                    <div class="col-xs-1">操作</div>
+                </div>
+                <div class="row" th:each="seller : ${session.sellers}">
+                    <div class="col-xs-2">
+                        <span th:text="${seller.storeName}"></span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span th:text="${seller.hostName}"></span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span th:if="${seller.sellerStatus && seller.stuff.stuffStatus}">正常</span>
+                        <span th:if="${!seller.sellerStatus && seller.score eq 0}">停业整顿</span>
+                        <span th:if="${!seller.sellerStatus}">审核中</span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span th:text="${seller.score}"></span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span th:text="${#dates.format(seller.shopTime,'yyyy-MM-dd HH:mm')}"></span>
+                    </div>
+                    <div class="col-xs-1">
+                        <span th:text="${seller.sale}"></span>
+                    </div>
+                    <div class="col-xs-1">
+                        <a>查看</a>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div th:if="${session.select eq 'buyer'}">
+            <label>查看买家</label>
+            <div class="user_list" th:if="${session.buyers.size() eq 0}">
+                暂无买家！
+            </div>
+            <div class="user_list" th:if="${session.buyers.size() > 0}">
+                <div class="row">
+                    <div class="col-xs-2">买家昵称</div>
+                    <div class="col-xs-2">买家状态</div>
+                    <div class="col-xs-2">注册时间</div>
+                    <div class="col-xs-2">购买量</div>
+                    <div class="col-xs-2">成交额（元）</div>
+                    <div class="col-xs-2">操作</div>
+                </div>
+                <div class="row" th:each="buyer : ${session.buyers}">
+                    <div class="col-xs-2">
+                        <span th:text="${buyer.nickName}"></span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span th:text="${buyer.buyerStatus eq true ? '正常' : '注销'}"></span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span th:text="${#dates.format(buyer.registerDate,'yyyy-MM-dd HH:mm')}"></span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span th:text="${buyer.orderNum}"></span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span th:if="${buyer.payMoney ne 0}" th:text="${#numbers.formatDecimal(buyer.payMoney,0,2)}"></span>
+                        <span th:if="${buyer.payMoney eq 0}">0.00</span>
+                    </div>
+                    <div class="col-xs-2">
+                        <a>查看</a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <div id="div_page">
+            <ul class="pagination">
+                <li th:class="${(session.lookCurrPage le 1) ? 'disabled':''}">
+                    <a th:if="${session.lookCurrPage eq 1}" href="javascript:void(0)">&laquo;</a>
+                    <a th:if="${session.lookCurrPage > 1}" th:href="@{'admin_look_user_list'(lookCurrPage=1,select=${session.select})}">&laquo;</a>
+                </li>
+                <li th:class="${(session.lookCurrPage le 1) ? 'disabled':''}">
+                    <a th:if="${session.lookCurrPage eq 1}" href="javascript:void(0)">&lt;</a>
+                    <a th:if="${session.lookCurrPage > 1}" th:href="@{'admin_look_user_list'(lookCurrPage=${session.lookCurrPage - 1},select=${session.select})}">&lt;</a>
+                </li>
+                <li><a href="#" th:text="${session.lookCurrPage}"></a></li>
+                <li th:class="${(session.lookCurrPage eq session.lookCount) ? 'disabled':''}">
+                    <a th:if="${(session.lookCurrPage eq session.lookCount)}" href="javascript:void(0)">&gt;</a>
+                    <a th:if="${(session.lookCurrPage < session.lookCount)}" th:href="@{'admin_look_user_list'(lookCurrPage=${session.lookCurrPage + 1},select=${session.select})}">&gt;</a>
+                </li>
+                <li th:class="${(session.lookCurrPage eq session.lookCount) ? 'disabled':''}">
+                    <a th:if="${(session.lookCurrPage eq session.lookCount)}" href="javascript:void(0)">&raquo;</a>
+                    <a th:if="${(session.lookCurrPage < session.lookCount)}" th:href="@{'admin_look_user_list'(lookCurrPage=${session.lookCount},select=${session.select})}">&raquo;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

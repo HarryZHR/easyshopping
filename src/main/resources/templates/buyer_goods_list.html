@@ -8,7 +8,40 @@
     <div th:fragment="buyer_goods_list">
         <link rel="stylesheet" type="text/css" th:href="@{css/buyer_goods_list.css}">
         <script type="text/javascript" th:src="@{js/buyer_goods_list.js}"></script>
+        <div id="border_operate">
+            <div class="inner_operate">
+                <ul>
+                    <li id="li_sort" class="li_operate dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" id="a_sort">排序</a>
+                        <ul class="dropdown-menu" id="ul_dropdown">
+                            <li>
+                                <a id="lowToHigh">价格从低到高</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a id="highToLow">价格从高到低</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li id="li_price" class="li_operate">
+                        <label>价格从
+                            <input class="low" type="text" size="3" th:value="${session.low eq null ? '' :(session.low eq 0 ? '0.00' : #numbers.formatDecimal(session.low,0,2))}"/>
+                        </label>
+                        <label>到
+                            <input class="high" type="text" size="3" th:value="${session.high eq null ? '' : (session.high eq 0 ? '0.00' : #numbers.formatDecimal(session.high,0,2))}"/>
+                        </label>
+                        <input class="type" type="hidden" th:value="${session.type}"/>
+                        <input class="key" type="hidden" th:value="${session.key}"/>
+                        <a id="sub_price">确定</a>
+                    </li>
+                </ul>
+            </div>
+            <div style="clear: both"></div>
+        </div>
         <div id="div_goods_list">
+            <div th:if="${session.buyerGoodsList.size() eq 0}">
+                <div style="height: 235px">抱歉，暂无相关商品！</div>
+            </div>
             <div class="div_goods" th:each="goods : ${session.buyerGoodsList}">
                 <a th:href="@{'buyer_goods_detail'(goodsId=${goods.id})}">
                     <img class="img_goods" src="" th:src="${goods.goodsImg.img1}">
