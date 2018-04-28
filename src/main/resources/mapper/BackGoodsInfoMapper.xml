@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="edu.cslg.easyshopping.dao.BackGoodsInfo">
+<mapper namespace="edu.cslg.easyshopping.dao.BackGoodsInfoDao">
 	<resultMap id="backGoodsInfoMap" type="edu.cslg.easyshopping.pojo.BackGoodsInfo">
 		<id property="id" column="id"/>
 		<result property="content" column="content"/>
-		<result property="img" column="img"/>
 		<result property="backTime" column="backTime"/>
+		<result property="backType" column="backType"/>
 		<result property="backStatus" column="backStatus"/>
+		<result property="reason" column="reason"/>
 	</resultMap>
 	<select id="getBackGoodsInfoById" resultMap="backGoodsInfoMap">
-		SELECT * FROM t_back_goods_info WHERE id = #{0}
+		SELECT * FROM t_back_goods_info WHERE id = #{0};
 	</select>
+	<insert id="saveBackGoodsInfo" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO t_back_goods_info VALUES (NULL ,#{content},#{backTime},#{backType},#{backStatus},#{reason});
+	</insert>
+	<update id="updateBackGoodsInfo">
+		UPDATE t_back_goods_info SET backStatus = #{backStatus} , reason = #{reason} WHERE id = #{id};
+	</update>
 </mapper>

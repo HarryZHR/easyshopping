@@ -45,3 +45,10 @@ i{
 .order_item_tr{
     padding-top: 10px;
 }
+.row{
+    margin: 0;
+}
+.col-xs-6, .col-xs-2,.col-xs-3, .col-xs-9{
+    padding-right: 0;
+    text-align: center;
+}

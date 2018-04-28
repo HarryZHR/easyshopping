@@ -58,10 +58,10 @@
                 </div>
                 <div id="collapseThree" th:class="(${operate} == 'back_operate') ? 'panel-collapse collapse in' : 'panel-collapse collapse'">
                     <div class="panel-body">
-                        <a href="">退款申请</a>
+                        <a href="seller_back_list?status=1">退款申请</a>
                     </div>
                     <div class="panel-body">
-                        <a href="">退款记录</a>
+                        <a href="seller_back_list?status=2">退款记录</a>
                     </div>
                 </div>
             </div>
@@ -89,7 +89,7 @@
                 </div>
                 <div id="collapseFive" th:class="(${operate} == 'error_operate') ? 'panel-collapse collapse in' : 'panel-collapse collapse'">
                     <div class="panel-body">
-                        <a href="">违规记录</a>
+                        <a href="seller_complain_list">违规记录</a>
                     </div>
                 </div>
             </div>

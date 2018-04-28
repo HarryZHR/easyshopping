@@ -36,7 +36,7 @@
                     <a th:class="${session.operate eq 'buyer_order_all' && session.small eq 5 ?'title_active':''}" th:href="@{'buyer_order_all'(small=5,big=5)}">已完成</a>
                 </li>
                 <li class="li_big_title">
-                    <a>退货退款</a>
+                    <a th:class="${(session.operate eq 'buyer_back_goods' || session.operate eq 'buyer_back_goods_info_list') ? 'title_active':''}" th:href="@{buyer_back_goods_info_list}">退货退款</a>
                 </li>
                 <li class="li_big_title">
                     <a href="/buyer_user_address" th:class="${session.operate eq 'buyer_user_address' ? 'title_active':''}">收货地址</a>

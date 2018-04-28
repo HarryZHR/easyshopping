@@ -2,10 +2,7 @@ package edu.cslg.easyshopping.controller;
 
 import edu.cslg.easyshopping.pojo.*;
 import edu.cslg.easyshopping.service.*;
-import edu.cslg.easyshopping.util.GoodsCountUtil;
-import edu.cslg.easyshopping.util.NumberUtil;
-import edu.cslg.easyshopping.util.ReplyImgsUtil;
-import edu.cslg.easyshopping.util.ValidationCode;
+import edu.cslg.easyshopping.util.*;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -53,6 +50,8 @@ public class BuyerController {
     private OrderStatusService orderStatusService;
     @Resource
     private ComplainService complainService;
+    @Resource
+    private BackGoodsInfoService backGoodsInfoService;
     /**
      * 时间格式化
      */
@@ -1010,13 +1009,7 @@ public class BuyerController {
     public String buyerOrderInfo(HttpSession session,Integer orderId){
         Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
         if(currBuyer != null){
-            Order order = orderService.getOrderById(orderId);
-            Float orderMoney = 0.0f;
-            for (OrderItem orderItem : order.getOrderItems()) {
-                orderMoney += (orderItem.getStandard().getPrice() - orderItem.getStandard().getGoods().getDiscount()) * orderItem.getBuyCount();
-            }
-            order.setOrderMoney(orderMoney);
-            session.setAttribute("currOrder",order);
+            session.setAttribute("currOrder",OrderMoneyUtil.setOrderMoney(orderService.getOrderById(orderId)));
             session.setAttribute("operate","buyer_order_info");
             return "buyer_info";
         }
@@ -1387,4 +1380,97 @@ public class BuyerController {
         }
         return "buyer_login";
     }
+
+    /**
+     * 跳转退货的页面
+     * @param orderItemId 订单详情的id
+     * @return 跳转页面
+     */
+    @GetMapping(value = "buyer_back_goods")
+    public String buyerBackGoods(HttpSession session,Integer orderItemId){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if (currBuyer != null) {
+            OrderItem orderItem = orderItemService.getOrderItemById(orderItemId);
+            BackGoodsInfo backGoodsInfo = orderItem.getBackGoodsInfo();
+            if(null == backGoodsInfo){
+                session.setAttribute("backStatus","null");
+            }else {
+                session.setAttribute("backStatus","notNull");
+            }
+            session.setAttribute("orderItem",orderItem);
+            session.setAttribute("operate","buyer_back_goods");
+            return "buyer_info";
+        }
+        return "buyer_login";
+    }
+
+    /**
+     * 提交退货信息
+     * @param orderItemId 订单详情的id
+     * @param backGoodsInfo 退货的信息
+     * @return 成功与否
+     */
+    @ResponseBody
+    @GetMapping(value = "buyer_sub_back_goods")
+    public String buyerSubBackGoods(HttpSession session, Integer orderItemId, BackGoodsInfo backGoodsInfo){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if (currBuyer != null) {
+            backGoodsInfo.setBackTime(new Date());
+            backGoodsInfo.setBackStatus("退款中");
+            backGoodsInfoService.saveBackGoodsInfo(backGoodsInfo);
+            OrderItem orderItem = orderItemService.getOrderItemById(orderItemId);
+            orderItem.setBackGoodsInfo(backGoodsInfo);
+            orderItemService.updateOrderItem(orderItem);
+            return "success";
+        }
+        return "buyer_login";
+    }
+
+    @GetMapping(value = "buyer_back_goods_info_list")
+    public String buyerBackGoodsInfoList(HttpSession session, Integer orderItemCurrPage){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if (currBuyer != null) {
+            Integer orderItemCount = orderItemService.countOrderItemByBuyerOrSeller(currBuyer.getId(),"buyer",0);
+            Integer pageCount = (orderItemCount + PAGE_SIZE - 1) / PAGE_SIZE;
+            if(pageCount == 0){
+                pageCount = 1;
+            }
+            if(orderItemCurrPage == null || orderItemCurrPage <= 0){
+                orderItemCurrPage = 1;
+            }
+            if(orderItemCurrPage > pageCount){
+                orderItemCurrPage = pageCount;
+            }
+            List<OrderItem> orderItems = orderItemService.listOrderItemByBuyerOrSeller(currBuyer.getId(),PAGE_SIZE * (orderItemCurrPage - 1), PAGE_SIZE,"buyer",0);
+            session.setAttribute("orderItems",orderItems);
+            session.setAttribute("orderItemCurrPage",orderItemCurrPage);
+            session.setAttribute("orderItemCount",pageCount);
+            session.setAttribute("operate", "buyer_back_goods_info_list");
+            return "buyer_info";
+        }
+        return "buyer_login";
+    }
+
+    /**
+     * 取消退货
+     * @param backGoodsId 退货信息id
+     * @return 成功与否
+     */
+    @ResponseBody
+    @GetMapping("buyer_operate_back_goods")
+    public String buyerOperateBackGoods(HttpSession session, Integer backGoodsId,String type){
+        Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
+        if (currBuyer != null) {
+            BackGoodsInfo backGoodsInfo = backGoodsInfoService.getBackGoodsInfoById(backGoodsId);
+            if("cancel".equals(type)){
+                backGoodsInfo.setBackStatus("取消退款");
+            }else if("again".equals(type)){
+                backGoodsInfo.setBackStatus("退款中");
+            }
+            backGoodsInfoService.updateBackGoodsInfo(backGoodsInfo);
+            return "success";
+        }
+        return "buyer_login";
+    }
+
 }

@@ -8,7 +8,7 @@
 		<result property="sendNum" column="sendNum"/>
 		<association property="standard" column="standard_id" select="edu.cslg.easyshopping.dao.StandardDao.getStandardById"/>
 		<association property="order" column="order_id" select="edu.cslg.easyshopping.dao.OrderDao.getOrderById"/>
-		<association property="backGoodsInfo" column="backInfo_id" select="edu.cslg.easyshopping.dao.BackGoodsInfo.getBackGoodsInfoById"/>
+		<association property="backGoodsInfo" column="backInfo_id" select="edu.cslg.easyshopping.dao.BackGoodsInfoDao.getBackGoodsInfoById"/>
 		<association property="complain" column="id" select="edu.cslg.easyshopping.dao.ComplainDao.getComplainById"/>
 	</resultMap>
 	<insert id="saveOrderItem" useGeneratedKeys="true" keyProperty="id">
@@ -23,4 +23,26 @@
 	<update id="updateOrderItem" parameterType="edu.cslg.easyshopping.pojo.OrderItem">
 		UPDATE t_order_item SET sendNum = #{sendNum},backInfo_id = #{backGoodsInfo.id} WHERE id = #{id} ;
 	</update>
+	<select id="listOrderItemByBuyerOrSeller" resultMap="orderItemMap">
+		SELECT t3.id,t3.buyCount,t3.standard_id,t3.order_id,t3.backInfo_id,t3.sendNum FROM
+			(SELECT t2.*,t1.buyer_id,t1.seller_id FROM t_order t1 LEFT JOIN t_order_item t2 ON t1.id = t2.order_id) t3
+	  		LEFT JOIN t_back_goods_info  t4 ON t3.backInfo_id = t4.id
+			WHERE t3.backInfo_id is not NULL
+			<if test='type == "buyer"'> AND t3.buyer_id = #{id} </if>
+			<if test='type == "seller"'> AND t3.seller_id = #{id} </if>
+			<if test="status eq 1"> AND t4.backStatus = '退款中' </if>
+			<if test="status eq 2"> AND t4.backStatus = '退款成功' OR t4.backStatus = '退款失败' OR t4.backStatus = '取消退款' </if>
+			LIMIT #{orderItemIndex},#{orderItemSize};
+	</select>
+	<select id="countOrderItemByBuyerOrSeller" resultType="Integer">
+		SELECT count(*) FROM
+			(SELECT t2.*,t1.buyer_id,t1.seller_id FROM t_order t1 LEFT JOIN t_order_item t2 ON t1.id = t2.order_id) t3
+			LEFT JOIN t_back_goods_info  t4 ON t3.backInfo_id = t4.id
+			WHERE t3.backInfo_id is not NULL
+			<if test='type == "buyer"'> AND t3.buyer_id = #{id}</if>
+			<if test='type == "seller"'> AND t3.seller_id = #{id}</if>
+			<if test="status eq 1"> AND t4.backStatus = '退款中'</if>
+			<if test="status eq 2"> AND t4.backStatus = '退款成功' OR t4.backStatus = '退款失败' OR t4.backStatus = '取消退款' </if>;
+	</select>
+
 </mapper>

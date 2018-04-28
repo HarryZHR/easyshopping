@@ -31,4 +31,17 @@
 	<update id="updateComplain">
 		UPDATE t_complain SET cutScore = #{cutScore}, checkFlag = #{checkFlag} WHERE id = #{id};
 	</update>
+
+	<!-- 卖家 -->
+	<select id="listComplainBySellerId" resultMap="complainMap">
+		SELECT t3.* from t_complain t3 LEFT JOIN
+			(SELECT t1.seller_id,t2.* FROM t_order t1 LEFT JOIN t_order_item t2 ON t1.id = t2.order_id ) t4
+				ON t3.id = t4.id WHERE t4.seller_id = 45 AND checkFlag = TRUE
+				LIMIT #{complainIndex},#{complainSize};
+	</select>
+	<select id="countComplainBySellerId" resultType="Integer">
+		SELECT count(*) from t_complain t3 LEFT JOIN
+			(SELECT t1.seller_id,t2.* FROM t_order t1 LEFT JOIN t_order_item t2 ON t1.id = t2.order_id ) t4
+				ON t3.id = t4.id WHERE t4.seller_id = 45 AND checkFlag = TRUE;;
+	</select>
 </mapper>

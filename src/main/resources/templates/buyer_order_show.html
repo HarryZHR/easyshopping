@@ -55,9 +55,10 @@
                         </div>
                         <div class="col-xs-2">
                             <input type="hidden" class="orderItemId" th:value="${orderItem.id}"/>
-                            <a class="order-data" th:if="${order.orderStatus.id > 3}" data-toggle="modal" data-target="#backInfo">申请售后</a>
-                            <a class="order-data" th:if="${order.orderStatus.id eq 2 || order.orderStatus.id eq 3}" data-toggle="modal" data-target="#backInfo">申请退款</a>
+                            <a class="order-data" th:if="${order.orderStatus.id > 3 && orderItem.backGoodsInfo eq null}" th:href="@{'buyer_back_goods'(orderItemId=${orderItem.id})}">申请售后</a>
+                            <a class="order-data" th:if="${(order.orderStatus.id eq 2 || order.orderStatus.id eq 3) && orderItem.backGoodsInfo eq null}" th:href="@{'buyer_back_goods'(orderItemId=${orderItem.id})}">申请退款</a>
                             <a class="order-data complain_seller" th:if="${order.orderStatus.id > 1 && orderItem.complain == null}" data-toggle="modal" data-target="#complain">投诉卖家</a>
+                            <span class="order-data" th:if="${orderItem.backGoodsInfo ne null}" th:text="${orderItem.backGoodsInfo.backStatus}"></span>
                         </div>
                     </div>
                 </div>

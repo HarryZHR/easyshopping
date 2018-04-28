@@ -1,0 +1,76 @@
+.order_item_img{
+    width: 70px;
+    height: 80px;
+}
+.center{
+    text-align: center;
+}
+.padding{
+    padding-top: 20px;
+}
+.tr{
+    height: 90px;
+    margin-top: 20px;
+    border-bottom: 1px solid #ECECEC;
+}
+.goods_title{
+    text-align: left;
+}
+.order_item_standard{
+    display: block;
+    margin-top: 10px;
+}
+#div_page{
+    text-align: right;
+}
+.goods_title{
+    padding-top: 10px;
+}
+#table-head{
+    height: 30px;
+    border: 1px solid #ECECEC;
+    padding-top: 5px;
+    background-color: #F9F9F9;
+}
+
+
+
+/* 卖家部分需要 */
+.font{
+    font-size: 12px;
+}
+.width{
+    width: 90%;
+}
+.height{
+    min-height: 300px;
+}
+.seller_operate_back{
+    display: inline-block;
+    width: 40px;
+    height: 25px;
+    background-color: #4cae4c;
+    text-align: center;
+    color: #fff;
+    padding-top: 4px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+.seller_operate_back:hover{
+    text-decoration: none;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* 买家单独的部分 */
+.back_again{
+    display: inline-block;
+    width: 60px;
+    height: 25px;
+    font-size: 12px;
+    padding-top: 3px;
+    padding-left: 5px;
+}
+.min-height{
+    min-height: 450px;
+}

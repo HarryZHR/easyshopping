@@ -1,5 +1,6 @@
 package edu.cslg.easyshopping.util;
 
+import com.sun.org.apache.xpath.internal.operations.Or;
 import edu.cslg.easyshopping.pojo.Order;
 import edu.cslg.easyshopping.pojo.OrderItem;
 
@@ -23,5 +24,14 @@ public class OrderMoneyUtil {
             order.setOrderMoney(orderMoney);
         }
         return orders;
+    }
+
+    public static Order setOrderMoney(Order order){
+        Float orderMoney = 0.0f;
+        for (OrderItem orderItem : order.getOrderItems()) {
+            orderMoney += (orderItem.getStandard().getPrice() - orderItem.getStandard().getGoods().getDiscount()) * orderItem.getBuyCount();
+        }
+        order.setOrderMoney(orderMoney);
+        return order;
     }
 }

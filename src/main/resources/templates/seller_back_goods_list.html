@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="seller_back_goods_list">
+        <link rel="stylesheet" type="text/css" th:href="@{css/back_goods_info_list.css}" />
+        <div th:if="${session.backGoodsOrderItems.size() eq 0}" class="font">
+            暂无退货处理！
+        </div>
+        <div th:if="${session.backGoodsOrderItems.size() > 0}" class="font width">
+            <div class="row" id="table-head">
+                <div class="col-xs-5 center">商品</div>
+                <div class="col-xs-1 center">数量</div>
+                <div class="col-xs-1 center">实付款</div>
+                <div class="col-xs-2 center">状态</div>
+                <div class="col-xs-2 center">退货状态</div>
+                <div class="col-xs-1 center">操作</div>
+            </div>
+            <div class="height">
+                <div class="row tr" th:each="orderItem : ${session.backGoodsOrderItems}">
+                    <div class="col-xs-5 center">
+                        <div class="col-xs-3">
+                            <img class="order_item_img" src="" th:src="${orderItem.standard.colorImg}"/>
+                        </div>
+                        <div class="col-xs-9 goods_title">
+                            <a th:href="@{'buyer_goods_detail'(goodsId=${orderItem.standard.goods.id})}" th:text="${orderItem.standard.goods.title}"></a>
+                            <span class="order_item_standard" th:text="'颜色分类：' + ${orderItem.standard.color} + ' 尺码：' + ${orderItem.standard.size}"></span>
+                        </div>
+                    </div>
+                    <div class="col-xs-1 center padding">
+                        <span th:text="${orderItem.buyCount}"></span>
+                    </div>
+                    <div class="col-xs-1 center padding">
+                        <span th:text="'￥' + ${#numbers.formatDecimal((orderItem.standard.price - orderItem.standard.goods.discount) * orderItem.buyCount,0,2)}"></span>
+                    </div>
+                    <div class="col-xs-2 center padding">
+                        <span th:text="${orderItem.order.orderStatus.status}"></span>
+                    </div>
+                    <div class="col-xs-2 center padding">
+                        <span th:if="${orderItem.backGoodsInfo.backStatus eq '退款中'}">退款中</span>
+                        <span th:if="${orderItem.backGoodsInfo.backStatus eq '退款成功'}">退款成功</span>
+                        <span th:if="${orderItem.backGoodsInfo.backStatus eq '退款失败'}">退款失败</span>
+                        <span th:if="${orderItem.backGoodsInfo.backStatus eq '取消退款'}">取消退款</span>
+                    </div>
+                    <div class="col-xs-1 center padding">
+                        <a class="seller_operate_back" th:if="${session.status eq 1}" th:href="@{'seller_back_goods'(orderItemId=${orderItem.id},process='operate')}">处理</a>
+                        <a class="seller_operate_back" th:if="${session.status eq 2}" th:href="@{'seller_back_goods'(orderItemId=${orderItem.id},process='look')}">查看</a>
+                    </div>
+                </div>
+            </div>
+            <div id="div_page" class="row">
+                <ul class="pagination">
+                    <li th:class="${(session.orderItemCurrPage le 1) ? 'disabled':''}">
+                        <a th:if="${session.orderItemCurrPage eq 1}" href="javascript:void(0)">&laquo;</a>
+                        <a th:if="${session.orderItemCurrPage > 1}" th:href="@{'seller_page_reply'(orderItemCurrPage=1,replyType=${session.replyType},hostReply=${session.hostReply})}">&laquo;</a>
+                    </li>
+                    <li th:class="${(session.orderItemCurrPage le 1) ? 'disabled':''}">
+                        <a th:if="${session.orderItemCurrPage eq 1}" href="javascript:void(0)">&lt;</a>
+                        <a th:if="${session.orderItemCurrPage > 1}" th:href="@{'seller_page_reply'(orderItemCurrPage=${session.orderItemCurrPage - 1},replyType=${session.replyType},hostReply=${session.hostReply})}">&lt;</a>
+                    </li>
+                    <li><a href="#" th:text="${session.orderItemCurrPage}"></a></li>
+                    <li th:class="${(session.orderItemCurrPage eq session.orderItemCount) ? 'disabled':''}">
+                        <a th:if="${(session.orderItemCurrPage eq session.orderItemCount)}" href="javascript:void(0)">&gt;</a>
+                        <a th:if="${(session.orderItemCurrPage < session.orderItemCount)}" th:href="@{'seller_page_reply'(orderItemCurrPage=${session.orderItemCurrPage + 1},replyType=${session.replyType},hostReply=${session.hostReply})}">&gt;</a>
+                    </li>
+                    <li th:class="${(session.orderItemCurrPage eq session.orderItemCount)? 'disabled':''}">
+                        <a th:if="${(session.orderItemCurrPage eq session.orderItemCount)}" href="javascript:void(0)">&raquo;</a>
+                        <a th:if="${(session.orderItemCurrPage < session.orderItemCount)}" th:href="@{'seller_page_reply'(orderItemCurrPage=${session.orderItemCount},replyType=${session.replyType},hostReply=${session.hostReply})}">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

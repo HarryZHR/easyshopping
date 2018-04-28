@@ -44,12 +44,12 @@
             </table>
             <div id="div_seller_info">
                 <p class="p_big">违规提醒</p>
-                <p class="p_small">违规记录</p>
-                <p class="p_small">店铺积分</p>
+                <p class="p_small">违规记录：<span th:text="${session.currSeller.complainCount}"></span></p>
+                <p class="p_small">店铺积分：<span th:text="${session.currSeller.score}"></span></p>
                 <p class="p_big">商品</p>
-                <p class="p_small">出售中的商品</p>
+                <p class="p_small">出售中的商品： <span th:text="${session.goodsCountInSeller}"></span></p>
                 <p class="p_big">订单</p>
-                <p class="p_small">订单总数</p>
+                <p class="p_small">订单总数： <span th:text="${session.currSeller.sale}"></span></p>
             </div>
         </div>
     </div>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="seller_back_goods">
+        <style>
+            .back_img{
+                width: 60px;
+                height: 70px;
+            }
+            .center{
+                text-align: center;
+            }
+            .font{
+                font-size: 12px;
+            }
+            label{
+                font-size: 16px;
+            }
+            .margin{
+                margin-top: 30px;
+            }
+            .padding{
+                padding-top: 15px;
+            }
+            .width{
+                width: 90%;
+            }
+            .border{
+                border: 1px solid #e3e3e3;
+                padding: 10px 0;
+                margin-top: 10px;
+            }
+            .btn{
+                height: 25px;
+                padding: 2px 5px;
+                font-size: 12px;
+            }
+            .btn-success{
+                width: 40px;
+            }
+            .btn-danger{
+                width: 50px;
+            }
+        </style>
+        <script>
+            $(function () {
+                $("#agree").on("click",function () {
+                    var backGoodsId = $("#backGoodsId").val();
+                    if(confirm("是否确认同意退款？")){
+                        $.get("seller_operate_back",
+                            {"backGoodsId":backGoodsId,"type":"agree"},
+                            function (data) {
+                                if(data === "success"){
+                                    window.location.href = "seller_back_list?status=1";
+                                }else {
+                                    window.location.href = "seller_login";
+                                }
+                            });
+                    }
+                });
+                $("#sub_disagree_back").on("click",function () {
+                    var backGoodsId = $("#backGoodsId").val();
+                    var reason = $("#reason").val();
+                    $.get("seller_operate_back",
+                        {"backGoodsId":backGoodsId,"type":"disagree","reason":reason},
+                    function (data) {
+                        if(data === "success"){
+                            window.location.href = "seller_back_list?status=1";
+                        }else {
+                            window.location.href = "seller_login";
+                        }
+                    })
+                });
+            });
+        </script>
+        <div class="font width">
+            <div>
+                <div>
+                    <label>订单信息</label>
+                </div>
+                <div>
+                    <span>订单编号：</span>
+                    <span th:text="${session.orderItem.order.orderNum}"></span>
+                </div>
+                <div class="border">
+                    <div class="row">
+
+                        <div class="col-xs-4 center">商品</div>
+                        <div class="col-xs-2 center">规格</div>
+                        <div class="col-xs-2 center">买家</div>
+                        <div class="col-xs-2 center">实付款</div>
+                        <div class="col-xs-2 center">订单状态</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div class="col-xs-4">
+                                <img src="" class="back_img" th:src="${session.orderItem.standard.colorImg}">
+                            </div>
+                            <div class="col-xs-8 padding">
+                                <div>
+                                    <a th:text="${session.orderItem.standard.goods.title}"></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-2 center padding">
+                            <div>
+                                <span>颜色分类：</span>
+                                <span class="order_item_standard" th:text="${session.orderItem.standard.color}"></span>
+                            </div>
+                            <div>
+                                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;尺码：</span>
+                                <span class="order_item_standard" th:text="${session.orderItem.standard.size}"></span>
+                            </div>
+
+                        </div>
+                        <div class="col-xs-2 center padding">
+                            <span th:text="${session.orderItem.order.buyer.nickName}"></span>
+                        </div>
+                        <div class="col-xs-2 center padding">
+                            <span th:text="'￥' + ${#numbers.formatDecimal((session.orderItem.standard.price - session.orderItem.standard.goods.discount) * session.orderItem.buyCount,0,2)}"></span>
+                        </div>
+                        <div class="col-xs-2 center padding">
+                            <span th:text="${session.orderItem.order.orderStatus.status}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="margin">
+                <div>
+                    <label>买家信息</label>
+                </div>
+                <div>
+                    <span>收货信息：</span>
+                    <span th:text="${session.orderItem.order.address.receiver}"></span>，
+                    <span th:text="${session.orderItem.order.address.tel}"></span>，
+                    <span th:text="${session.orderItem.order.address.province + ' ' + session.orderItem.order.address.city + ' ' + session.orderItem.order.address.district + ' ' + session.orderItem.order.address.street}"></span>
+                </div>
+            </div>
+            <div>
+                <span>退货类型：</span>
+                <span th:text="${session.orderItem.backGoodsInfo.backType}"></span>
+            </div>
+            <div th:if="${session.process eq 'look'}">
+                <div class="margin">
+                    <div>
+                        <label>处理结果</label>
+                    </div>
+                    <span>退货状态：</span>
+                    <span th:text="${session.orderItem.backGoodsInfo.backStatus}"></span>
+                </div>
+            </div>
+            <div th:if="${session.process eq 'operate'}">
+                <div class="margin">
+                    <input type="hidden" th:value="${session.orderItem.backGoodsInfo.id}" id="backGoodsId"/>
+                    <input type="button" id="agree" class="btn btn-success" value="同意"/>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="button" id="disagree" class="btn btn-danger" value="不同意" data-toggle="modal" data-target="#disagree_back_goods"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="disagree_back_goods" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">阐述理由</h4>
+                    </div>
+                    <div class="modal-body">
+                        <textarea id="reason" cols="75" rows="5"></textarea>
+                        <div id="back_goods_tip"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="sub_disagree_back" class="btn btn-primary">确&nbsp;&nbsp;定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

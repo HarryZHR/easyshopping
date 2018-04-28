@@ -30,6 +30,12 @@
         .tr{
             margin-top: 30px;
         }
+        .contain{
+            background-color: #fff;
+        }
+        #div_border{
+            background-color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -45,14 +51,8 @@
     <div class="div-right" th:if="${session.operate eq 'buyer_post_condition'}" th:include="buyer_post_condition :: buyer_post_condition"></div>
     <div class="div-right" th:if="${session.operate eq 'buyer_order_reply'}" th:include="buyer_order_reply :: buyer_order_reply"></div>
     <div class="div-right" th:if="${session.operate eq 'buyer_reply_success'}" th:include="buyer_reply_success :: buyer_reply_success"></div>
+    <div class="div-right" th:if="${session.operate eq 'buyer_back_goods'}" th:include="buyer_back_goods :: buyer_back_goods"></div>
+    <div class="div-right" th:if="${session.operate eq 'buyer_back_goods_info_list'}" th:include="buyer_back_goods_info_list :: buyer_back_goods_info_list"></div>
     <div th:include="footer :: footer"></div>
 </body>
-<style>
-    .contain{
-        background-color: #fff;
-    }
-    #div_border{
-        background-color: #fff;
-    }
-</style>
 </html>

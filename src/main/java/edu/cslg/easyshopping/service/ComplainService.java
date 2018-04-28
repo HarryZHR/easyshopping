@@ -53,5 +53,23 @@ public class ComplainService {
     public void updateComplain(Complain complain){
         complainDao.updateComplain(complain);
     }
+
+    /**
+     * 通过买家id获取投诉
+     * @param sellerId 买家id
+     * @return 投诉结果
+     */
+    public List<Complain> listComplainBySellerId(Integer sellerId,Integer complainIndex,Integer complainSize){
+        return complainDao.listComplainBySellerId(sellerId,complainIndex,complainSize);
+    }
+
+    /**
+     * 投诉的总数
+     * @param sellerId 店铺的id
+     * @return 数量
+     */
+    public Integer countComplainBySellerId(Integer sellerId){
+        return complainDao.countComplainBySellerId(sellerId);
+    }
 }
 

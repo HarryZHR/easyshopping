@@ -2,10 +2,7 @@ package edu.cslg.easyshopping.controller;
 
 import edu.cslg.easyshopping.pojo.*;
 import edu.cslg.easyshopping.service.*;
-import edu.cslg.easyshopping.util.GoodsCountUtil;
-import edu.cslg.easyshopping.util.OrderMoneyUtil;
-import edu.cslg.easyshopping.util.UploadUtil;
-import edu.cslg.easyshopping.util.ValidationCode;
+import edu.cslg.easyshopping.util.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +20,8 @@ import java.util.List;
 
 @Controller
 public class SellerController {
+
+    private static final Integer PAGE_SIZE = 5;
     @Resource
     private GoodsTypeService goodsTypeService;
     @Resource
@@ -45,6 +44,10 @@ public class SellerController {
     private ReplyService replyService;
     @Resource
     private HostReplyService hostReplyService;
+    @Resource
+    private ComplainService complainService;
+    @Resource
+    private BackGoodsInfoService backGoodsInfoService;
 
     /**
      * 商家注册
@@ -187,6 +190,10 @@ public class SellerController {
     public String sellerHome(Model model,HttpSession session) {
         Seller currSeller = (Seller) session.getAttribute("currSeller");
         if(currSeller != null){
+            Integer goodsCount = goodsService.countGoodsBySeller(currSeller.getId());
+            session.setAttribute("goodsCountInSeller",goodsCount);
+            currSeller.setComplainCount(complainService.countComplainBySellerId(currSeller.getId()));
+            session.setAttribute("currSeller",currSeller);
             model.addAttribute("seller_status", "home_page");
             return "seller_index";
         }
@@ -814,5 +821,148 @@ public class SellerController {
         return "seller_login";
     }
 
+    /**
+     * 查看店铺的所有投诉
+     * @param complainCurrPage 当前页面
+     * @return 跳转页面
+     */
+    @GetMapping(value = "seller_complain_list")
+    public String sellerComplainList(HttpSession session,Model model,Integer complainCurrPage){
+        Seller currSeller = (Seller)session.getAttribute("currSeller");
+        if(currSeller != null){
+            Integer pageSize = 5;
+            Integer complainCount = complainService.countComplainBySellerId(currSeller.getId());
+            Integer pageCount = (complainCount + pageSize - 1) / pageSize;
+            if(pageCount == 0){
+                pageCount = 1;
+            }
+            if(complainCurrPage == null || complainCurrPage <= 0){
+                complainCurrPage = 1;
+            }
+            if(complainCurrPage > pageCount){
+                complainCurrPage = pageCount;
+            }
+            List<Complain> complains = complainService.listComplainBySellerId(currSeller.getId(),pageSize * (complainCurrPage - 1), pageSize);
+            session.setAttribute("complains",complains);
+            session.setAttribute("complainCurrPage",complainCurrPage);
+            session.setAttribute("complainPageCount",pageCount);
+            model.addAttribute("seller_status", "complain_list");
+            model.addAttribute("operate", "error_operate");
+            return "seller_index";
+        }
+        return "seller_login";
+    }
 
+    /**
+     * 查看具体的投诉
+     * @param complainId 投诉的id
+     * @return 跳转页面
+     */
+    @GetMapping(value = "seller_look_complain")
+    public String sellerLookComplain(HttpSession session,Model model,Integer complainId){
+        Seller currSeller = (Seller)session.getAttribute("currSeller");
+        if(currSeller != null){
+            Complain complain = ComplainUtil.setComplainImgs(complainService.getComplainById(complainId));
+            session.setAttribute("complain",complain);
+            model.addAttribute("seller_status", "complain_look");
+            model.addAttribute("operate", "error_operate");
+            return "seller_index";
+        }
+        return "seller_login";
+    }
+
+    /**
+     * 获取卖家的退货信息
+     * @param orderItemCurrPage 当前页
+     * @param status 不同的状态
+     * @return 退货信息
+     */
+    @GetMapping(value = "seller_back_list")
+    public String sellerBackList(HttpSession session,Model model,Integer orderItemCurrPage,Integer status){
+        Seller currSeller = (Seller)session.getAttribute("currSeller");
+        if(currSeller != null){
+            Integer orderItemCount = orderItemService.countOrderItemByBuyerOrSeller(currSeller.getId(),"seller",status);
+            Integer pageCount = (orderItemCount + PAGE_SIZE - 1) / PAGE_SIZE;
+            if(pageCount == 0){
+                pageCount = 1;
+            }
+            if(orderItemCurrPage == null || orderItemCurrPage <= 0){
+                orderItemCurrPage = 1;
+            }
+            if(orderItemCurrPage > pageCount){
+                orderItemCurrPage = pageCount;
+            }
+            List<OrderItem> orderItems = orderItemService.listOrderItemByBuyerOrSeller(currSeller.getId(),PAGE_SIZE * (orderItemCurrPage - 1), PAGE_SIZE,"seller",status);
+            session.setAttribute("backGoodsOrderItems",orderItems);
+            session.setAttribute("orderItemCurrPage",orderItemCurrPage);
+            session.setAttribute("orderItemCount",pageCount);
+            session.setAttribute("status",status);
+            model.addAttribute("seller_status", "back_goods_list");
+            model.addAttribute("operate", "back_operate");
+            return "seller_index";
+        }
+        return "seller_login";
+    }
+
+    /**
+     * 买家跳转到退货的页面
+     * @param orderItemId 订单详情id
+     * @param process 查看还是操作的标志
+     * @return 跳转到页面
+     */
+    @GetMapping(value = "seller_back_goods")
+    public String sellerBackGoods(HttpSession session,Integer orderItemId,String process,Model model){
+        Seller currSeller = (Seller)session.getAttribute("currSeller");
+        if(currSeller != null){
+            OrderItem orderItem = orderItemService.getOrderItemById(orderItemId);
+            session.setAttribute("orderItem",orderItem);
+            session.setAttribute("process",process);
+            model.addAttribute("seller_status","back_goods");
+            model.addAttribute("operate", "back_operate");
+            return "seller_index";
+        }
+        return "seller_login";
+    }
+
+    /**
+     * 卖家操作退货
+     * @param type 同意还是不同意
+     * @param backGoodsId 退货的id
+     * @param reason 不同意的理由
+     * @return 跳转回页面
+     */
+    @ResponseBody
+    @GetMapping(value = "seller_operate_back")
+    public String sellerOperateBack(HttpSession session,String type,Integer backGoodsId,String reason){
+        Seller currSeller = (Seller)session.getAttribute("currSeller");
+        if(currSeller != null){
+            BackGoodsInfo backGoodsInfo = backGoodsInfoService.getBackGoodsInfoById(backGoodsId);
+            if("agree".equals(type)){
+                backGoodsInfo.setBackStatus("退款成功");
+            }else if("disagree".equals(type)){
+                backGoodsInfo.setBackStatus("退款失败");
+                backGoodsInfo.setReason(reason);
+            }
+            backGoodsInfoService.updateBackGoodsInfo(backGoodsInfo);
+            return "success";
+        }
+        return "seller_login";
+    }
+
+    /**
+     * 卖家进入到订单详情
+     * @param orderId 订单的id
+     * @return 跳转页面
+     */
+    @GetMapping(value = "seller_order_detail")
+    public String sellerOrderDetail(HttpSession session, Integer orderId, Model model){
+        Seller currSeller = (Seller)session.getAttribute("currSeller");
+        if(currSeller != null){
+            session.setAttribute("currOrder",OrderMoneyUtil.setOrderMoney(orderService.getOrderById(orderId)));
+            model.addAttribute("seller_status","order_detail");
+            model.addAttribute("operate", "order_operate");
+            return "seller_index";
+        }
+        return "seller_login";
+    }
 }

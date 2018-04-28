@@ -17,13 +17,16 @@
             </div>
             <div id="div_seller_bottom" class="container-fluid">
                 <div id="div_logo" class="navbar-header">
-                    <img src="../static/img/LOGO(White).png" th:src="@{img/LOGO(White).png}">
+                    <img src="" th:src="@{img/LOGO(White).png}">
                 </div>
                 <div>
                     <ul id="ul_select" class="nav navbar-nav">
                         <li><a href="/seller_home">首页</a></li>
                         <li><a href="/seller_setting">基础设置</a></li>
                     </ul>
+                </div>
+                <div>
+                    <img class="seller_icon img-circle" src="" th:src="${session.currSeller.icon}" />
                 </div>
             </div>
         </div>
@@ -58,12 +61,26 @@
             <div th:case="order_list">
                 <div th:replace="seller_order_list :: seller_order_list"></div>
             </div>
+            <div th:case="order_detail">
+                <div th:replace="seller_order_detail :: seller_order_detail"></div>
+            </div>
             <div th:case="order_reply">
                 <div th:replace="seller_order_reply :: seller_order_reply"></div>
             </div>
-
             <div th:case="send_goods">
                 <div th:replace="seller_send_goods :: seller_send_goods"></div>
+            </div>
+            <div th:case="complain_list">
+                <div th:replace="seller_complain_list :: seller_complain_list"></div>
+            </div>
+            <div th:case="complain_look">
+                <div th:replace="seller_complain_list :: seller_complain_look"></div>
+            </div>
+            <div th:case="back_goods_list">
+                <div th:replace="seller_back_goods_list :: seller_back_goods_list"></div>
+            </div>
+            <div th:case="back_goods">
+                <div th:replace="seller_back_goods :: seller_back_goods"></div>
             </div>
         </div>
         <div id="div_footer" th:include="footer :: footer"></div>

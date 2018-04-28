@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="buyer_back_goods">
+        <style>
+            .order_item_img{
+                width: 80px;
+                height: 100px;
+            }
+            .center{
+                text-align: center;
+            }
+            .col-xs-1, .col-xs-2, .col-xs-6{
+                /*border: 1px solid #ddd;*/
+            }
+            .padding{
+                padding-top: 30px;
+            }
+            .order_item_standard{
+                display: block;
+            }
+            .goods_title{
+                margin-top: 30px;
+            }
+            #div_order_remark{
+                padding-top: 30px;
+            }
+            .first-content{
+                height: 40px;
+            }
+            .row{
+                margin: 0;
+            }
+            textarea{
+                outline: none;
+            }
+            .btn{
+                margin-top: 20px;
+                outline: none;
+            }
+            #back{
+                background-color: #F2F2F2;
+                padding: 20px;
+            }
+            #input,#select-type{
+                padding-top: 20px;
+            }
+            #cancel-back{
+                outline: none;
+            }
+            .font{
+                font-size: 12px;
+            }
+        </style>
+        <script>
+            $(function () {
+                $("#sub-back").on("click",function () {
+                    var content = $("#content").val();
+                    var orderItemId = $("#orderItemId").val();
+                    var backType = $("input[type='radio']:checked").val();
+                    $.get("buyer_sub_back_goods",
+                        {"orderItemId":orderItemId,"content":content,"backType":backType},
+                        function (data) {
+                            if(data === "success"){
+                                window.location.href = "buyer_order_all";
+                            }else {
+                                window.location.href = "buyer_login";
+                            }
+                    });
+                });
+                $("#cancel-back").on("click",function () {
+                    var backGoodsId = $("#backGoodsId").val();
+                    console.log(backGoodsId);
+                    $.get("buyer_operate_back_goods",
+                        {"backGoodsId":backGoodsId,"type":"cancel"},
+                        function (data) {
+                            if(data === "success"){
+                                $("#cancel-back").remove();
+                                $("#backStatus").text('取消退款');
+                            }else {
+                                window.location.href = "buyer_login";
+                            }
+                        });
+                });
+            });
+        </script>
+        <div id="back" class="font">
+            <div class="row first-content">
+                <span>订单编号：<i th:text="${session.orderItem.order.orderNum}"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
+            <div class="row" id="order_info_table">
+                <div class="row" id="table-head">
+                    <div class="col-xs-5 center">商品</div>
+                    <div class="col-xs-1 center">状态</div>
+                    <div class="col-xs-2 center">单价</div>
+                    <div class="col-xs-1 center">数量</div>
+                    <div class="col-xs-1 center">优惠</div>
+                    <div class="col-xs-2 center">订单金额</div>
+                </div>
+                <div class="row table-body">
+                    <div class="col-xs-5">
+                        <div class="col-xs-3">
+                            <img class="order_item_img" src="" th:src="${session.orderItem.standard.colorImg}"/>
+                        </div>
+                        <div class="col-xs-9 goods_title">
+                            <a th:href="@{'buyer_goods_detail'(goodsId=${session.orderItem.standard.goods.id})}" th:text="${session.orderItem.standard.goods.title}"></a>
+                            <span class="order_item_standard" th:text="'颜色分类：' + ${session.orderItem.standard.color} + ' 尺码：' + ${session.orderItem.standard.size}"></span>
+                        </div>
+                    </div>
+                    <div class="col-xs-1 center padding">
+                        <span th:text="${session.orderItem.order.orderStatus.status}"></span>
+                    </div>
+                    <div class="col-xs-2 center padding">
+                        <span th:text="'￥' + ${#numbers.formatDecimal(session.orderItem.standard.price,0,2)}"></span>
+                    </div>
+                    <div class="col-xs-1 center padding">
+                        <span th:text="${session.orderItem.buyCount}"></span>
+                    </div>
+                    <div class="col-xs-1 center padding">
+                        <span th:if="${session.orderItem.standard.goods.discount != 0}" th:text="'￥' + ${#numbers.formatDecimal(session.orderItem.standard.goods.discount,0,2)}"></span>
+                        <span th:if="${session.orderItem.standard.goods.discount eq 0}">￥0.00</span>
+                    </div>
+                    <div class="col-xs-2 center padding">
+                        <span class="all-money" th:text="'￥' + ${#numbers.formatDecimal((session.orderItem.standard.price - session.orderItem.standard.goods.discount) * session.orderItem.buyCount,0,2)}"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="div_order_remark">
+                <span>买家备注：<i th:text="${session.orderItem.order.remark}"></i></span>
+            </div>
+        </div>
+        <div class="font" th:if="${session.backStatus eq 'null'}">
+            <div id="select-type">
+                <input type="radio" name="backType" th:value="仅退款" /><span>仅退款</span>
+                <input type="radio" name="backType" th:value="退货且退款" /><span>退货且退款</span>
+            </div>
+            <div id="input">
+                <div>请简述退货理由：</div>
+                <textarea cols="75" rows="5" id="content"></textarea>
+            </div>
+            <input type="hidden" th:value="${session.orderItem.id}" id="orderItemId">
+            <div>
+                <input type="button" class="btn btn-danger" th:value="确定" id="sub-back"/>
+            </div>
+        </div>
+        <div class="font" th:if="${session.backStatus eq 'notNull'}">
+            <input type="hidden" th:value="${session.orderItem.backGoodsInfo.id}" id="backGoodsId"/>
+            <div class="padding">
+                <span>退货类型：</span>
+                <span th:text="${session.orderItem.backGoodsInfo.backType}"></span>
+            </div>
+            <div class="padding">
+                <span>退货状态：</span>
+                <span id="backStatus" th:text="${session.orderItem.backGoodsInfo.backStatus}"></span>
+            </div>
+            <div>
+                <input th:if="${session.orderItem.backGoodsInfo.backStatus eq '退款中'}" type="button" id="cancel-back" class="btn" value="取消退款" />
+            </div>
+        </div>
+    </div>
+</body>
+</html>

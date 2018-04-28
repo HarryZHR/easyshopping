@@ -40,4 +40,18 @@ public interface ComplainDao {
      * @param complain 参数
      */
     void updateComplain(Complain complain);
+
+    /**
+     * 通过买家id获取投诉
+     * @param sellerId 买家id
+     * @return 投诉结果
+     */
+    List<Complain> listComplainBySellerId(@Param(value = "sellerId") Integer sellerId, @Param(value = "complainIndex")Integer complainIndex,@Param(value = "complainSize") Integer complainSize);
+
+    /**
+     * 投诉的总数
+     * @param sellerId 店铺的id
+     * @return 数量
+     */
+    Integer countComplainBySellerId(Integer sellerId);
 }
