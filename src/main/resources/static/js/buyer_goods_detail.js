@@ -75,10 +75,7 @@ $(function(){
                         $.get("get_standard_count",
                             {"goodsId":$("#goodsId").val(),"size":size, "color": $(this).val()},
                             function (data) {
-                                $("#count").text(data);
-                                if($num_input.val() > data){
-                                    $num_input.val(data);
-                                }
+                                updatePriceAndCount(data);
                             });
                     }
                 });
@@ -133,10 +130,7 @@ $(function(){
                         $.get("get_standard_count",
                             {"goodsId": $("#goodsId").val(), "color": color, "size": $(this).val()},
                             function (data) {
-                                $("#count").text(data);
-                                if ($num_input.val() > data) {
-                                    $num_input.val(data);
-                                }
+                                updatePriceAndCount(data);
                             });
                     }
                 });
@@ -516,4 +510,22 @@ function addCart() {
                 window.location.href = "buyer_login";
             }
         });
+}
+
+function updatePriceAndCount(data) {
+    var $num_input = $("#sy_num_gid");
+    var count = data.split("_")[0];
+    var price = data.split("_")[1];
+    var discount = data.split("_")[2];
+    $("#count").text(count);
+    if($num_input.val() > count){
+        $num_input.val(count);
+    }
+    if(discount === 0){
+        $(".span_real_price").text('￥' + price);
+    }else {
+        $(".span_price").text('￥' + price);
+        $(".span_real_price").text('￥' + (price - discount).toFixed(2));
+        console.log(11111)
+    }
 }

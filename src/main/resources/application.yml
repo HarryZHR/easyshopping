@@ -4,7 +4,7 @@ spring:
   thymeleaf:
     prefix: classpath:templates/
     suffix: .html
-    mode: LEGACYHTML5
+    mode: HTML
     cache: false
   datasource:
     username: root

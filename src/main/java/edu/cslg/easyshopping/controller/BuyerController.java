@@ -323,7 +323,9 @@ public class BuyerController {
     public String getStandardCount(Integer goodsId, String color, String size){
         Standard standard = standardService.getStandardByIdAndSizeAndColor(goodsId, size, color);
         Integer count = standard.getCount();
-        return count.toString();
+        DecimalFormat decimalFormat = new DecimalFormat(".00");
+        String price = decimalFormat.format(standard.getPrice());
+        return count.toString() + "_" + price + "_" + standard.getGoods().getDiscount().toString();
     }
 
     /**
@@ -402,16 +404,7 @@ public class BuyerController {
             String validationCode = ValidationCode.getRandom();
             System.out.println("买家注册的验证码："+validationCode);
             session.setAttribute(tel,validationCode);
-            /*try {
-                SendSmsResponse response = ValidationCodeSend.sendSms(tel,validationCode ,"SMS_102315072");
-                System.out.println("短信接口返回的数据----------------");
-                System.out.println("Code=" + response.getCode());
-                System.out.println("Message=" + response.getMessage());
-                System.out.println("RequestId=" + response.getRequestId());
-                System.out.println("BizId=" + response.getBizId());
-            }catch (ClientException e){
-                e.printStackTrace();
-            }*/
+            SendUtil.send(tel,validationCode);
             return "true";
         }
     }
@@ -597,7 +590,7 @@ public class BuyerController {
      */
     @ResponseBody
     @GetMapping(value="add_cart")
-    public String addCart(String color, String size, Integer goodsId, Integer buyCount,HttpSession session){
+    public String addCart(String color, String size, Integer goodsId, Integer buyCount, HttpSession session){
         Buyer currBuyer = (Buyer) session.getAttribute("currBuyer");
         if(currBuyer != null){
             Standard standard = standardService.getStandardByIdAndSizeAndColor(goodsId, size, color);

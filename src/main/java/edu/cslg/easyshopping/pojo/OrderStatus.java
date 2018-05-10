@@ -6,11 +6,6 @@ public class OrderStatus {
 
     public OrderStatus(){}
 
-    public OrderStatus(Integer id, String status) {
-        this.id = id;
-        this.status = status;
-    }
-
     public Integer getId() {
         return id;
     }

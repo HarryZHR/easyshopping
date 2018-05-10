@@ -17,4 +17,10 @@ public interface GoodsImgDao {
      * @return 商品的图片
      */
     GoodsImg getGoodsImgById(Integer id);
+
+    /**
+     * 更新商品的图片
+     * @param goodsImg 商品图片的参数
+     */
+    void updateGoodsImg(GoodsImg goodsImg);
 }

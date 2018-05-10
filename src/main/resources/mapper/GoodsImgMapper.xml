@@ -17,4 +17,7 @@
 	<select id="getGoodsImgById" resultMap="goodsImgMap">
 		SELECT * FROM t_goods_img WHERE id = #{0}
 	</select>
+	<update id="updateGoodsImg" parameterType="edu.cslg.easyshopping.pojo.GoodsImg">
+		UPDATE t_goods_img SET img1=#{img1},img2 = #{img2} ,img3 = #{img3},img4 = #{img4},img5 = #{img5},detailImg = #{detailImg} WHERE id = #{id};
+	</update>
 </mapper>

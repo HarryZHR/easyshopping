@@ -1,20 +1,16 @@
 package edu.cslg.easyshopping.pojo;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class Standard {
     private Integer id;
-    private Goods goods;
     private String color;
     private String colorImg;
     private String size;
     private Float price;
     private Integer count;
+    private Boolean delFlag;
+    private Goods goods;
 
-    public Standard() {
-    }
-
+    public Standard() {}
 
     public Integer getId() {
         return id;
@@ -22,14 +18,6 @@ public class Standard {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Goods getGoods() {
-        return goods;
-    }
-
-    public void setGoods(Goods goods) {
-        this.goods = goods;
     }
 
     public String getColor() {
@@ -70,5 +58,21 @@ public class Standard {
 
     public void setCount(Integer count) {
         this.count = count;
+    }
+
+    public Boolean getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Boolean delFlag) {
+        this.delFlag = delFlag;
+    }
+
+    public Goods getGoods() {
+        return goods;
+    }
+
+    public void setGoods(Goods goods) {
+        this.goods = goods;
     }
 }

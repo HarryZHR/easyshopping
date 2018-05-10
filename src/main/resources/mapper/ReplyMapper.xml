@@ -8,7 +8,7 @@
 		<result property="content" column="content"/>
 		<result property="replyTime" column="replyTime"/>
 		<result property="img" column="img"/>
-		<association property="standard" column="standard_id" select="edu.cslg.easyshopping.dao.StandardDao.getStandardById" />
+		<association property="standard" column="standard_id" select="edu.cslg.easyshopping.dao.StandardDao.getStandardAllById" />
 		<association property="buyer" column="buyer_id" select="edu.cslg.easyshopping.dao.BuyerDao.getBuyerById" />
 		<association property="seller" column="seller_id" select="edu.cslg.easyshopping.dao.SellerDao.getSellerById" />
 		<association property="hostReply" column="hostReply_id" select="edu.cslg.easyshopping.dao.HostReplyDao.getHostReplyById" />

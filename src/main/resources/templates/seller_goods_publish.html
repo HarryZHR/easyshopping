@@ -2,91 +2,163 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
     <div th:fragment="goods_publish">
-        <link rel="stylesheet" type="text/css" href="../static/css/seller_goods_publish.css" th:href="@{/css/seller_goods_publish.css}"/>
-        <script type="text/javascript" src="../static/js/seller_goods_publish.js" th:src="@{/js/seller_goods_publish.js}"></script>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/seller_goods_publish.css}"/>
+        <script type="text/javascript" th:src="@{/js/seller_goods_publish.js}"></script>
         <form id="form_goods_publish" action="/goods_save" method="post" enctype ="multipart/form-data">
-            <input type="hidden" id="goodsId"/>
-            <label>宝贝标题：<input id="goods_title" type="text" name="title" size="60"/></label><br/>
+            <label>宝贝标题：<input id="goods_title" type="text" name="title" size="60" th:value="${session.goodsInEdit eq null ? '' : session.goodsInEdit.title}"/></label><br/>
             <label>颜色分类：</label>
             <div class="div_goods_color">
-                <table id="table_goods_color">
-                    <tr id="0" class="tr_goods_color">
-                        <td>
+                <div id="table_goods_color">
+                    <div th:if="${session.goodsInEdit ne null}">
+                        <div th:id="${colorMapStuts.index}" class="row tr_goods_color" th:each="colorMap,colorMapStuts : ${session.goodsInEdit.colorMap}">
+                            <div class="col-xs-3 text_color">
+                                <input type="checkbox" name="goods_color" class="input_check_color" onclick="selectColor($(this))" checked/>
+                                <input type="text" size="10" class="input_goods_color" th:value="${colorMap.value}" placeholder="颜色" onblur="updColor($(this))"/>
+                            </div>
+                            <div class="col-xs-1">
+                                <img src="" class="img_goods_color" th:src="${colorMap.key}"/>
+                            </div>
+                            <div class="col-xs-2">
+                                <input th:id="'color_' + ${colorMapStuts.index}" type="file" class="input_up_file" accept="image/gif,image/jpeg,image/jpg,image/png" onchange="upColorImg($(this))"/>
+                                <input type="button" class="btn btn-info input_up_css" value="上传图片">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tr_goods_color new_color row">
+                        <div class="col-xs-3">
                             <input type="checkbox" name="goods_color" class="input_check_color" onclick="selectColor($(this))"/>
                             <input type="text" size="10" class="input_goods_color" placeholder="颜色" onblur="updColor($(this))"/><br/>
+                        </div>
+                        <div class="col-xs-1">
                             <img src=" " class="img_goods_color"/>
-                            <input id="color0" type="file" class="input_up_file" accept="image/gif,image/jpeg,image/jpg,image/png" onchange="upColorImg($(this))"/>
+                        </div>
+                        <div class="col-xs-2">
+                            <input type="file" class="input_up_file new_up_file" accept="image/gif,image/jpeg,image/jpg,image/png" onchange="upColorImg($(this))"/>
                             <input type="button" class="btn btn-info input_up_css" value="上传图片">
-                        </td>
-                    </tr>
-                </table>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div th:switch="${session.goods_type}" style="margin-top: 50px">
+            <div style="margin-top: 50px">
                 <label class="label_size">尺寸大小：</label>
-                <div class="div_cloth" th:case="上衣">
-                    <div th:each="clothSize : ${session.clothSizes}" class="div_cloth_size">
-                        <input type="checkbox" name="goods_size" class="input_check_size"/>
-                        <label th:text="${clothSize}"></label>
-                    </div>
-                </div>
-                <div class="div_cloth" th:case="裙子">
-                    <div th:each="clothSize : ${session.clothSizes}" class="div_cloth_size">
-                        <input type="checkbox" name="goods_size" class="input_check_size"/>
-                        <label th:text="${clothSize}"></label>
-                    </div>
-                </div>
-                <div class="div_cloth" th:case="裤子">
-                    <div th:each="clothSize : ${session.clothSizes}" class="div_cloth_size">
-                        <input type="checkbox" name="goods_size" class="input_check_size"/>
-                        <label th:text="${clothSize}"></label>
-                    </div>
-                </div>
-                <div class="div_shoe" th:case="鞋子">
-                    <div th:each="shoesSize : ${session.shoesSizes}" class="div_shoe_size">
-                        <input type="checkbox" name="goods_size" class="input_check_size"/>
-                        <label th:text="${shoesSize} + '码'"></label>
-                    </div>
-                </div>
-                <div class="div_child" th:case="童装">
-                    <div th:each="childSize : ${session.childSizes}" class="div_child_size">
-                        <input type="checkbox" name="goods_size" class="input_check_size"/>
-                        <label th:text="${childSize} + 'cm'"></label>
+                <div class="div_cloth" >
+                    <div th:each="size : ${session.sizeMap}" class="div_cloth_size">
+                        <label>
+                            <input type="checkbox" name="goods_size" class="input_check_size" th:checked="${size.value eq true}"/>
+                            <span th:text="${size.key}"></span>
+                        </label>
                     </div>
                 </div>
             </div>
             <div id="div_price_count">
                 <label>商品规格：</label>
-                <table id="table_price_count">
-                    <tr id="a_a">
-                        <td>颜色分类</td>
-                        <td>尺码</td>
-                        <td>价格</td>
-                        <td>数量</td>
-                    </tr>
-                </table>
+                <div id="table_price_count">
+                    <div id="a_a" class="row price_count_title">
+                        <div class="col-xs-3">颜色分类</div>
+                        <div class="col-xs-3">尺码</div>
+                        <div class="col-xs-3">价格</div>
+                        <div class="col-xs-3">数量</div>
+                    </div>
+                    <div th:if="${session.goodsInEdit eq null}">
+                        <div class="row color_tr" style="border: 0;"></div>
+                    </div>
+                    <div th:if="${session.goodsInEdit ne null}" >
+                        <div class="row color_tr" style="border: 0;"></div>
+                        <div th:each="colorMap : ${session.goodsInEdit.colorMap}" class="row color_tr">
+                            <div class="col-xs-3 color_content" th:id="${colorMapStat.index} + '_color'">
+                                <span class="span_color" th:text="${colorMap.value}"></span>
+                                <input type="hidden" class="hidden_color_color_img" th:value="${colorMap.key}">
+                            </div>
+                            <div class="col-xs-9 padding count_count">
+                                <div th:each="size : ${session.goodsInEdit.sizes}" th:class="'row standard_info price_count_tr ' + ${size}">
+                                    <div class="col-xs-4">
+                                        <input type="hidden" class="hidden_color" th:value="${colorMap.value}">
+                                        <input type="hidden" th:class="${colorMapStat.index} + '_colorImg' + ' hidden_color_img'" th:value="${colorMap.key}">
+                                        <input type="hidden" class="hidden_size" th:value="${size}">
+                                        <span th:text="${size}"></span>
+                                    </div>
+                                    <div th:each="standard : ${session.goodsInEdit.standards}">
+                                        <div th:if="${standard.color eq colorMap.value && standard.size eq size}">
+                                            <div class="col-xs-4">
+                                                <input class="standard_price" th:value="${#numbers.formatDecimal(standard.price,0,2)}" type="text" size="5"/>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <input class="standard_count" th:value="${standard.count}" type="text" size="5"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <label id="label_description">商品描述：</label><br/>
-            <textarea id="textarea_description" cols="55" rows="4" name="introduce"></textarea>
+            <textarea id="textarea_description" cols="55" rows="4" name="introduce" th:text="${session.goodsInEdit eq null ? '' : session.goodsInEdit.introduce}"></textarea>
             <label id="label_goods_main">商品主图：</label>
             <div id="div_goods_main_img">
-                <div class="div_goods" th:each="i: ${#numbers.sequence(0,4)}">
-                    <img src="" class="img_goods_main"/>
+                <div class="div_goods">
+                    <img src="" class="img_goods_main" th:src="${session.goodsInEdit eq null} ? '' : ${session.goodsInEdit.goodsImg.img1}"/>
                     <input type="file" class="input_up_goods_main" accept="image/gif,image/jpeg,image/jpg,image/png"/>
                     <i class="i_add_img"></i>
-                    <img class="img_delete" src="../static/img/delete.png" th:src="@{/img/delete.png}"/>
-                    <input type="hidden" th:name="img+${i+1}" class="input_src"/>
+                    <img class="img_delete" src="" th:src="@{/img/delete.png}"/>
+                    <input type="hidden" name="img1" class="input_src" th:value="${session.goodsInEdit eq null} ? '' : ${session.goodsInEdit.goodsImg.img1}"/>
                 </div>
+                <div class="div_goods">
+                    <img src="" class="img_goods_main" th:src="${session.goodsInEdit eq null} ? '' : ${session.goodsInEdit.goodsImg.img2}"/>
+                    <input type="file" class="input_up_goods_main" accept="image/gif,image/jpeg,image/jpg,image/png"/>
+                    <i class="i_add_img"></i>
+                    <img class="img_delete" src="" th:src="@{/img/delete.png}"/>
+                    <input type="hidden" name="img2" class="input_src" th:value="${session.goodsInEdit eq null} ? '' : ${session.goodsInEdit.goodsImg.img2}"/>
+                </div>
+                <div class="div_goods">
+                    <img src="" class="img_goods_main" th:src="${session.goodsInEdit eq null} ? '' : ${session.goodsInEdit.goodsImg.img3}"/>
+                    <input type="file" class="input_up_goods_main" accept="image/gif,image/jpeg,image/jpg,image/png"/>
+                    <i class="i_add_img"></i>
+                    <img class="img_delete" src="" th:src="@{/img/delete.png}"/>
+                    <input type="hidden" name="img3" class="input_src" th:value="${session.goodsInEdit eq null} ? '' : ${session.goodsInEdit.goodsImg.img3}"/>
+                </div>
+                <div class="div_goods">
+                    <img src="" class="img_goods_main" th:src="${session.goodsInEdit eq null} ? '' : ${session.goodsInEdit.goodsImg.img4}"/>
+                    <input type="file" class="input_up_goods_main" accept="image/gif,image/jpeg,image/jpg,image/png"/>
+                    <i class="i_add_img"></i>
+                    <img class="img_delete" src="" th:src="@{/img/delete.png}"/>
+                    <input type="hidden" name="img4" class="input_src" th:value="${session.goodsInEdit eq null} ? '' : ${session.goodsInEdit.goodsImg.img4}"/>
+                </div>
+                <div class="div_goods">
+                    <img src="" class="img_goods_main" th:src="${session.goodsInEdit eq null} ? '' : ${session.goodsInEdit.goodsImg.img5}"/>
+                    <input type="file" class="input_up_goods_main" accept="image/gif,image/jpeg,image/jpg,image/png"/>
+                    <i class="i_add_img"></i>
+                    <img class="img_delete" src="" th:src="@{/img/delete.png}"/>
+                    <input type="hidden" name="img5" class="input_src" th:value="${session.goodsInEdit eq null} ? '' : ${session.goodsInEdit.goodsImg.img5}"/>
+                </div>
+                <!--<div class="div_goods" th:each="i: ${#numbers.sequence(0,4)}">
+                    <img src="" class="img_goods_main" th:src="${session.goodsInEdit.goodsImg.img}"/>
+                    <input type="file" class="input_up_goods_main" accept="image/gif,image/jpeg,image/jpg,image/png"/>
+                    <i class="i_add_img"></i>
+                    <img class="img_delete" src="" th:src="@{/img/delete.png}"/>
+                    <input type="hidden" th:name="img+${i+1}" class="input_src"/>
+                </div>-->
             </div>
             <div id="div_goods_detail">
                 <label id="label_goods_detail">商品详情图：</label>
                 <div id="div_goods_info">
-                    <div id="div_goods_detail_img"></div>
+                    <div id="div_goods_detail_img">
+                        <div th:if="${session.goodsInEdit ne null}" >
+                            <div class='div_goods_detail_img_img' th:each="detailImg : ${session.goodsInEdit.goodsImgDetail}">
+                                <img src="" class='img_goods_detail' th:src="${detailImg}"/>
+                                <img src="" th:src="@{img/delete.png}" class='img_delete_detail' onclick='deleteImg($(this))'/>
+                                <input type='hidden' name='input_img_detail' th:value="${detailImg}"/>
+                            </div>
+                        </div>
+                    </div>
                     <div id="div_goods_detail_add">
                         <input type="file" id="input_up_goods_detail" multiple accept="image/gif,image/jpeg,image/jpg,image/png"/>
                         <i class="i_add_img"></i>
                     </div>
                 </div>
             </div>
+            <input type="hidden" name="goodsId" id="goodsId" th:value="${session.goodsInEdit eq null ? '' : session.goodsInEdit.id}"/>
             <input type="submit" value="发布" class="btn btn-info input_sub">
         </form>
     </div>

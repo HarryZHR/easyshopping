@@ -14,6 +14,7 @@ public class Reply {
     private Seller seller;
     private HostReply hostReply;
     private List<String> imgs;
+
     public Reply(){}
 
     public Integer getId() {

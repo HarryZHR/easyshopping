@@ -76,4 +76,5 @@ public class StandardService {
     public List<Standard> listStandardByGoodsIdAndSize(Integer goodsId, String size){
         return standardDao.listStandardByGoodsIdAndSize(goodsId, size);
     }
+
 }

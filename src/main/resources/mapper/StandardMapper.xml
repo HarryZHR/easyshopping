@@ -9,31 +9,36 @@
 		<result property="size" column="size"/>
 		<result property="price" column="price"/>
 		<result property="count" column="count"/>
+		<result property="delFlag" column="delFlag"/>
 		<association property="goods" column="goods_id" select="edu.cslg.easyshopping.dao.GoodsDao.getGoodsById"/>
 	</resultMap>
 	<insert id="saveStandard">
-		INSERT INTO t_standard VALUES (NULL ,#{color},#{colorImg},#{size},#{price},#{count},#{goods.id})
+		INSERT INTO t_standard VALUES (NULL ,#{color},#{colorImg},#{size},#{price},#{count},#{goods.id},#{delFlag});
 	</insert>
 	<select id="listStandardByGoodsId" resultMap="standardMap">
-		SELECT * FROM t_standard WHERE goods_id = #{0}
+		SELECT * FROM t_standard WHERE goods_id = #{0} AND delFlag = TRUE ;
 	</select>
 	<select id="getStandardById" resultMap="standardMap">
-		SELECT * FROM t_standard WHERE id = #{0}
+		SELECT * FROM t_standard WHERE id = #{0} AND delFlag = TRUE ;
 	</select>
+	<select id="getStandardAllById" resultMap="standardMap">
+		SELECT * FROM t_standard WHERE id = #{0};
+	</select>
+
 	<!--<select id="getStandardToCart" resultMap="standardMap">
 		SELECT * FROM t_standard WHERE goods_id = #{goodsId} AND color = #{color} AND size = #{size};
 	</select>-->
 	<select id="getStandardByIdAndSizeAndColor" resultMap="standardMap">
-		SELECT * FROM t_standard WHERE goods_id = #{goodsId} AND size = #{size} AND color = #{color};
+		SELECT * FROM t_standard WHERE goods_id = #{goodsId} AND size = #{size} AND color = #{color} ;
 	</select>
 	<update id="updateStandard" parameterType="edu.cslg.easyshopping.pojo.Standard">
-		UPDATE t_standard SET count = #{count} WHERE id = #{id};
+		UPDATE t_standard SET count = #{count},price = #{price},delFlag = #{delFlag},color=#{color},colorImg=#{colorImg} WHERE id = #{id};
 	</update>
 	<select id="listStandardByGoodsIdAndColor" resultMap="standardMap">
-		SELECT * FROM t_standard WHERE goods_id = #{goodsId} AND color = #{color};
+		SELECT * FROM t_standard WHERE goods_id = #{goodsId} AND color = #{color} AND delFlag = TRUE ;
 	</select>
 	<select id="listStandardByGoodsIdAndSize" resultMap="standardMap">
-		SELECT * FROM t_standard WHERE goods_id = #{goodsId} AND size = #{size};
+		SELECT * FROM t_standard WHERE goods_id = #{goodsId} AND size = #{size} AND delFlag = TRUE ;
 	</select>
 
 </mapper>

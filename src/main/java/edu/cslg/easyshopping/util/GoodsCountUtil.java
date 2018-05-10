@@ -20,7 +20,7 @@ public class GoodsCountUtil {
     /**
      * 设置商品数量
      * @param goods 商品
-     * @param type 种类
+     * @param type 仅获取总库存还是获取商品所有信息
      * @return 返回商品
      */
     public static Goods setGoodsCount(Goods goods, String type){

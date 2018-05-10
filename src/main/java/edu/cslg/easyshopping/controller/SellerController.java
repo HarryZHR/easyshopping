@@ -3,6 +3,7 @@ package edu.cslg.easyshopping.controller;
 import edu.cslg.easyshopping.pojo.*;
 import edu.cslg.easyshopping.service.*;
 import edu.cslg.easyshopping.util.*;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,9 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 @Controller
@@ -72,16 +71,7 @@ public class SellerController {
             String validationCode = ValidationCode.getRandom();
             System.out.println("卖家注册的验证码："+validationCode);
             session.setAttribute(tel,validationCode);
-            /*try {
-                SendSmsResponse response = ValidationCodeSend.sendSms(tel,validationCode ,"SMS_102315072");
-                System.out.println("短信接口返回的数据----------------");
-                System.out.println("Code=" + response.getCode());
-                System.out.println("Message=" + response.getMessage());
-                System.out.println("RequestId=" + response.getRequestId());
-                System.out.println("BizId=" + response.getBizId());
-            }catch (ClientException e){
-                e.printStackTrace();
-            }*/
+            SendUtil.send(tel,validationCode);
             return "true";
         }
     }
@@ -265,40 +255,40 @@ public class SellerController {
      * 衣服的尺寸
      * @return 衣服尺寸的集合
      */
-    private List<String> setClothSizes(){
-        List<String> clothSizes = new ArrayList<>();
-        clothSizes.add("S");
-        clothSizes.add("M");
-        clothSizes.add("X");
-        clothSizes.add("L");
-        clothSizes.add("XL");
-        clothSizes.add("2XL");
-        clothSizes.add("3XL");
-        return clothSizes;
+    private Map<String,Boolean> setClothSizeMap(){
+        Map<String,Boolean> clothSizeMap = new LinkedHashMap<>();
+        clothSizeMap.put("S",false);
+        clothSizeMap.put("M",false);
+        clothSizeMap.put("X",false);
+        clothSizeMap.put("L",false);
+        clothSizeMap.put("XL",false);
+        clothSizeMap.put("2XL",false);
+        clothSizeMap.put("3XL",false);
+        return clothSizeMap;
     }
 
     /**
      * 设置鞋子尺码
      * @return 鞋子尺码的集合
      */
-    private List<Integer> setShoesSizes(){
-        List<Integer> shoesSizes = new ArrayList<>();
+    private Map<String,Boolean> setShoesSizeMap(){
+        Map<String,Boolean> shoesSizeMap = new LinkedHashMap<>();
         for (int i = 35; i < 46; i++) {
-            shoesSizes.add(i);
+            shoesSizeMap.put(i + "码",false);
         }
-        return shoesSizes;
+        return shoesSizeMap;
     }
 
     /**
      * 设置童装的尺码
      * @return 童装的尺码
      */
-    private List<Integer> setChildSizes(){
-        List<Integer> childSizes = new ArrayList<>();
+    private Map<String,Boolean> setChildSizeMap(){
+        Map<String,Boolean> childSizeMap = new LinkedHashMap<>();
         for (int i = 80; i < 161; i += 10) {
-            childSizes.add(i);
+            childSizeMap.put(i+"cm",false);
         }
-        return childSizes;
+        return childSizeMap;
     }
 
     /**
@@ -312,9 +302,20 @@ public class SellerController {
     public String goodsPublish(Model model, String goods_type, HttpSession session) {
         Seller currSeller = (Seller) session.getAttribute("currSeller");
         if(currSeller != null){
-            session.setAttribute("clothSizes", setClothSizes());
-            session.setAttribute("shoesSizes", setShoesSizes());
-            session.setAttribute("childSizes", setChildSizes());
+            session.removeAttribute("goodsInEdit");
+            switch (goods_type){
+                case "上衣":
+                case "裤子":
+                case "裙子":
+                    session.setAttribute("sizeMap", setClothSizeMap());
+                    break;
+                case "鞋子":
+                    session.setAttribute("sizeMap", setShoesSizeMap());
+                    break;
+                case "童装":
+                    session.setAttribute("sizeMap", setChildSizeMap());
+                    break;
+            }
             session.setAttribute("goods_type", goods_type);
             model.addAttribute("seller_status", "goods_publish");
             model.addAttribute("operate", "goods_operate");
@@ -323,47 +324,87 @@ public class SellerController {
         return "seller_login";
     }
 
+
+    private GoodsImg setGoodsImg(GoodsImg goodsImg, String[] input_img_detail){
+        StringBuilder detailImg = new StringBuilder();
+        for (String detailImgArr : input_img_detail){
+            detailImg.append(detailImgArr).append("_");
+        }
+        goodsImg.setDetailImg(detailImg.toString());
+        return goodsImg;
+    }
+
     /**
      * 保存商品
      * @return 主页面
      */
     @PostMapping(value = "/goods_save")
-    public String goodsSave(Goods goods,GoodsImg goodsImg,HttpSession session,Model model,String[] input_img_detail,String[] color,String[] colorImg,String[] size,Integer[] count,Float[] price){
+    public String goodsSave(Goods goods,GoodsImg goodsImg,HttpSession session,Model model,String[] input_img_detail,Standards standards,Integer goodsId){
         Seller currSeller = (Seller)session.getAttribute("currSeller");
         if(currSeller != null){
-            String type = (String)session.getAttribute("goods_type");
-            GoodsType goodsType = goodsTypeService.getGoodsTypeByType(type);
-            goods.setGoodsTime(new Date());
-            goods.setType(goodsType);
-            goods.setSeller(currSeller);
-            goodsService.saveGoods(goods);
-            Integer goodsId = goods.getId();
-            goodsImg.setId(goodsId);
-            StringBuilder detailImg = new StringBuilder();
-            for (String detailImgArr : input_img_detail){
-                detailImg.append(detailImgArr).append("_");
-            }
-            goodsImg.setDetailImg(detailImg.toString());
-            goodsImgService.saveGoodsImg(goodsImg);
-            Standard standard = new Standard();
-            Float minPrice = Float.MAX_VALUE;
-            for (int i = 0; i < color.length; i++){
-                if(price[i]< minPrice){
-                    minPrice = price[i];
+            Float minPrice;
+            if(null == goodsId){
+                String type = (String)session.getAttribute("goods_type");
+                GoodsType goodsType = goodsTypeService.getGoodsTypeByType(type);
+                goods.setType(goodsType);
+                goods.setGoodsTime(new Date());
+                goods.setSeller(currSeller);
+                goods.setStatus(true);
+                goods.setSaleCount(0);
+                goods.setDiscount(0f);
+                goodsService.saveGoods(goods);
+                goodsId = goods.getId();
+                goodsImg.setId(goodsId);
+                goodsImgService.saveGoodsImg(setGoodsImg(goodsImg,input_img_detail));
+                minPrice = Float.MAX_VALUE;
+                for (Standard standard : standards.getStandards()) {
+                    if(minPrice > standard.getPrice()){
+                        minPrice = standard.getPrice();
+                    }
+                    standard.setDelFlag(true);
+                    standard.setGoods(goods);
+                    standardService.saveStandard(standard);
                 }
-                standard.setGoods(goods);
-                standard.setColor(color[i]);
-                standard.setColorImg(colorImg[i]);
-                standard.setSize(size[i]);
-                standard.setCount(count[i]);
-                standard.setPrice(price[i]);
-                standardService.saveStandard(standard);
+                goods.setMinPrice(minPrice);
+                goodsService.updateGoods(goods);
+            }else{
+                // 修改商品本身的属性
+                Goods newGoods = goodsService.getGoodsById(goodsId);
+                newGoods.setTitle(goods.getTitle());
+                newGoods.setIntroduce(goods.getIntroduce());
+                goodsService.updateGoods(newGoods);
+                // 修改商品的规格
+                // 先把所有的规格下架
+                for(Standard standard : newGoods.getStandards()){
+                    standard.setDelFlag(false);
+                    standardService.updateStandard(standard);
+                }
+                // 判断前端传入的规格是否已经存在
+                minPrice = newGoods.getMinPrice();
+                for(Standard standard : standards.getStandards()){
+                    Standard standard1 = standardService.getStandardByIdAndSizeAndColor(goodsId,standard.getSize(),standard.getColor());
+                    if(minPrice > standard.getPrice()){
+                        minPrice = standard.getPrice();
+                    }
+                    // 如果已经存在，修改状态，恢复上架
+                    if(standard1 != null){
+                        standard1.setDelFlag(true);
+                        standard1.setColorImg(standard.getColorImg());
+                        standard1.setPrice(standard.getPrice());
+                        standard1.setCount(standard.getCount());
+                        standardService.updateStandard(standard1);
+                    // 如果不存在，新增
+                    }else {
+                        standard.setDelFlag(true);
+                        standard.setGoods(newGoods);
+                        standardService.saveStandard(standard);
+                    }
+                }
+                newGoods.setMinPrice(minPrice);
+                goodsService.updateGoods(newGoods);
+                goodsImg.setId(goodsId);
+                goodsImgService.updateGoodsImg(setGoodsImg(goodsImg,input_img_detail));
             }
-            goods.setMinPrice(minPrice);
-            goods.setStatus(true);
-            goods.setSaleCount(0);
-            goods.setDiscount(0f);
-            goodsService.updateGoods(goods);
             model.addAttribute("seller_status", "home_page");
             return "seller_index";
         }
@@ -455,11 +496,33 @@ public class SellerController {
         Seller currSeller = (Seller)session.getAttribute("currSeller");
         if(currSeller != null){
             Goods goods = GoodsCountUtil.setGoodsCount(goodsService.getGoodsById(goodsId),"");
+            String goodsType = goods.getType().getType();
+            Map<String,Boolean> sizeMap = new TreeMap<>();
+            if("上衣".equals(goodsType) || "裙子".equals(goodsType) || "裤子".equals(goodsType)){
+                sizeMap = setClothSizeMap();
+                for(String size : goods.getSizes()){
+                    if(sizeMap.keySet().contains(size)){
+                        sizeMap.put(size,true);
+                    }
+                }
+            }else if("童装".equals(goodsType)){
+                sizeMap = setChildSizeMap();
+                for(String size : goods.getSizes()){
+                    if(sizeMap.keySet().contains(size)){
+                        sizeMap.put(size,true);
+                    }
+                }
+            }else if("鞋子".equals(goodsType)){
+                sizeMap = setShoesSizeMap();
+                for(String size : goods.getSizes()){
+                    if(sizeMap.keySet().contains(size)){
+                        sizeMap.put(size,true);
+                    }
+                }
+            }
+            session.setAttribute("sizeMap", sizeMap);
             session.setAttribute("goodsInEdit",goods);
-            session.setAttribute("clothSizes", setClothSizes());
-            session.setAttribute("shoesSizes", setShoesSizes());
-            session.setAttribute("childSizes", setChildSizes());
-            model.addAttribute("seller_status", "goods_edit");
+            model.addAttribute("seller_status", "goods_publish");
             model.addAttribute("operate", "goods_operate");
             return "seller_index";
         }
@@ -965,4 +1028,5 @@ public class SellerController {
         }
         return "seller_login";
     }
+
 }

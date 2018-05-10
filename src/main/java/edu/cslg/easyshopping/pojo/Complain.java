@@ -12,8 +12,8 @@ public class Complain {
     private Integer cutScore;
     private OrderItem orderItem;
     private Date complainTime;
-
     private boolean checkFlag;
+
     public Complain(){}
 
     public Integer getId() {

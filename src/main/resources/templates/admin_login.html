@@ -5,13 +5,35 @@
     <meta charset="UTF-8">
     <title>管理员-登录</title>
     <script type="text/javascript" th:src="@{js/admin_login.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{css/admin_login.css}"/>
 </head>
 <body>
-    <div>
+    <!--<div>
         <input id="loginId" type="text" placeholder="用户名" value="15151793609"/>
         <input id="pwd" type="password" placeholder="密码" value="123456"/>
         <input id="input_login" type="button" value="登录"/>
+    </div>-->
+    <div class="login-form">
+        <div class="top-login">
+            <span><img src="" th:src="@{img/group.png}" alt=""></span>
+        </div>
+        <h1>嗨易购-管理员登录</h1>
+        <div class="login-top">
+            <div class="login-ic">
+                <i></i>
+                <input id="loginId" type="text" placeholder="用户名" value="15151793609"/>
+                <div class="clear"> </div>
+            </div>
+            <div class="login-ic">
+                <i class="icon"></i>
+                <input id="pwd" type="password" placeholder="密码" value="123456"/>
+                <div class="clear"> </div>
+            </div>
+
+            <div class="log-bwn">
+                <input id="input_login" type="button" value="Login">
+            </div>
+        </div>
     </div>
-    <div th:include="footer :: footer"></div>
 </body>
 </html>
