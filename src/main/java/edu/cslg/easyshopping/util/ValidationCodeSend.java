@@ -24,14 +24,6 @@ import com.aliyuncs.profile.IClientProfile;
  * 国际短信发送请勿参照此DEMO
  */
 public class ValidationCodeSend {
-    //产品名称:云通信短信API产品,开发者无需替换
-    private static final String product = "Dysmsapi";
-    //产品域名,开发者无需替换
-    private static final String domain = "dysmsapi.aliyuncs.com";
-
-    // 此处需要替换成开发者自己的AK(在阿里云访问控制台寻找)
-    private static final String accessKeyId = "LTAIvCjZhCufhQMD";
-    private static final String accessKeySecret = "ootgzzopLZ7gf7FWBUEaJgkOc3gub4";
 
     public static SendSmsResponse sendSms(String tel,String validateCode,String templateCode) throws ClientException {
 
