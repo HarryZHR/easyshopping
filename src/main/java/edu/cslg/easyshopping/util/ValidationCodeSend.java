@@ -25,7 +25,16 @@ import com.aliyuncs.profile.IClientProfile;
  */
 public class ValidationCodeSend {
 
+    //产品名称:云通信短信API产品,开发者无需替换
+    private static final String product = "";
+    //产品域名,开发者无需替换
+    private static final String domain = "";
+
+    // 此处需要替换成开发者自己的AK(在阿里云访问控制台寻找)
+    private static final String accessKeyId = "";
+    private static final String accessKeySecret = "";
     public static SendSmsResponse sendSms(String tel,String validateCode,String templateCode) throws ClientException {
+
 
         //可自助调整超时时间
         System.setProperty("sun.net.client.defaultConnectTimeout", "30000");

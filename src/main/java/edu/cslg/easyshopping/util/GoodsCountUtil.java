@@ -28,8 +28,11 @@ public class GoodsCountUtil {
         Map<String,String> colorMap = new HashMap<>();
         List<Standard> standards = goods.getStandards();
         Integer allCount = 0;
-        for (Standard standard: standards) {
-            allCount += standard.getCount();
+        if (standards != null && standards.size() > 0) {
+
+            for (Standard standard: standards) {
+                allCount += standard.getCount();
+            }
         }
         goods.setAllCount(allCount);
         if(!"onlyCount".equals(type)) {

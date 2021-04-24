@@ -130,14 +130,14 @@
 	</dependencies>
 	<build>
 		<resources>
-			<resource>
+			<!--<resource>
 				<directory>src/main/java</directory>
 				<includes>
 					<include>**/*.yml</include>
 					<include>**/*.xml</include>
 				</includes>
 				<filtering>false</filtering>
-			</resource>
+			</resource>-->
 		</resources>
 		<plugins>
 			<plugin>
